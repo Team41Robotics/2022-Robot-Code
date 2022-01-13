@@ -24,6 +24,7 @@ public class Robot extends TimedRobot {
   public static Joystick rightJoy = new Joystick(0);
   private Drivetrain drivetrain;
 
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
