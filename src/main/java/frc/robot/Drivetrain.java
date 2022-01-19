@@ -20,6 +20,7 @@ public class Drivetrain {
     private SparkMaxPIDController controllerLF;
     private SparkMaxPIDController controllerRF;
     private RelativeEncoder lfEncoder;
+    private CANSparkMax[] sparkList = CANSparkMax[4]
 
     public Drivetrain(){
         sparkLF = new CANSparkMax(15, MotorType.kBrushless);
