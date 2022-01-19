@@ -20,7 +20,7 @@ public class Drivetrain {
     private SparkMaxPIDController controllerLF;
     private SparkMaxPIDController controllerRF;
     private RelativeEncoder lfEncoder;
-
+    private CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
 
     public Drivetrain(){
         sparkLF = new CANSparkMax(15, MotorType.kBrushless);
@@ -46,16 +46,11 @@ public class Drivetrain {
 
     public void auton(){
         if(!Robot.onTape){
-            sparkLB.set(.1);
-            sparkLF.set(.1);
-            sparkRB.set(.1);
-            sparkRF.set(.1);
+            set(0.1);
             System.out.println(lfEncoder.getVelocity()*Math.PI/2);
         }else{
-            sparkLB.set(0);
-            sparkLF.set(0);
-            sparkRB.set(0);
-            sparkRF.set(0); 
+            set(0);
+ 
         }
     }
 
@@ -68,17 +63,13 @@ public class Drivetrain {
     }
 
     public void set(double speed) {
-        sparkLB.set(speed);
-        sparkLF.set(speed);
-        sparkRB.set(speed);
-        sparkRF.set(speed);
+        for(CANSparkMax i : sparkList){
+            i.set(speed);
+        }
     }
 
     public void stop() {
-        sparkLB.set(0);
-        sparkLF.set(0);
-        sparkRB.set(0);
-        sparkRF.set(0);
+        set(0);
     }
     
     public void teleop(){
@@ -91,5 +82,5 @@ public class Drivetrain {
         // System.out.println(leftSpeed);
         // System.out.println(rightSpeed);
     }
-
+    
 }
