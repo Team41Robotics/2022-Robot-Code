@@ -27,7 +27,6 @@ public class Drivetrain {
         sparkRF = new CANSparkMax(5, MotorType.kBrushless);
         sparkLB = new CANSparkMax(1, MotorType.kBrushless);
         sparkRB = new CANSparkMax(4, MotorType.kBrushless);
-        //CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
         lfEncoder = sparkLF.getEncoder();
 
         sparkRB.setInverted(true);
@@ -47,10 +46,10 @@ public class Drivetrain {
 
     public void auton(){
         if(!Robot.onTape){
-            setAllSparks(0.1);
+            set(0.1);
             System.out.println(lfEncoder.getVelocity()*Math.PI/2);
         }else{
-            setAllSparks(0);
+            set(0);
  
         }
     }
@@ -64,11 +63,13 @@ public class Drivetrain {
     }
 
     public void set(double speed) {
-        setAllSparks(speed);
+        for(CANSparkMax i : sparkList){
+            i.set(speed);
+        }
     }
 
     public void stop() {
-        setAllSparks(0);
+        set(0);
     }
     
     public void teleop(){
@@ -81,9 +82,5 @@ public class Drivetrain {
         // System.out.println(leftSpeed);
         // System.out.println(rightSpeed);
     }
-    private void setAllSparks(double speed){
-        for(CANSparkMax i : sparkList){
-            i.set(speed);
-        }
-    }
+    
 }
