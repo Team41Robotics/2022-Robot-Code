@@ -72,9 +72,14 @@ public class Drivetrain {
         set(0);
     }
     
-    public void teleop(){
+    public void teleop(){ 
         double leftSpeed = leftJoy.getY();
         double rightSpeed = rightJoy.getY();
+       
+        if(Math.abs(leftSpeed) <= .05 || Math.abs(rightSpeed) <= .05){
+            return;
+        }
+       
         sparkLB.set(leftSpeed/2);
         sparkLF.set(leftSpeed/2);
         sparkRB.set(rightSpeed/2);
