@@ -8,8 +8,18 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
+
+import javax.lang.model.util.ElementScanner6;
+
+import com.ctre.phoenix.platform.can.AutocacheState;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C.Port;
+import frc.robot.Constants.AutonState;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,12 +28,15 @@ import edu.wpi.first.wpilibj.I2C.Port;
  * project.
  */
 public class Robot extends TimedRobot {
-  private ColorSensorV3 sensor;
+  private ColorSensorV3 sensorRight;
   public static boolean onTape = false;
   public static Joystick leftJoy = new Joystick(1);
   public static Joystick rightJoy = new Joystick(0);
   private Drivetrain drivetrain;
-
+  private AutonState autonState;
+  private DoubleSolenoid intakeSolLeft;
+  private DoubleSolenoid intakeSolRight;
+  private TalonSRX intakeMotor;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,8 +45,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    sensor = new ColorSensorV3(Port.kOnboard);
+    sensorRight = new ColorSensorV3(Port.kOnboard);
     drivetrain = new Drivetrain();
+    System.out.println("RobotInit");
+    intakeSolLeft = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 3, 2);
+    intakeSolRight = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 5, 4);
+    intakeMotor = new TalonSRX(14);
   }
 
   /**
@@ -58,28 +75,51 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    onTape = false;
+    autonState = AutonState.FIND_LINE;
+    intakeSolLeft.set(DoubleSolenoid.Value.kForward);
+    intakeSolRight.set(DoubleSolenoid.Value.kForward);
+    intakeMotor.set(ControlMode.PercentOutput, 0.6);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    int colorValue;
-    int threshold;
-    if(DriverStation.getAlliance() == Alliance.Blue){
-      colorValue = sensor.getBlue();
-      threshold = 300;
-    } else {
-      colorValue = sensor.getRed();
-      threshold = 350;
-    }
+    switch (autonState) {
+      case FIND_LINE:
+        int colorValue;
+        int threshold;
+        if(DriverStation.getAlliance() == Alliance.Blue){
+          colorValue = sensorRight.getBlue();
+          threshold = 950;
+        } else {
+          colorValue = sensorRight.getRed();
+          threshold = 1000;
+        }
 
-    System.out.println(onTape);
-    if(colorValue >= threshold){
-      onTape = true;
+        if(colorValue <= threshold){
+          autonState = AutonState.GOTO_BALL;
+          drivetrain.setPosition(0);
+          drivetrain.stop();
+        } else {
+          drivetrain.set(-0.1);
+        }
+        break;
+      
+      case GOTO_BALL:
+        System.out.println(drivetrain.getPosition());
+        if(drivetrain.getPosition() <=0 ) {
+          drivetrain.stop();
+          autonState = AutonState.PICKUP_BALL;
+        }
+        else {
+          drivetrain.set(-.1);
+        }  
+        break;
+      
+      case PICKUP_BALL:
+        intakeSolLeft.set(DoubleSolenoid.Value.kForward);
+        intakeSolRight.set(DoubleSolenoid.Value.kForward);
     }
-    
-    drivetrain.auton();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -89,12 +129,12 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    drivetrain.teleop();
-    if(DriverStation.getAlliance() == Alliance.Blue){
-      System.out.println(sensor.getBlue());
-    } else {
-      System.out.println(sensor.getRed());
+    if (leftJoy.getRawButtonPressed(1)) {
+      intakeSolLeft.set(DoubleSolenoid.Value.kReverse);
+      intakeSolRight.set(DoubleSolenoid.Value.kReverse);
     }
+    drivetrain.teleop();
+    System.out.println(Integer.toString(sensorRight.getRed()) + "," + Integer.toString(sensorRight.getGreen()) + "," + Integer.toString(sensorRight.getBlue()));
   }
 
   @Override
