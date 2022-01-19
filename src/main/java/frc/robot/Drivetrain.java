@@ -20,14 +20,14 @@ public class Drivetrain {
     private SparkMaxPIDController controllerLF;
     private SparkMaxPIDController controllerRF;
     private RelativeEncoder lfEncoder;
-    private CANSparkMax[] sparkList = CANSparkMax[4];
+    private CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
 
     public Drivetrain(){
         sparkLF = new CANSparkMax(15, MotorType.kBrushless);
         sparkRF = new CANSparkMax(5, MotorType.kBrushless);
         sparkLB = new CANSparkMax(1, MotorType.kBrushless);
         sparkRB = new CANSparkMax(4, MotorType.kBrushless);
-        CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
+        //CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
         lfEncoder = sparkLF.getEncoder();
 
         sparkRB.setInverted(true);
