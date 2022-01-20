@@ -24,6 +24,10 @@ public class Constants {
     static int INTAKE_MOTOR = 14;
     static double INTAKE_FULL_SPEED = .6;
 
+    static int LIMELIGHT_HEIGHT_OF_TARGET = 71;
+    static int LIMELIGHT_HEIGHT = 32;
+    static double LIMELIGHT_ANGLE = 0;
+    
     public enum AutonState {
         FIND_LINE,
         GOTO_BALL,
