@@ -9,9 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 
-import javax.lang.model.util.ElementScanner6;
 
-import com.ctre.phoenix.platform.can.AutocacheState;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.Constants.AutonState;

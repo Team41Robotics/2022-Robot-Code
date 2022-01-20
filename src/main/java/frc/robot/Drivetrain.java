@@ -3,9 +3,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 
 
@@ -17,8 +15,6 @@ public class Drivetrain {
     private CANSparkMax sparkRB;
     private Joystick leftJoy; 
     private Joystick rightJoy;
-    private SparkMaxPIDController controllerLF;
-    private SparkMaxPIDController controllerRF;
     private RelativeEncoder lfEncoder;
     private CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
 
@@ -33,15 +29,6 @@ public class Drivetrain {
         sparkRF.setInverted(true);
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
-
-        //controllerLF = sparkLF.getPIDController();
-        //sparkLB.follow(sparkLF);
-       // controllerRF = sparkRF.getPIDController();
-       // sparkRB.follow(sparkRF);
-        
-       // controllerLF.setFF(0.00000481);
-        //controllerRF.setFF(0.00000481);
-
     }
 
     public void auton(){
