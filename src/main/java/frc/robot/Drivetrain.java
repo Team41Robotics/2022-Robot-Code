@@ -20,10 +20,10 @@ public class Drivetrain {
 
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain(){
-        sparkLF = new CANSparkMax(15, MotorType.kBrushless);
-        sparkRF = new CANSparkMax(5, MotorType.kBrushless);
-        sparkLB = new CANSparkMax(1, MotorType.kBrushless);
-        sparkRB = new CANSparkMax(4, MotorType.kBrushless);
+        sparkLF = new CANSparkMax(Constants.SPARK_LF, MotorType.kBrushless);
+        sparkRF = new CANSparkMax(Constants.SPARK_RF, MotorType.kBrushless);
+        sparkLB = new CANSparkMax(Constants.SPARK_LB, MotorType.kBrushless);
+        sparkRB = new CANSparkMax(Constants.SPARK_RB, MotorType.kBrushless);
         lfEncoder = sparkLF.getEncoder();
         sparkList[0] = sparkLF;
         sparkList[1] = sparkLB;

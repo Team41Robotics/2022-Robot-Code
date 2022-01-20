@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
-
-
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.Constants.AutonState;
@@ -24,8 +22,8 @@ import frc.robot.Constants.AutonState;
 public class Robot extends TimedRobot {
   private ColorSensorV3 sensorRight;
   public static boolean intakeOn = false;
-  public static Joystick leftJoy = new Joystick(1);
-  public static Joystick rightJoy = new Joystick(0);
+  public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
+  public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
   private Drivetrain drivetrain;
   private AutonState autonState;
   private Intake intake;
@@ -73,10 +71,10 @@ public class Robot extends TimedRobot {
         int threshold;
         if(DriverStation.getAlliance() == Alliance.Blue){
           colorValue = sensorRight.getBlue();
-          threshold = 950;
+          threshold = Constants.BLUE_TAPE_THRESHOLD;
         } else {
           colorValue = sensorRight.getRed();
-          threshold = 1000;
+          threshold = Constants.RED_TAPE_THRESHOLD;
         }
 
         if(colorValue <= threshold){
@@ -84,19 +82,19 @@ public class Robot extends TimedRobot {
           drivetrain.setPosition(0);
           drivetrain.stop();
         } else {
-          drivetrain.set(-0.1);
+          drivetrain.set(Constants.AUTON_SPEED);
         }
         break;
       
       // After the line, go to where we know the ball is (~40in outside of the tape)
       case GOTO_BALL:
         System.out.println(drivetrain.getPosition());
-        if(drivetrain.getPosition() <=-10 ) {
+        if(drivetrain.getPosition() <= Constants.AUTON_DISTANCE ) {
           drivetrain.stop();
           autonState = AutonState.PICKUP_BALL;
         }
         else {
-          drivetrain.set(-.1);
+          drivetrain.set(Constants.AUTON_SPEED);
         }  
         break;
       

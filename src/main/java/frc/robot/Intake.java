@@ -17,9 +17,9 @@ public class Intake {
 
     /** Initialize all parts of the intake */
     public Intake(){
-        intakeSolLeft = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 3, 2);
-        intakeSolRight = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 5, 4);
-        intakeMotor = new TalonSRX(14);
+        intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.CTREPCM, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
+        intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.CTREPCM, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
+        intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR);
         rightJoy = Robot.rightJoy;
         leftJoy = Robot.leftJoy;
         intakeOn = false;
@@ -29,7 +29,7 @@ public class Intake {
     public void autonInit(){
         intakeSolLeft.set(DoubleSolenoid.Value.kForward);
         intakeSolRight.set(DoubleSolenoid.Value.kForward);
-        intakeMotor.set(ControlMode.PercentOutput, 0.6);
+        intakeMotor.set(ControlMode.PercentOutput, Constants.INTAKE_FULL_SPEED);
     }
 
     /** Set the intake motor to a specified speed between -1 and 1 */
@@ -45,7 +45,7 @@ public class Intake {
           }
           if (rightJoy.getRawButtonPressed(1)) {
             intakeOn = !intakeOn;
-            intakeMotor.set(TalonSRXControlMode.PercentOutput, intakeOn ? 0.6 : 0);
+            intakeMotor.set(TalonSRXControlMode.PercentOutput, intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
           }
     }
 
