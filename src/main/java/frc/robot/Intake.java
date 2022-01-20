@@ -15,6 +15,7 @@ public class Intake {
     private Joystick leftJoy;
     private Boolean intakeOn;
 
+    /** Initialize all parts of the intake */
     public Intake(){
         intakeSolLeft = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 3, 2);
         intakeSolRight = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 5, 4);
@@ -24,16 +25,19 @@ public class Intake {
         intakeOn = false;
     }
 
+    /** At beginning of auton, move the intake down and start the motor */
     public void autonInit(){
         intakeSolLeft.set(DoubleSolenoid.Value.kForward);
         intakeSolRight.set(DoubleSolenoid.Value.kForward);
         intakeMotor.set(ControlMode.PercentOutput, 0.6);
     }
 
+    /** Set the intake motor to a specified speed between -1 and 1 */
     public void setIntakeMotor(double speed){
         intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
     }
 
+    /** In teleop, set buttons to raise the intake and toggle the motor */
     public void teleop(){
         if (leftJoy.getRawButtonPressed(1)) {
             intakeSolLeft.set(DoubleSolenoid.Value.kReverse);

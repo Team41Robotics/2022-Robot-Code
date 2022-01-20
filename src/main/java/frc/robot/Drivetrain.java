@@ -18,6 +18,7 @@ public class Drivetrain {
     private RelativeEncoder lfEncoder;
     private CANSparkMax[] sparkList = new CANSparkMax[4];
 
+    /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain(){
         sparkLF = new CANSparkMax(15, MotorType.kBrushless);
         sparkRF = new CANSparkMax(5, MotorType.kBrushless);
@@ -34,34 +35,29 @@ public class Drivetrain {
         rightJoy = Robot.rightJoy;
     }
 
-    public void auton(){
-        if(!Robot.onTape){
-            set(0.1);
-            System.out.println(lfEncoder.getVelocity()*Math.PI/2);
-        }else{
-            set(0);
- 
-        }
-    }
-
+    /** Get position (inches) of the robot */
     public double getPosition() {
         return lfEncoder.getPosition()*Math.PI/2;
     }
 
+    /** Set position (inches) of the robot */
     public void setPosition(double pos) {
         lfEncoder.setPosition(pos);
     }
 
+    /** Set the speed of the drivetrain [-1, 1] */
     public void set(double speed) {
         for(CANSparkMax i : sparkList){
             i.set(speed);
         }
     }
 
+    /** Stop the drivetrain */
     public void stop() {
         set(0);
     }
     
+    /** Run the drivetrain at half the speed of the joysticks */
     public void teleop(){ 
         double leftSpeed = leftJoy.getY();
         double rightSpeed = rightJoy.getY();

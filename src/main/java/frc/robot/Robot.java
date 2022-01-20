@@ -23,7 +23,6 @@ import frc.robot.Constants.AutonState;
  */
 public class Robot extends TimedRobot {
   private ColorSensorV3 sensorRight;
-  public static boolean onTape = false;
   public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(1);
   public static Joystick rightJoy = new Joystick(0);
@@ -66,7 +65,9 @@ public class Robot extends TimedRobot {
   /* This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    // State machine for auton
     switch (autonState) {
+      // Go until ball finds the starting tape
       case FIND_LINE:
         int colorValue;
         int threshold;
@@ -87,6 +88,7 @@ public class Robot extends TimedRobot {
         }
         break;
       
+      // After the line, go to where we know the ball is (~40in outside of the tape)
       case GOTO_BALL:
         System.out.println(drivetrain.getPosition());
         if(drivetrain.getPosition() <=-10 ) {
@@ -98,6 +100,7 @@ public class Robot extends TimedRobot {
         }  
         break;
       
+      // Turn off intake after the ball is picked up
       case PICKUP_BALL:
         intake.setIntakeMotor(0);
     }
@@ -112,7 +115,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drivetrain.teleop();
     intake.teleop();
-    System.out.println(Integer.toString(sensorRight.getRed()) + "," + Integer.toString(sensorRight.getGreen()) + "," + Integer.toString(sensorRight.getBlue()));
   }
 
   @Override
