@@ -13,11 +13,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.Constants.AutonState;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,13 +24,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Robot extends TimedRobot {
   private ColorSensorV3 sensorRight;
   public static boolean onTape = false;
+  public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(1);
   public static Joystick rightJoy = new Joystick(0);
   private Drivetrain drivetrain;
   private AutonState autonState;
-  private DoubleSolenoid intakeSolLeft;
-  private DoubleSolenoid intakeSolRight;
-  private TalonSRX intakeMotor;
+  private Intake intake;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -45,18 +40,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     sensorRight = new ColorSensorV3(Port.kOnboard);
     drivetrain = new Drivetrain();
-    System.out.println("RobotInit");
-    intakeSolLeft = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 3, 2);
-    intakeSolRight = new DoubleSolenoid(15, PneumaticsModuleType.CTREPCM, 5, 4);
-    intakeMotor = new TalonSRX(14);
+    intake = new Intake();
   }
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {}
@@ -66,20 +56,14 @@ public class Robot extends TimedRobot {
    * autonomous modes using the dashboard. The sendable chooser code works with the Java
    * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
    * uncomment the getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
-   * chooser code above as well.
    */
   @Override
   public void autonomousInit() {
     autonState = AutonState.FIND_LINE;
-    intakeSolLeft.set(DoubleSolenoid.Value.kForward);
-    intakeSolRight.set(DoubleSolenoid.Value.kForward);
-    intakeMotor.set(ControlMode.PercentOutput, 0.6);
+    intake.autonInit();
   }
 
-  /** This function is called periodically during autonomous. */
+  /* This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     switch (autonState) {
@@ -105,7 +89,7 @@ public class Robot extends TimedRobot {
       
       case GOTO_BALL:
         System.out.println(drivetrain.getPosition());
-        if(drivetrain.getPosition() <=0 ) {
+        if(drivetrain.getPosition() <=-10 ) {
           drivetrain.stop();
           autonState = AutonState.PICKUP_BALL;
         }
@@ -115,8 +99,7 @@ public class Robot extends TimedRobot {
         break;
       
       case PICKUP_BALL:
-        intakeSolLeft.set(DoubleSolenoid.Value.kForward);
-        intakeSolRight.set(DoubleSolenoid.Value.kForward);
+        intake.setIntakeMotor(0);
     }
   }
 
@@ -127,11 +110,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (leftJoy.getRawButtonPressed(1)) {
-      intakeSolLeft.set(DoubleSolenoid.Value.kReverse);
-      intakeSolRight.set(DoubleSolenoid.Value.kReverse);
-    }
     drivetrain.teleop();
+    intake.teleop();
     System.out.println(Integer.toString(sensorRight.getRed()) + "," + Integer.toString(sensorRight.getGreen()) + "," + Integer.toString(sensorRight.getBlue()));
   }
 

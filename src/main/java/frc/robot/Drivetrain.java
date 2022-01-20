@@ -16,7 +16,7 @@ public class Drivetrain {
     private Joystick leftJoy; 
     private Joystick rightJoy;
     private RelativeEncoder lfEncoder;
-    private CANSparkMax[] sparkList = {sparkLF,sparkRF, sparkLB, sparkRB};
+    private CANSparkMax[] sparkList = new CANSparkMax[4];
 
     public Drivetrain(){
         sparkLF = new CANSparkMax(15, MotorType.kBrushless);
@@ -24,7 +24,10 @@ public class Drivetrain {
         sparkLB = new CANSparkMax(1, MotorType.kBrushless);
         sparkRB = new CANSparkMax(4, MotorType.kBrushless);
         lfEncoder = sparkLF.getEncoder();
-
+        sparkList[0] = sparkLF;
+        sparkList[1] = sparkLB;
+        sparkList[2] = sparkRF;
+        sparkList[3] = sparkRB;
         sparkRB.setInverted(true);
         sparkRF.setInverted(true);
         leftJoy = Robot.leftJoy;
@@ -62,17 +65,22 @@ public class Drivetrain {
     public void teleop(){ 
         double leftSpeed = leftJoy.getY();
         double rightSpeed = rightJoy.getY();
-       
-        if(Math.abs(leftSpeed) <= .05 || Math.abs(rightSpeed) <= .05){
-            return;
+    
+        if(Math.abs(leftSpeed) > .1){
+            sparkLB.set(leftSpeed/2);
+            sparkLF.set(leftSpeed/2);
+        } else {
+            sparkLB.set(0);
+            sparkLF.set(0);
         }
-       
-        sparkLB.set(leftSpeed/2);
-        sparkLF.set(leftSpeed/2);
-        sparkRB.set(rightSpeed/2);
-        sparkRF.set(rightSpeed/2);
-        // System.out.println(leftSpeed);
-        // System.out.println(rightSpeed);
+
+        if(Math.abs(rightSpeed) > .1) {
+            sparkRB.set(rightSpeed/2);
+            sparkRF.set(rightSpeed/2);
+        } else {
+            sparkRB.set(0);
+            sparkRF.set(0);
+        }
     }
     
 }
