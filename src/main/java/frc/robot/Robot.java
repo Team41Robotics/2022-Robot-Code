@@ -5,13 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
-import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.Constants.AutonState;
-import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,14 +15,13 @@ import edu.wpi.first.wpilibj.util.Color;
  * project.
  */
 public class Robot extends TimedRobot {
-  private ColorSensorV3 sensorRight;
-  private ColorSensorV3 sensorLeft;
   public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
   private Drivetrain drivetrain;
   private AutonState autonState;
   private Intake intake;
+  private ColorSensor colorSensor;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,10 +30,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    sensorRight = new ColorSensorV3(Port.kOnboard);
-    sensorLeft = new ColorSensorV3(Port.kMXP);
     drivetrain = new Drivetrain();
     intake = new Intake();
+    colorSensor = new ColorSensor();
   }
 
   /**
@@ -69,23 +62,8 @@ public class Robot extends TimedRobot {
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
-        Color colorLeft;
-        int colorRight;
-        int threshold;
-        if(DriverStation.getAlliance() == Alliance.Blue){
-          colorRight = sensorRight.getBlue();
-          colorLeft = sensorLeft.getColor();
-
-          System.out.println(colorLeft.blue);
-
-          threshold = Constants.BLUE_TAPE_THRESHOLD;
-        } else {
-          colorRight = sensorRight.getRed();
-          colorLeft = sensorLeft.getColor();
-          threshold = Constants.RED_TAPE_THRESHOLD;
-        }
-
-        if(colorRight <= threshold && colorRight <= threshold) {
+        boolean onTape = colorSensor.findLine();
+        if(onTape) {
           autonState = AutonState.GOTO_BALL;
           drivetrain.setPosition(0);
           drivetrain.stop();
@@ -109,6 +87,7 @@ public class Robot extends TimedRobot {
       // Turn off intake after the ball is picked up
       case PICKUP_BALL:
         intake.setIntakeMotor(0);
+        break;
     }
   }
 
@@ -121,6 +100,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drivetrain.teleop();
     intake.teleop();
+    colorSensor.teleop();
   }
 
   @Override

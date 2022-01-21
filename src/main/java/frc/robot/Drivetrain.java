@@ -5,9 +5,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.RelativeEncoder;
 
-
-
-
 public class Drivetrain {
     private CANSparkMax sparkLF;
     private CANSparkMax sparkLB;
