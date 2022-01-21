@@ -79,7 +79,7 @@ public class ColorSensor {
         if (calc.length % 2 == 0)
             median = ((float) calc[calc.length / 2] + (float) calc[calc.length / 2 - 1]) / 2;
         else
-            median = (float) calc[array.length / 2];
+            median = (float) calc[calc.length / 2];
         return Math.round(median);
     }
 }
