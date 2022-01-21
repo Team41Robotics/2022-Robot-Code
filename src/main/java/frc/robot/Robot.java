@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.Constants.AutonState;
-
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -69,20 +69,23 @@ public class Robot extends TimedRobot {
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
-        int colorLeft;
+        Color colorLeft;
         int colorRight;
         int threshold;
         if(DriverStation.getAlliance() == Alliance.Blue){
           colorRight = sensorRight.getBlue();
-          colorLeft = sensorLeft.getBlue();
+          colorLeft = sensorLeft.getColor();
+
+          System.out.println(colorLeft.blue);
+
           threshold = Constants.BLUE_TAPE_THRESHOLD;
         } else {
           colorRight = sensorRight.getRed();
-          colorLeft = sensorLeft.getRed();
+          colorLeft = sensorLeft.getColor();
           threshold = Constants.RED_TAPE_THRESHOLD;
         }
 
-        if(colorLeft <= threshold && colorRight <= threshold) {
+        if(colorRight <= threshold && colorRight <= threshold) {
           autonState = AutonState.GOTO_BALL;
           drivetrain.setPosition(0);
           drivetrain.stop();
