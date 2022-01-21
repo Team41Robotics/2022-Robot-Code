@@ -17,8 +17,8 @@ public class ColorSensor {
     private int[] leftColor;
     private int[][] leftBuffer = new int[3][1000];
     private int[] leftBufferPointers = new int[3];
-    private int[] medianList = new int[3]
-    private int[] adjustedColorList = new int[3]
+    private int[] medianList = new int[3];
+    private int[] adjustedColorList = new int[3];
     
     public ColorSensor() {
         sensorRight = new ColorSensorV3(Port.kOnboard);
@@ -62,9 +62,9 @@ public class ColorSensor {
         for (int i = 0; i < 4; i++) {
                 leftBuffer[i][leftBufferPointers[i]] = leftColor[i];
                 leftBufferPointers[i] = (leftBufferPointers[i] + 1) % leftBuffer[i].length;
-                medianList[i] = getMedian(leftBuffer[i])
-                adjustedColorList[i] = leftColor[i] - medianList[i]
-                finalNum = math.abs(finalNum*adjustedColorList[i])
+                medianList[i] = getMedian(leftBuffer[i]);
+                adjustedColorList[i] = leftColor[i] - medianList[i];
+                finalNum = math.abs(finalNum*adjustedColorList[i])l
             }
         /*
         leftBuffer[0][leftBufferPointers[0]] = leftColor[0];
