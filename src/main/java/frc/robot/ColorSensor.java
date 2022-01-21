@@ -64,7 +64,7 @@ public class ColorSensor {
                 leftBufferPointers[i] = (leftBufferPointers[i] + 1) % leftBuffer[i].length;
                 medianList[i] = getMedian(leftBuffer[i]);
                 adjustedColorList[i] = leftColor[i] - medianList[i];
-                finalNum = math.abs(finalNum*adjustedColorList[i]);
+                finalNum = Math.abs(finalNum*adjustedColorList[i]);
             }
         /*
         leftBuffer[0][leftBufferPointers[0]] = leftColor[0];
