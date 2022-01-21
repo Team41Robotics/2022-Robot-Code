@@ -58,13 +58,13 @@ public class ColorSensor {
         leftColor[0] = sensorLeft.getRed();
         leftColor[1] = sensorLeft.getGreen();
         leftColor[2] = sensorLeft.getBlue();
-        int finalNum = 1
+        int finalNum = 1;
         for (int i = 0; i < 4; i++) {
                 leftBuffer[i][leftBufferPointers[i]] = leftColor[i];
                 leftBufferPointers[i] = (leftBufferPointers[i] + 1) % leftBuffer[i].length;
                 medianList[i] = getMedian(leftBuffer[i]);
                 adjustedColorList[i] = leftColor[i] - medianList[i];
-                finalNum = math.abs(finalNum*adjustedColorList[i])l
+                finalNum = math.abs(finalNum*adjustedColorList[i]);
             }
         /*
         leftBuffer[0][leftBufferPointers[0]] = leftColor[0];
