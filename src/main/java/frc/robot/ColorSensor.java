@@ -75,6 +75,11 @@ public class ColorSensor {
     private int getMedian(int[] arr) {
       int[] calc = arr.clone();
       Arrays.sort(calc);
-      return calc[calc.length/2];
+        float median;
+        if (calc.length % 2 == 0)
+            median = ((float) calc[calc.length / 2] + (float) calc[calc.length / 2 - 1]) / 2;
+        else
+            median = (float) calc[calc.length / 2];
+        return Math.round(median);
     }
 }
