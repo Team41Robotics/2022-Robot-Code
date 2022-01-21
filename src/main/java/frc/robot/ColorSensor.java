@@ -56,12 +56,18 @@ public class ColorSensor {
         leftColor[0] = sensorLeft.getRed();
         leftColor[1] = sensorLeft.getGreen();
         leftColor[2] = sensorLeft.getBlue();
+        for (int i = 0; i < 4; i++) {
+                leftBuffer[i][leftBufferPointers[i]] = leftColor[i];
+                leftBufferPointers[i] = (leftBufferPointers[i] + 1) % leftBuffer[i].length;
+            }
+        /*
         leftBuffer[0][leftBufferPointers[0]] = leftColor[0];
         leftBuffer[1][leftBufferPointers[1]] = leftColor[1];
         leftBuffer[2][leftBufferPointers[2]] = leftColor[2];
         leftBufferPointers[0] = (leftBufferPointers[0] + 1) % leftBuffer[0].length;
         leftBufferPointers[1] = (leftBufferPointers[1] + 1) % leftBuffer[1].length;
         leftBufferPointers[2] = (leftBufferPointers[2] + 1) % leftBuffer[2].length;
+        */
         int redMedian = getMedian(leftBuffer[0]);
         int greenMedian = getMedian(leftBuffer[1]);
         int blueMedian = getMedian(leftBuffer[2]);
