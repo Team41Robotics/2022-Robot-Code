@@ -2,7 +2,7 @@ package frc.robot;
 
 public class Constants {
     static int LEFT_JOY = 1;
-    static int RIGHT_JOY = 1;
+    static int RIGHT_JOY = 0;
 
     static int BLUE_TAPE_THRESHOLD = 950;
     static int RED_TAPE_THRESHOLD = 1000;
@@ -27,6 +27,8 @@ public class Constants {
     static int LIMELIGHT_HEIGHT_OF_TARGET = 71;
     static int LIMELIGHT_HEIGHT = 32;
     static double LIMELIGHT_ANGLE = 0;
+
+    static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
     
     public enum AutonState {
         FIND_LINE,

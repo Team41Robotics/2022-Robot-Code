@@ -21,6 +21,7 @@ import frc.robot.Constants.AutonState;
  */
 public class Robot extends TimedRobot {
   private ColorSensorV3 sensorRight;
+  private ColorSensorV3 sensorLeft;
   public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     sensorRight = new ColorSensorV3(Port.kOnboard);
+    sensorLeft = new ColorSensorV3(Port.kMXP);
     drivetrain = new Drivetrain();
     intake = new Intake();
   }
@@ -67,17 +69,20 @@ public class Robot extends TimedRobot {
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
-        int colorValue;
+        int colorLeft;
+        int colorRight;
         int threshold;
         if(DriverStation.getAlliance() == Alliance.Blue){
-          colorValue = sensorRight.getBlue();
+          colorRight = sensorRight.getBlue();
+          colorLeft = sensorLeft.getBlue();
           threshold = Constants.BLUE_TAPE_THRESHOLD;
         } else {
-          colorValue = sensorRight.getRed();
+          colorRight = sensorRight.getRed();
+          colorLeft = sensorLeft.getRed();
           threshold = Constants.RED_TAPE_THRESHOLD;
         }
 
-        if(colorValue <= threshold){
+        if(colorLeft <= threshold && colorRight <= threshold) {
           autonState = AutonState.GOTO_BALL;
           drivetrain.setPosition(0);
           drivetrain.stop();

@@ -37,7 +37,7 @@ public class Drivetrain {
 
     /** Get position (inches) of the robot */
     public double getPosition() {
-        return lfEncoder.getPosition()*Math.PI/2;
+        return lfEncoder.getPosition()*Constants.WHEEL_CONVERSION_FACTOR;
     }
 
     /** Set position (inches) of the robot */
@@ -63,8 +63,8 @@ public class Drivetrain {
         double rightSpeed = rightJoy.getY();
     
         if(Math.abs(leftSpeed) > .1){
-            sparkLB.set(leftSpeed/2);
-            sparkLF.set(leftSpeed/2);
+            sparkLB.set(leftSpeed);
+            sparkLF.set(leftSpeed);
         } else {
             sparkLB.set(0);
             sparkLF.set(0);

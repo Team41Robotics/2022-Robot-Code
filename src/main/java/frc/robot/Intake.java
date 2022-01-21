@@ -14,6 +14,7 @@ public class Intake {
     private Joystick rightJoy;
     private Joystick leftJoy;
     private Boolean intakeOn;
+    private Boolean intakeUp;
 
     /** Initialize all parts of the intake */
     public Intake(){
@@ -23,12 +24,14 @@ public class Intake {
         rightJoy = Robot.rightJoy;
         leftJoy = Robot.leftJoy;
         intakeOn = false;
+        intakeUp = false;
     }
 
     /** At beginning of auton, move the intake down and start the motor */
     public void autonInit(){
         intakeSolLeft.set(DoubleSolenoid.Value.kForward);
         intakeSolRight.set(DoubleSolenoid.Value.kForward);
+        intakeUp = true;
         intakeMotor.set(ControlMode.PercentOutput, Constants.INTAKE_FULL_SPEED);
     }
 
@@ -40,8 +43,9 @@ public class Intake {
     /** In teleop, set buttons to raise the intake and toggle the motor */
     public void teleop(){
         if (leftJoy.getRawButtonPressed(1)) {
-            intakeSolLeft.set(DoubleSolenoid.Value.kReverse);
-            intakeSolRight.set(DoubleSolenoid.Value.kReverse);
+            intakeUp = !intakeUp;
+            intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+            intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
           }
           if (rightJoy.getRawButtonPressed(1)) {
             intakeOn = !intakeOn;
