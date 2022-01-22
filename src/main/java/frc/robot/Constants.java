@@ -4,8 +4,10 @@ public class Constants {
     static int LEFT_JOY = 1;
     static int RIGHT_JOY = 0;
 
-    static int BLUE_TAPE_THRESHOLD = 950;
-    static int RED_TAPE_THRESHOLD = 1000;
+    static int BLUE_TAPE_LEFT_THRESHOLD = 20000000;
+    static int RED_TAPE_LEFT_THRESHOLD = 20000000; // 2e7
+    static int BLUE_TAPE_RIGHT_THRESHOLD = 27000000; 
+    static int RED_TAPE_RIGHT_THRESHOLD = 27000000; 
 
     static double AUTON_SPEED = -0.1;
     static int AUTON_DISTANCE = -10;
