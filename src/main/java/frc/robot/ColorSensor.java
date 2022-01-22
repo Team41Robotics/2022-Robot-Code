@@ -1,6 +1,5 @@
 package frc.robot;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import com.revrobotics.ColorSensorV3;
@@ -8,7 +7,6 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.util.Color;
 
 public class ColorSensor {
     private ColorSensorV3 sensorRight;
@@ -16,8 +14,11 @@ public class ColorSensor {
     private int[] rightColor;
     private int[] leftColor;
     private int[][] leftBuffer = new int[3][1000];
+    private int[][] rightBuffer = new int[3][1000];
     private int[] leftBufferPointers = new int[3];
-    private int[] medianList = new int[3];
+    private int[] rightBufferPointers = new int[3];
+    private int[] leftMedianList = {797, 1300, 527};
+    private int[] rightMedianList = {1633, 2786, 1186};
     private int[] adjustedColorList = new int[3];
     
     public ColorSensor() {
@@ -30,42 +31,52 @@ public class ColorSensor {
         leftBufferPointers[2] = 0;
     }
 
-    public boolean findLine() {
-        Color colorLeft;
-        int colorRight;
+    public boolean findLineR() {
         int threshold;
+        int colorRight;
+        rightColor[0] = sensorRight.getRed();
+        rightColor[1] = sensorRight.getGreen();
+        rightColor[2] = sensorRight.getBlue();
         if(DriverStation.getAlliance() == Alliance.Blue){
-          colorRight = sensorRight.getBlue();
-          colorLeft = sensorLeft.getColor();
-
-          System.out.println(colorLeft.blue);
-
-          threshold = Constants.BLUE_TAPE_THRESHOLD;
+          threshold = Constants.BLUE_TAPE_RIGHT_THRESHOLD;
         } else {
-          colorRight = sensorRight.getRed();
-          colorLeft = sensorLeft.getColor();
-          threshold = Constants.RED_TAPE_THRESHOLD;
+          threshold = Constants.RED_TAPE_RIGHT_THRESHOLD;
         }
-
-        if(colorRight <= threshold && colorRight <= threshold) {
+        colorRight = getAdjColor(rightColor, rightBufferPointers, rightBuffer, rightMedianList);
+        System.out.println(colorRight);
+        if(colorRight >= threshold) {
             return true;
           } else {
             return false;
           }
     }
-
+    public boolean findLineL(){
+      int threshold;
+      int colorLeft;
+      leftColor[0] = sensorLeft.getRed();
+      leftColor[1] = sensorLeft.getGreen();
+      leftColor[2] = sensorLeft.getBlue();
+      if(DriverStation.getAlliance() == Alliance.Blue){
+        threshold = Constants.BLUE_TAPE_LEFT_THRESHOLD;
+      } else {
+        threshold = Constants.RED_TAPE_LEFT_THRESHOLD;
+      }
+      colorLeft = getAdjColor(leftColor, leftBufferPointers, leftBuffer, leftMedianList);
+      System.out.print(colorLeft);
+      System.out.print("\t\t\t");
+      if (colorLeft >= threshold){
+        return true;
+      }else{
+        return false;
+      }
+      
+    }
     public void teleop() {
         leftColor[0] = sensorLeft.getRed();
         leftColor[1] = sensorLeft.getGreen();
         leftColor[2] = sensorLeft.getBlue();
-        int finalNum = 1;
-        for (int i = 0; i < 4; i++) {
-                leftBuffer[i][leftBufferPointers[i]] = leftColor[i];
-                leftBufferPointers[i] = (leftBufferPointers[i] + 1) % leftBuffer[i].length;
-                medianList[i] = getMedian(leftBuffer[i]);
-                adjustedColorList[i] = leftColor[i] - medianList[i];
-                finalNum = Math.abs(finalNum*adjustedColorList[i]);
-            }
+        int finalNum = getAdjColor(leftColor, leftBufferPointers, leftBuffer, leftMedianList);
+        System.out.println(finalNum);
         /*
         leftBuffer[0][leftBufferPointers[0]] = leftColor[0];
         leftBuffer[1][leftBufferPointers[1]] = leftColor[1];
@@ -82,7 +93,19 @@ public class ColorSensor {
         int blueAdjusted = leftColor[2] - blueMedian;
         int finalNum = Math.abs(redAdjusted*greenAdjusted*blueAdjusted);
         */
-        System.out.println(finalNum);
+    }
+
+    private int getAdjColor(int[] data, int[] pointers, int[][] buffer, int[] medianList) {
+      int finalNum = 1;
+      for (int i = 0; i < 3; i++) {
+        buffer[i][pointers[i]] = leftColor[i];
+        pointers[i] = (pointers[i] + 1) % buffer[i].length;
+        medianList[i] = getMedian(buffer[i]);
+        adjustedColorList[i] = data[i] - medianList[i];
+        finalNum = Math.abs(finalNum*adjustedColorList[i]);
+      }
+      //System.out.println(Arrays.toString(medianList));
+      return finalNum;
     }
 
     private int getMedian(int[] arr) {

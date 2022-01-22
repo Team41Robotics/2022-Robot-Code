@@ -22,7 +22,8 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private Intake intake;
   private ColorSensor colorSensor;
-
+  private boolean onTapeR;
+  private boolean onTapeL;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -53,6 +54,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autonState = AutonState.FIND_LINE;
     intake.autonInit();
+    onTapeL = false;
+    onTapeR = false;
   }
 
   /* This function is called periodically during autonomous. */
@@ -62,19 +65,27 @@ public class Robot extends TimedRobot {
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
-        boolean onTape = colorSensor.findLine();
-        if(onTape) {
+        if(colorSensor.findLineL()){
+          onTapeL = true;
+        }
+        if(colorSensor.findLineR()){
+          onTapeR = true;
+        }
+        if(onTapeL && onTapeR) {
           autonState = AutonState.GOTO_BALL;
           drivetrain.setPosition(0);
           drivetrain.stop();
-        } else {
-          drivetrain.set(Constants.AUTON_SPEED);
+        }
+        if(!onTapeL){
+          drivetrain.setLeft(Constants.AUTON_SPEED);
+        }
+        if(!onTapeR){
+          drivetrain.setRight(Constants.AUTON_SPEED);
         }
         break;
       
       // After the line, go to where we know the ball is (~40in outside of the tape)
       case GOTO_BALL:
-        System.out.println(drivetrain.getPosition());
         if(drivetrain.getPosition() <= Constants.AUTON_DISTANCE ) {
           drivetrain.stop();
           autonState = AutonState.PICKUP_BALL;
