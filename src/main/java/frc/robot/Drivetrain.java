@@ -17,6 +17,7 @@ public class Drivetrain {
     private Joystick leftJoy; 
     private Joystick rightJoy;  
     private RelativeEncoder lfEncoder;
+    private RelativeEncoder rfEncoder;
     private CANSparkMax[] sparkList = new CANSparkMax[4];
 
     private double leftSpeed;
@@ -35,7 +36,8 @@ public class Drivetrain {
         sparkLB = new CANSparkMax(Constants.SPARK_LB, MotorType.kBrushless);
         sparkRB = new CANSparkMax(Constants.SPARK_RB, MotorType.kBrushless);
         lfEncoder = sparkLF.getEncoder();
-        
+        rfEncoder = sparkRF.getEncoder();
+
         sparkList[0] = sparkLF;
         sparkList[1] = sparkLB;
         sparkList[2] = sparkRF;
@@ -46,14 +48,6 @@ public class Drivetrain {
         
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
-
-        leftSpeed = 0;
-        rightSpeed = 0;
-
-        MAX_SPEED = 5_500;
-        rightController = sparkRB.getPIDController();
-        leftController = sparkLB.getPIDController();
-
     }
 
     /** Get position (inches) of the robot */
@@ -64,6 +58,7 @@ public class Drivetrain {
     /** Set position (inches) of the robot */
     public void setPosition(double pos) {
         lfEncoder.setPosition(pos);
+        rfEncoder.setPosition(pos);
     }
 
     /** Set the speed of the drivetrain [-1, 1] */
@@ -80,8 +75,8 @@ public class Drivetrain {
     
     /** Run the drivetrain at half the speed of the joysticks */
     public void teleop(){ 
-        double leftSpeed = leftJoy.getY();
-        double rightSpeed = rightJoy.getY();
+        double leftSpeed = leftJoy.getY()/2;
+        double rightSpeed = rightJoy.getY()/2;
     
         if(Math.abs(leftSpeed) > .1){
             sparkLB.set(leftSpeed);
@@ -109,11 +104,7 @@ public class Drivetrain {
     }
     
     public void calculateSpeed(){
-        rightController.setSmartMotionMaxVelocity(50, 0);
-        leftController.setSmartMotionMaxVelocity(50, 0);
-        
-        rightController.setSmartMotionAccelStrategy(SparkMaxPIDController.AccelStrategy.kTrapezoidal, 0);
-        leftController.setSmartMotionAccelStrategy(SparkMaxPIDController.AccelStrategy.kTrapezoidal, 0);
+      
     }
 
     public void auton() {

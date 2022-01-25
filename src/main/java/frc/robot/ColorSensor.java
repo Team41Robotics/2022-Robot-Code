@@ -17,8 +17,8 @@ public class ColorSensor {
     private int[][] rightBuffer = new int[3][1000];
     private int[] leftBufferPointers = new int[3];
     private int[] rightBufferPointers = new int[3];
-    private int[] leftMedianList = {797, 1300, 527};
-    private int[] rightMedianList = {1633, 2786, 1186};
+    private int[] leftMedianList = {0, 0, 0};
+    private int[] rightMedianList = {0, 0, 0};
     private int[] adjustedColorList = new int[3];
     
     public ColorSensor() {
@@ -30,7 +30,7 @@ public class ColorSensor {
         leftBufferPointers[1] = 0;
         leftBufferPointers[2] = 0;
     }
-
+    
     public boolean findLineR() {
         int threshold;
         int colorRight;
@@ -50,6 +50,7 @@ public class ColorSensor {
             return false;
           }
     }
+    
     public boolean findLineL(){
       int threshold;
       int colorLeft;
@@ -76,6 +77,7 @@ public class ColorSensor {
         leftColor[1] = sensorLeft.getGreen();
         leftColor[2] = sensorLeft.getBlue();
         int finalNum = getAdjColor(leftColor, leftBufferPointers, leftBuffer, leftMedianList);
+        //System.out.println(rightColor);
         System.out.println(finalNum);
         /*
         leftBuffer[0][leftBufferPointers[0]] = leftColor[0];

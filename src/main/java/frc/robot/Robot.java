@@ -67,9 +67,11 @@ public class Robot extends TimedRobot {
       case FIND_LINE:
         if(colorSensor.findLineL()){
           onTapeL = true;
+          //System.out.println("Left Sensor has found the tape");
         }
         if(colorSensor.findLineR()){
           onTapeR = true;
+          //System.out.println("Right Sensor has found tape");
         }
         if(onTapeL && onTapeR) {
           autonState = AutonState.GOTO_BALL;
