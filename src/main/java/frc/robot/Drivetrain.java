@@ -85,9 +85,9 @@ public class Drivetrain {
         }
 
         if(Math.abs(rightSpeed) > .1) {
-            setRight(rightSpeed)
+            setRight(rightSpeed);
         } else {
-            setRight(0)
+            setRight(0);
         }
     }
     public void setLeft(double speed){
