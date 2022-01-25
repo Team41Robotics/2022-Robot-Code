@@ -79,19 +79,15 @@ public class Drivetrain {
         double rightSpeed = rightJoy.getY()/2;
     
         if(Math.abs(leftSpeed) > .1){
-            sparkLB.set(leftSpeed);
-            sparkLF.set(leftSpeed);
+            setLeft(leftSpeed);
         } else {
-            sparkLB.set(0);
-            sparkLF.set(0);
+            setLeft(0);
         }
 
         if(Math.abs(rightSpeed) > .1) {
-            sparkRB.set(rightSpeed);
-            sparkRF.set(rightSpeed);
+            setRight(rightSpeed)
         } else {
-            sparkRB.set(0);
-            sparkRF.set(0);
+            setRight(0)
         }
     }
     public void setLeft(double speed){
