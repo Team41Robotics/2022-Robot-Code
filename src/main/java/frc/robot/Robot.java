@@ -56,6 +56,10 @@ public class Robot extends TimedRobot {
     intake.autonInit();
     onTapeL = false;
     onTapeR = false;
+    for(int i = 0;i<1024;i++){
+      colorSensor.findLineL();
+      colorSensor.findLineR();
+    }
   }
 
   /* This function is called periodically during autonomous. */
@@ -106,7 +110,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    for(int i = 0;i<1024;i++){
+      colorSensor.findLineL();
+      colorSensor.findLineR();
+    }
+  }
 
   /** This function is called periodically during operator control. */
   @Override

@@ -4,11 +4,11 @@ public class Constants {
     static int LEFT_JOY = 1;
     static int RIGHT_JOY = 0;
 
-    static int BLUE_TAPE_LEFT_THRESHOLD = 50000000;
-    static int RED_TAPE_LEFT_THRESHOLD = 20000000; // 2e7
-    static int BLUE_TAPE_RIGHT_THRESHOLD = 27000000; 
-    static int RED_TAPE_RIGHT_THRESHOLD = 20000000; 
-
+    static double BLUE_TAPE_LEFT_THRESHOLD = 50000000;
+    static double RED_TAPE_LEFT_THRESHOLD = Math.pow(10,7); // 2e7
+    static double BLUE_TAPE_RIGHT_THRESHOLD = 27000000; 
+    static double RED_TAPE_RIGHT_THRESHOLD = 1.5e7; 
+    //1.5 e 7 tested as of 1/25/22 suggested by hadzic 200 sec delay before test
     static double AUTON_SPEED = -0.1;
     static int AUTON_DISTANCE = -10;
 
