@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
       colorSensor.findLineL();
       colorSensor.findLineR();
     }
+    System.out.println("Color sensors ready");
   }
 
   /* This function is called periodically during autonomous. */
@@ -71,22 +72,24 @@ public class Robot extends TimedRobot {
       case FIND_LINE:
         if(colorSensor.findLineL()){
           onTapeL = true;
-          //System.out.println("Left Sensor has found the tape");
+          System.out.println("Left Sensor has found the tape");
+          drivetrain.setLeft(0);
         }
         if(colorSensor.findLineR()){
           onTapeR = true;
-          //System.out.println("Right Sensor has found tape");
-        }
-        if(onTapeL && onTapeR) {
-          autonState = AutonState.GOTO_BALL;
-          drivetrain.setPosition(0);
-          drivetrain.stop();
-        }
+         System.out.println("Right Sensor has found tape");
+          drivetrain.setRight(0);
+        }    
         if(!onTapeL){
           drivetrain.setLeft(Constants.AUTON_SPEED);
         }
         if(!onTapeR){
           drivetrain.setRight(Constants.AUTON_SPEED);
+        }
+        if(onTapeL && onTapeR) {
+          autonState = AutonState.GOTO_BALL;
+          drivetrain.setPosition(0);
+          drivetrain.stop();
         }
         break;
       
@@ -113,7 +116,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     for(int i = 0;i<1024;i++){
       colorSensor.findLineL();
-      colorSensor.findLineR();
     }
   }
 

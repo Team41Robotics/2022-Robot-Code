@@ -40,7 +40,7 @@ public class ColorSensor {
           threshold = Constants.RED_TAPE_RIGHT_THRESHOLD;
         }
         colorRight = getAdjColor(rightColor, rightBuffer, rightMedianList);
-        if(colorRight <= threshold) {
+        if(colorRight >= threshold) {
             return true;
           } else {
             return false;
@@ -74,7 +74,7 @@ public class ColorSensor {
         //int finalNum = getAdjColor(leftColor, leftBufferPointers, leftBuffer, leftMedianList);
         int finalNum = getAdjColor(rightColor, rightBuffer, rightMedianList);
         //System.out.println(rightColor);
-        System.out.println(rightBuffer[1023][0]);
+        System.out.println(finalNum);
 
     }
 
@@ -87,7 +87,7 @@ public class ColorSensor {
         adjustedColorList[i] = data[i] - medianList[i];
         finalNum = Math.abs(finalNum*adjustedColorList[i]);
       }
-      pointer = (pointer+1) % buffer[0].length;      
+      pointer = (pointer+1) % BUFFER_LEN;      
       //System.out.println(Arrays.toString(medianList));
       return finalNum;
     }
