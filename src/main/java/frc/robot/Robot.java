@@ -129,7 +129,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drivetrain.teleop();
     intake.teleop();
-    leftColorSensor.teleop();
+    // leftColorSensor.teleop();
+    //commented out for testing carpet reasons(says mason 2022/27/1)
     rightColorSensor.teleop();
     
   }

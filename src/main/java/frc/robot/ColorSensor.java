@@ -28,7 +28,9 @@ public class ColorSensor {
   }
 
   public void teleop() {
-    System.out.println(filter());
+    filter();
+    System.out.println(Arrays.toString(colorData));
+    
   }
 
   public boolean findLine() {
