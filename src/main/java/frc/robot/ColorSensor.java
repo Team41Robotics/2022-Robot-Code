@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 
+/** Custom class to handle all code for the color sensors */
 public class ColorSensor {
   private ColorSensorV3 sensor;
   private int pointer;
@@ -14,12 +15,20 @@ public class ColorSensor {
   private int[] medians = {0, 0, 0};
   private int[][] buffer = new int[Constants.COLOR_BUFFER_LEN][3];
 
+  /**
+   * Intialize color sensor with REV Object
+   * @param realSensor the sensor object from REV
+   */
   public ColorSensor(ColorSensorV3 realSensor) {
     sensor = realSensor;
     colorData = new int[3];
     pointer = 0;
   }
 
+  /**
+   * Run color sensor and filter colors
+   * @return the filtered color signal
+   */
   private int filter() {
     colorData[0] = sensor.getRed();
     colorData[1] = sensor.getGreen();
@@ -27,10 +36,15 @@ public class ColorSensor {
     return getAdjColor();
   }
 
+  /** Function to run during teleop */
   public void teleop() {
     System.out.println(filter());
   }
 
+  /**
+   * Check the calculated value and compare to threshold
+   * @return true if we are on a line, false if otherwise
+   */
   public boolean findLine() {
     double threshold;
     if(DriverStation.getAlliance() == Alliance.Blue){
@@ -41,6 +55,10 @@ public class ColorSensor {
     return filter() >= threshold;
   }
 
+  /**
+   * Get the calculated number based off of the r g an b values in colorData[]
+   * @return the calculated value
+   */
   private int getAdjColor() {
     int finalNum = 1;
     int[] adjustedColorList = new int[3];
@@ -54,6 +72,14 @@ public class ColorSensor {
     return finalNum;
   }
 
+  /**
+   * Get the median value of one of the 3 colors from the buffer
+   * @param color the index of the color to check (
+   * 0 = red;
+   * 1 = green;
+   * 2 = blue)
+   * @return the median of the color
+   */
   private int getMedian(int color) {
     int[] calc = new int[Constants.COLOR_BUFFER_LEN];
     for (int i = 0; i < Constants.COLOR_BUFFER_LEN; i++) {
@@ -70,6 +96,7 @@ public class ColorSensor {
 }
 
 
+// OLD
 final class ColorSensorOLD {
     private ColorSensorV3 sensorRight;
     private ColorSensorV3 sensorLeft;
