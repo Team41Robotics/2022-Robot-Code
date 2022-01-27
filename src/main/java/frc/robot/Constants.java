@@ -5,9 +5,9 @@ public class Constants {
     static int RIGHT_JOY = 0;
 
     static double BLUE_TAPE_LEFT_THRESHOLD = 50000000;
-    static double RED_TAPE_LEFT_THRESHOLD = 1.5e7; // 2e7
+    static double RED_TAPE_LEFT_THRESHOLD = 1e8; // 2e7
     static double BLUE_TAPE_RIGHT_THRESHOLD = 27000000; 
-    static double RED_TAPE_RIGHT_THRESHOLD = 1.5e7; 
+    static double RED_TAPE_RIGHT_THRESHOLD = 1e8; 
     //1.5 e 7 tested as of 1/25/22 suggested by hadzic 200 sec delay before test
     static double AUTON_SPEED = -0.1;
     static int AUTON_DISTANCE = -10;
@@ -26,9 +26,9 @@ public class Constants {
     static int INTAKE_MOTOR = 14;
     static double INTAKE_FULL_SPEED = .6;
 
-    static int LIMELIGHT_HEIGHT_OF_TARGET = 71;
-    static int LIMELIGHT_HEIGHT = 32;
-    static double LIMELIGHT_ANGLE = 0;
+    static int LIMELIGHT_HEIGHT_OF_TARGET = 50;
+    static int LIMELIGHT_HEIGHT = 22;
+    static double LIMELIGHT_ANGLE = 60;
 
     static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
     

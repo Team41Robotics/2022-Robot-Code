@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj.I2C.Port;
 public class ColorSensor {
     private ColorSensorV3 sensorRight;
     private ColorSensorV3 sensorLeft;
-    private final int BUFFER_LEN = 1024;
+    private final int BUFFER_LEN = 256;
     private int[] rightColor;
     private int[] leftColor;
     private int[][] leftBuffer = new int[BUFFER_LEN][3];
     private int[][] rightBuffer = new int[BUFFER_LEN][3];
+    private int leftPointer;
+    private int rightPointer;
     private int pointer;
     private int[] leftMedianList = {0, 0, 0};
     private int[] rightMedianList = {0, 0, 0};
@@ -40,11 +42,7 @@ public class ColorSensor {
           threshold = Constants.RED_TAPE_RIGHT_THRESHOLD;
         }
         colorRight = getAdjColor(rightColor, rightBuffer, rightMedianList);
-        if(colorRight >= threshold) {
-            return true;
-          } else {
-            return false;
-          }
+        return colorRight >= threshold;
     }
     
     public boolean findLineL(){
@@ -59,22 +57,15 @@ public class ColorSensor {
         threshold = Constants.RED_TAPE_LEFT_THRESHOLD;
       }
       colorLeft = getAdjColor(leftColor, leftBuffer, leftMedianList);
-      if (colorLeft >= threshold){
-        return true;
-      }else{
-        return false;
-      }
-      
+      return colorLeft >= threshold;
     }
 
     public void teleop() {
         rightColor[0] = sensorRight.getRed();
         rightColor[1] = sensorRight.getGreen();
         rightColor[2] = sensorRight.getBlue();
-        //int finalNum = getAdjColor(leftColor, leftBufferPointers, leftBuffer, leftMedianList);
         int finalNum = getAdjColor(rightColor, rightBuffer, rightMedianList);
-        //System.out.println(rightColor);
-        System.out.println(finalNum);
+        //System.out.println(finalNum);
 
     }
 

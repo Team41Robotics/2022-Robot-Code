@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
     intake.autonInit();
     onTapeL = false;
     onTapeR = false;
-    for(int i = 0;i<1024;i++){
+    for(int i = 0;i<256;i++){
       colorSensor.findLineL();
       colorSensor.findLineR();
     }
@@ -114,7 +114,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    for(int i = 0;i<1024;i++){
+    for(int i = 0;i<256;i++){
       colorSensor.findLineL();
     }
   }
@@ -125,6 +125,7 @@ public class Robot extends TimedRobot {
     drivetrain.teleop();
     intake.teleop();
     colorSensor.teleop();
+    //System.out.println(Limelight.estimateDistance());
   }
 
   @Override
