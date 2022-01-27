@@ -5,8 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.AutonState;
+import com.revrobotics.ColorSensorV3;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,7 +23,8 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private AutonState autonState;
   private Intake intake;
-  private ColorSensor colorSensor;
+  private ColorSensor leftColorSensor;
+  private ColorSensor rightColorSensor;
   private boolean onTapeR;
   private boolean onTapeL;
   /**
@@ -33,7 +36,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drivetrain = new Drivetrain();
     intake = new Intake();
-    colorSensor = new ColorSensor();
+    leftColorSensor = new ColorSensor(new ColorSensorV3(Port.kMXP));
+    rightColorSensor = new ColorSensor(new ColorSensorV3(Port.kOnboard));
   }
 
   /**
@@ -57,8 +61,8 @@ public class Robot extends TimedRobot {
     onTapeL = false;
     onTapeR = false;
     for(int i = 0;i<256;i++){
-      colorSensor.findLineL();
-      colorSensor.findLineR();
+      leftColorSensor.findLine();
+      rightColorSensor.findLine();
     }
     System.out.println("Color sensors ready");
   }
@@ -70,12 +74,12 @@ public class Robot extends TimedRobot {
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
-        if(colorSensor.findLineL()){
+        if(leftColorSensor.findLine()){
           onTapeL = true;
           System.out.println("Left Sensor has found the tape");
           drivetrain.setLeft(0);
         }
-        if(colorSensor.findLineR()){
+        if(leftColorSensor.findLine()){
           onTapeR = true;
          System.out.println("Right Sensor has found tape");
           drivetrain.setRight(0);
@@ -115,7 +119,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     for(int i = 0;i<256;i++){
-      colorSensor.findLineL();
+      leftColorSensor.findLine();
+      rightColorSensor.findLine();
     }
   }
 
@@ -124,8 +129,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drivetrain.teleop();
     intake.teleop();
-    colorSensor.teleop();
-    //System.out.println(Limelight.estimateDistance());
+    leftColorSensor.teleop();
+    rightColorSensor.teleop();
+    
   }
 
   @Override
