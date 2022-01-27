@@ -1,37 +1,21 @@
 package frc.robot;
-
-import java.util.Set;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
-
 
 public class Drivetrain {
-    
-    private CANSparkMax sparkLF;
-    private CANSparkMax sparkLB;
-    private CANSparkMax sparkRF;
-    private CANSparkMax sparkRB;
-    private Joystick leftJoy; 
-    private Joystick rightJoy;  
+    private CANSparkMax sparkLF, sparkLB, sparkRF, sparkRB;
+    private Joystick leftJoy;
+    private Joystick rightJoy;
     private RelativeEncoder lfEncoder;
     private RelativeEncoder rfEncoder;
     private CANSparkMax[] sparkList = new CANSparkMax[4];
-    private double leftSpeed;
-    private double rightSpeed;
-    private double MAX_SPEED;
-    private SparkMaxPIDController rightController;
-    private SparkMaxPIDController leftController;
     
 	
 
     /** Intialize all sparks, joysticks, and encoder */
-    public Drivetrain(){
+    public Drivetrain() {
         sparkLF = new CANSparkMax(Constants.SPARK_LF, MotorType.kBrushless);
         sparkRF = new CANSparkMax(Constants.SPARK_RF, MotorType.kBrushless);
         sparkLB = new CANSparkMax(Constants.SPARK_LB, MotorType.kBrushless);
@@ -75,11 +59,11 @@ public class Drivetrain {
     }
     
     /** Run the drivetrain at half the speed of the joysticks */
-    public void teleop(){ 
+    public void teleop() { 
         double leftSpeed = leftJoy.getY()/2;
         double rightSpeed = rightJoy.getY()/2;
     
-        if(Math.abs(leftSpeed) > .1){
+        if(Math.abs(leftSpeed) > .1) {
             setLeft(leftSpeed);
         } else {
             setLeft(0);
@@ -91,31 +75,40 @@ public class Drivetrain {
             setRight(0);
         }
     }
-    public void setLeft(double speed){
+
+    /**
+     * sets the speed of the left motors
+     * @param speed desired speed
+     */
+    public void setLeft(double speed) {
         sparkLF.set(speed);
         sparkLB.set(speed);
     }
-    public void setRight(double speed){
+    /**
+     * sets the speed of the right motors
+     * @param speed desired speed
+     */
+    public void setRight(double speed) {
         sparkRF.set(speed);
         sparkRB.set(speed);
     }
     
-    public void calculateSpeed(){
+    public void calculateSpeed() {
       
     }
-
+    /**function that adjusts the orientation of the robot in accordance to its relation  with the tape with */
+    
     public void auton() {
         double angle = Limelight.getHorizontalAngle();
-        if(angle>5){
+        if (angle>Constants.LIME_LITE_THRESH_HOLD) {
             setRight(-Constants.AUTON_SPEED);
             setLeft(Constants.AUTON_SPEED);
-        }else if(angle<-5){
+        } else if (angle<-Constants.LIME_LITE_THRESH_HOLD) {
             setRight(Constants.AUTON_SPEED);
             setLeft(-Constants.AUTON_SPEED);
-        }else{
+        } else {
             set(0);
-            System.out.println("Buffer MOment");
+            System.out.println("Buffer Moment");
         }
     }
-
 }

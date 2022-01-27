@@ -33,9 +33,12 @@ public class Constants {
 
     static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
     
+    static double LIME_LITE_THRESH_HOLD = 5;    
+    
     public enum AutonState {
         FIND_LINE,
         GOTO_BALL,
-        PICKUP_BALL
+        PICKUP_BALL,
+        TARACK_BALL
     }
 }

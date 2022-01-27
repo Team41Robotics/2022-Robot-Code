@@ -111,8 +111,13 @@ public class Robot extends TimedRobot {
       
       // Turn off intake after the ball is picked up
       case PICKUP_BALL:
+        Limelight.setLedOn(true);
         intake.setIntakeMotor(0);
         drivetrain.auton();
+        break;
+      case TARACK_BALL:
+        Limelight.setBlinkLed(true);
+        
         break;
     }
   }
