@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.util.Set;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -19,10 +22,8 @@ public class Drivetrain {
     private RelativeEncoder lfEncoder;
     private RelativeEncoder rfEncoder;
     private CANSparkMax[] sparkList = new CANSparkMax[4];
-
     private double leftSpeed;
     private double rightSpeed;
-
     private double MAX_SPEED;
     private SparkMaxPIDController rightController;
     private SparkMaxPIDController leftController;
@@ -104,7 +105,17 @@ public class Drivetrain {
     }
 
     public void auton() {
-
+        double angle = Limelight.getHorizontalAngle();
+        if(angle>5){
+            setRight(-Constants.AUTON_SPEED);
+            setLeft(Constants.AUTON_SPEED);
+        }else if(angle<-5){
+            setRight(Constants.AUTON_SPEED);
+            setLeft(-Constants.AUTON_SPEED);
+        }else{
+            set(0);
+            System.out.println("Buffer MOment");
+        }
     }
 
 }

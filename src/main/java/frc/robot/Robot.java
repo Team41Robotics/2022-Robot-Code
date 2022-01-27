@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     // State machine for auton
+    // autonState = AutonState.PICKUP_BALL;
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
@@ -111,6 +112,7 @@ public class Robot extends TimedRobot {
       // Turn off intake after the ball is picked up
       case PICKUP_BALL:
         intake.setIntakeMotor(0);
+        drivetrain.auton();
         break;
     }
   }
@@ -131,7 +133,7 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
-    
+    System.out.println(Limelight.getHorizontalAngle());
   }
 
   @Override

@@ -39,7 +39,7 @@ public class ColorSensor {
   /** Function to run during teleop */
   public void teleop() {
     filter();
-    System.out.println(Arrays.toString(colorData));
+    // System.out.println(Arrays.toString(colorData));
     
   }
 
