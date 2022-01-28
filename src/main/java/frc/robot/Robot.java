@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
           System.out.println("Left Sensor has found the tape");
           drivetrain.setLeft(0);
         }
-        if(leftColorSensor.findLine()){
+        if(rightColorSensor.findLine()){
           onTapeR = true;
          System.out.println("Right Sensor has found tape");
           drivetrain.setRight(0);
