@@ -60,10 +60,8 @@ public class Robot extends TimedRobot {
     intake.autonInit();
     onTapeL = false;
     onTapeR = false;
-    for(int i = 0;i<256;i++){
-      leftColorSensor.findLine();
-      rightColorSensor.findLine();
-    }
+    leftColorSensor.calcMedian();
+    rightColorSensor.calcMedian();
     System.out.println("Color sensors ready");
   }
 
@@ -117,7 +115,7 @@ public class Robot extends TimedRobot {
         break;
       case TARACK_BALL:
         Limelight.setBlinkLed(true);
-        
+
         break;
     }
   }
@@ -125,10 +123,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    for(int i = 0;i<256;i++){
-      leftColorSensor.findLine();
-      rightColorSensor.findLine();
-    }
+    leftColorSensor.calcMedian();
+    rightColorSensor.calcMedian();
   }
 
   /** This function is called periodically during operator control. */
@@ -138,7 +134,7 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
-    System.out.println(Limelight.getHorizontalAngle());
+    //System.out.println(Limelight.getHorizontalAngle());
   }
 
   @Override

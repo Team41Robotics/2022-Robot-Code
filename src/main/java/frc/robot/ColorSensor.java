@@ -36,11 +36,17 @@ public class ColorSensor {
     return getAdjColor();
   }
 
+  private int maxFilter() {
+    colorData[0] = sensor.getRed();
+    colorData[1] = sensor.getGreen();
+    colorData[2] = sensor.getBlue();
+    return Math.max(colorData[0]-medians[0], colorData[2]-medians[2]);
+  }
+
   /** Function to run during teleop */
   public void teleop() {
-    filter();
+    System.out.println(findLineMax());
     // System.out.println(Arrays.toString(colorData));
-    
   }
 
   /**
@@ -55,6 +61,11 @@ public class ColorSensor {
       threshold = Constants.RED_TAPE_RIGHT_THRESHOLD;
     }
     return filter() >= threshold;
+  }
+
+  public boolean findLineMax() {
+    double threshold = Constants.MAX_TAPE_VALUES_THRESHOLD;
+    return maxFilter() >= threshold;
   }
 
   /**
@@ -72,6 +83,12 @@ public class ColorSensor {
     }
     pointer = (pointer+1) % Constants.COLOR_BUFFER_LEN;      
     return finalNum;
+  }
+
+  public void calcMedian() {
+    for(int i = 0;i<256;i++){
+      findLine();
+    }
   }
 
   /**
