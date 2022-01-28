@@ -7,8 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.Constants.AutonState;
 import com.revrobotics.ColorSensorV3;
+import frc.robot.Constants.AutonState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,18 +20,18 @@ public class Robot extends TimedRobot {
   public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
-  private Drivetrain drivetrain;
-  private AutonState autonState;
-  private Intake intake;
-  private ColorSensor leftColorSensor;
-  private ColorSensor rightColorSensor;
   private boolean onTapeR;
   private boolean onTapeL;
+  private Intake intake;
+  private Drivetrain drivetrain;
+  private AutonState autonState;
+  private ColorSensor leftColorSensor;
+  private ColorSensor rightColorSensor;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-
   @Override
   public void robotInit() {
     drivetrain = new Drivetrain();
@@ -49,27 +49,23 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {}
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
+   * This code runs right as auton mode is started
    */
   @Override
   public void autonomousInit() {
-    autonState = AutonState.FIND_LINE;
-    intake.autonInit();
     onTapeL = false;
     onTapeR = false;
+    autonState = AutonState.FIND_LINE;
+    intake.autonInit();
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     System.out.println("Color sensors ready");
   }
 
-  /* This function is called periodically during autonomous. */
+  /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     // State machine for auton
-    // autonState = AutonState.PICKUP_BALL;
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
@@ -109,13 +105,13 @@ public class Robot extends TimedRobot {
       
       // Turn off intake after the ball is picked up
       case PICKUP_BALL:
-        Limelight.setLedOn(true);
         intake.setIntakeMotor(0);
-        drivetrain.auton();
+        autonState = AutonState.TRACK_BALL;
         break;
-      case TARACK_BALL:
-        Limelight.setBlinkLed(true);
-
+        
+      case TRACK_BALL:
+        drivetrain.auton();
+        Limelight.setLedOn(true);
         break;
     }
   }
@@ -134,7 +130,6 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
-    //System.out.println(Limelight.getHorizontalAngle());
   }
 
   @Override
