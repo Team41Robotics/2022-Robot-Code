@@ -13,10 +13,10 @@ public class Drivetrain {
     
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain() {
-        talonLB = new TalonFX(Constants.TALON_LB);
-        talonLF = new TalonFX(Constants.TALON_LF);
-        talonRF = new TalonFX(Constants.TALON_RF);
-        talonRB = new TalonFX(Constants.TALON_RB);
+        talonLB = new TalonFX(Constants.FALCON_LB);
+        talonLF = new TalonFX(Constants.FALCON_LF);
+        talonRF = new TalonFX(Constants.FALCON_RF);
+        talonRB = new TalonFX(Constants.FALCON_RB);
 
         talonList[0] = talonLF;
         talonList[1] = talonLB;

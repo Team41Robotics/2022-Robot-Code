@@ -19,10 +19,10 @@ public class Constants {
     static int AUTON_DISTANCE = -20;
 
     // Ports for drivetrain Talons
-    static int TALON_LF = 0;
-    static int TALON_LB = 0;
-    static int TALON_RF = 0;
-    static int TALON_RB = 0;
+    static int FALCON_LF = 0;
+    static int FALCON_LB = 0;
+    static int FALCON_RF = 0;
+    static int FALCON_RB = 0;
 
     // Measurements for the physical robot
     static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
