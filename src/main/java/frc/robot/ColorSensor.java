@@ -51,7 +51,7 @@ public class ColorSensor {
 
   /** Function to run during teleop */
   public void teleop() {
-    System.out.println(findLineMax());
+    // System.out.println(findLineMax());
     // System.out.println(Arrays.toString(colorData));
   }
 

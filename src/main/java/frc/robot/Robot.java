@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
       
       // After the line, go to where we know the ball is (~40in outside of the tape)
       case GOTO_BALL:
+        System.out.println(drivetrain.getPosition());
         if(drivetrain.getPosition() <= Constants.AUTON_DISTANCE ) {
           drivetrain.stop();
           autonState = AutonState.PICKUP_BALL;
@@ -130,6 +131,7 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
+    System.out.println(Limelight.estimateDistance());
   }
 
   @Override

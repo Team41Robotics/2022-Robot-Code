@@ -16,7 +16,7 @@ public class Constants {
 
     // Auton parameters
     static double AUTON_SPEED = -0.1;
-    static int AUTON_DISTANCE = 0;
+    static int AUTON_DISTANCE = -20;
 
     // Ports of the 4 sparks
     static int SPARK_LF = 15;
@@ -39,10 +39,10 @@ public class Constants {
     static double INTAKE_FULL_SPEED = .6;
 
     // Measurements for the Limelight
-    static int LIMELIGHT_HEIGHT_OF_TARGET = 50;
-    static int LIMELIGHT_HEIGHT = 22;
-    static double LIMELIGHT_ANGLE = 60;
-    static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 5;  
+    static double LIMELIGHT_HEIGHT_OF_TARGET = 49.5;
+    static double LIMELIGHT_HEIGHT = 24.75;
+    static double LIMELIGHT_ANGLE = 6;
+    static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
     //different states for auton
     public enum AutonState {

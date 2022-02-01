@@ -109,11 +109,11 @@ public class Drivetrain {
     public void auton() {
         double angle = Limelight.getHorizontalAngle();
         if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
-            setRight(-Constants.AUTON_SPEED);
-            setLeft(Constants.AUTON_SPEED);
+            setRight(-Constants.AUTON_SPEED/2);
+            setLeft(Constants.AUTON_SPEED/2);
         } else if (angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
-            setRight(Constants.AUTON_SPEED);
-            setLeft(-Constants.AUTON_SPEED);
+            setRight(Constants.AUTON_SPEED/2);
+            setLeft(-Constants.AUTON_SPEED/2);
         } else {
             set(0);
             System.out.println("Buffer Moment");

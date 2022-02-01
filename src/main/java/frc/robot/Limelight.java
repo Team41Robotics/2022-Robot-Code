@@ -12,9 +12,9 @@ class Limelight {
      * @return distance from limelight
      */
     public static double estimateDistance() {
-        int dif = Constants.LIMELIGHT_HEIGHT_OF_TARGET - Constants.LIMELIGHT_HEIGHT;
+        double dif = Constants.LIMELIGHT_HEIGHT_OF_TARGET - Constants.LIMELIGHT_HEIGHT;
         double ty = limelightTable.getEntry("ty").getDouble(0);
-        double distance = dif/Math.tan(Constants.LIMELIGHT_ANGLE + ty);
+        double distance = dif/Math.tan(Math.toRadians(Constants.LIMELIGHT_ANGLE + ty));
         return distance;
     }
 
