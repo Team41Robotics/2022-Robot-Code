@@ -18,11 +18,11 @@ public class Constants {
     static double AUTON_SPEED = -0.1;
     static int AUTON_DISTANCE = -20;
 
-    // Ports of the 4 sparks
-    static int SPARK_LF = 15;
-    static int SPARK_LB = 1;
-    static int SPARK_RF = 5;
-    static int SPARK_RB = 4;
+    // Ports for drivetrain Talons
+    static int TALON_LF = 0;
+    static int TALON_LB = 0;
+    static int TALON_RF = 0;
+    static int TALON_RB = 0;
 
     // Measurements for the physical robot
     static double WHEEL_CONVERSION_FACTOR = Math.PI/2;

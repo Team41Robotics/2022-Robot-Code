@@ -1,35 +1,30 @@
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
-import com.revrobotics.RelativeEncoder;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
     private Joystick leftJoy;
     private Joystick rightJoy;
-    private RelativeEncoder lfEncoder;
-    private RelativeEncoder rfEncoder;
-    private CANSparkMax sparkLF, sparkLB, sparkRF, sparkRB;
-    private CANSparkMax[] sparkList = new CANSparkMax[4];
+    private TalonFX talonLF, talonLB, talonRF, talonRB;
+    private TalonFX[] talonList = new TalonFX[4];
     
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain() {
-        sparkLF = new CANSparkMax(Constants.SPARK_LF, MotorType.kBrushless);
-        sparkRF = new CANSparkMax(Constants.SPARK_RF, MotorType.kBrushless);
-        sparkLB = new CANSparkMax(Constants.SPARK_LB, MotorType.kBrushless);
-        sparkRB = new CANSparkMax(Constants.SPARK_RB, MotorType.kBrushless);
-        lfEncoder = sparkLF.getEncoder();
-        rfEncoder = sparkRF.getEncoder();
+        talonLB = new TalonFX(Constants.TALON_LB);
+        talonLF = new TalonFX(Constants.TALON_LF);
+        talonRF = new TalonFX(Constants.TALON_RF);
+        talonRB = new TalonFX(Constants.TALON_RB);
 
-        sparkList[0] = sparkLF;
-        sparkList[1] = sparkLB;
-        sparkList[2] = sparkRF;
-        sparkList[3] = sparkRB;
-        
-        sparkRB.setInverted(true); 
-        sparkRF.setInverted(true);
+        talonList[0] = talonLF;
+        talonList[1] = talonLB;
+        talonList[2] = talonRF;
+        talonList[3] = talonRB;
+
+        talonRB.setInverted(true); 
+        talonRF.setInverted(true);
         
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
@@ -40,7 +35,7 @@ public class Drivetrain {
      * @return position of the robot in inches
      */
     public double getPosition() {
-        return lfEncoder.getPosition()*Constants.WHEEL_CONVERSION_FACTOR;
+        return talonLF.getSelectedSensorPosition()*Constants.WHEEL_CONVERSION_FACTOR;
     }
 
     /**
@@ -48,8 +43,9 @@ public class Drivetrain {
      * @param pos position of the robot in inches
      */
     public void setPosition(double pos) {
-        lfEncoder.setPosition(pos);
-        rfEncoder.setPosition(pos);
+        for (TalonFX tal : talonList) {
+            tal.setSelectedSensorPosition(pos);
+        }
     }
 
     /**
@@ -57,8 +53,8 @@ public class Drivetrain {
      * @param speed desired speed of the robot [-1, 1]
      */
     public void set(double speed) {
-        for(CANSparkMax i : sparkList){
-            i.set(speed);
+        for(TalonFX i : talonList){
+            i.set(TalonFXControlMode.PercentOutput, speed);
         }
     }
 
@@ -92,8 +88,8 @@ public class Drivetrain {
      * @param speed desired speed
      */
     public void setLeft(double speed) {
-        sparkLF.set(speed);
-        sparkLB.set(speed);
+        talonLF.set(TalonFXControlMode.PercentOutput, speed);
+        talonLB.set(TalonFXControlMode.PercentOutput, speed);
     }
 
     /**
@@ -101,8 +97,8 @@ public class Drivetrain {
      * @param speed desired speed
      */
     public void setRight(double speed) {
-        sparkRF.set(speed);
-        sparkRB.set(speed);
+        talonRF.set(TalonFXControlMode.PercentOutput, speed);
+        talonRB.set(TalonFXControlMode.PercentOutput, speed);
     }
 
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
