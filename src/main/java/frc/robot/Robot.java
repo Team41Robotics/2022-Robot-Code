@@ -133,16 +133,17 @@ public class Robot extends TimedRobot {
     rightColorSensor.teleop();
     System.out.println(Limelight.estimateDistance());
   }
-
+  
+  /** doesnt have any code yet */
   @Override
   public void disabledInit() {}
-
+  /**doesnt have any code yet */
   @Override
   public void disabledPeriodic() {}
-
+  /**doesnt have any code yet */
   @Override
   public void testInit() {}
-
+  /**doesnt have any code yet */
   @Override
   public void testPeriodic() {}
 }
