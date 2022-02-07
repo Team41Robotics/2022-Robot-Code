@@ -3,8 +3,6 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class PID {
     public final double SENSOR_NORM = (10.0*60)/(2048*6380);
     private TalonFX motor;
@@ -58,21 +56,24 @@ public class PID {
     }
 
     public void run(double speed) {
+        double deltaSpeed;
+        double usedDeltaSpeed;
         long currentTime = System.currentTimeMillis();
         double deltaT = (currentTime-time)/1000.0;
+        double reqDeltaSpeed = speed-currSpeed;
         time = currentTime;
+
         if (deltaT > 0.1) {
             System.out.println("deltaT is too big");
             return;
         }
-        double deltaSpeed;
+
         if (rampTime == 0) {
-            deltaSpeed = deltaT/0.00000000000001;
+            deltaSpeed = Double.MAX_VALUE; // It won't get chosen over set speed
         } else {
             deltaSpeed = deltaT/rampTime;
         }
-        double reqDeltaSpeed = speed-currSpeed;
-        double usedDeltaSpeed;
+
         if (reqDeltaSpeed < 0) {
             if (Math.abs(reqDeltaSpeed) > deltaSpeed) {
                 usedDeltaSpeed = -deltaSpeed;
@@ -84,9 +85,9 @@ public class PID {
         }
 
         currSpeed += usedDeltaSpeed;
-
         vel = motor.getSelectedSensorVelocity()*SENSOR_NORM;
         err = currSpeed-vel;
+
         if (!ready) {
             prevErr = err;
             time = System.currentTimeMillis();
@@ -94,6 +95,7 @@ public class PID {
             acc = 0;
             return;
         }
+
         controlSignal = p(err)+i(err, deltaT)+d(err, deltaT);
         controlSignal += currSpeed*kF;
         time = currentTime;
