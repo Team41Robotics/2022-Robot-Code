@@ -3,7 +3,7 @@ package frc.robot;
 /** Class with all primitives needed in the code, so if they need to be changed they can */
 public class Constants {
     /** Driver station IDs of Joysticks */
-    static int LEFT_JOY = 1, RIGHT_JOY = 0;
+    static int LEFT_JOY = 0, RIGHT_JOY = 1;
 
     //Thresholds at which color sensors will detect the line
     static double BLUE_TAPE_LEFT_THRESHOLD = 50000000;
@@ -19,10 +19,10 @@ public class Constants {
     static int AUTON_DISTANCE = -20;
 
     // Ports for drivetrain Talons
-    static int FALCON_LF = 0;
-    static int FALCON_LB = 0;
-    static int FALCON_RF = 0;
-    static int FALCON_RB = 0;
+    static int FALCON_LF = 10;
+    static int FALCON_LB = 9;
+    static int FALCON_RF = 7;
+    static int FALCON_RB = 8;
 
     // Measurements for the physical robot
     static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
@@ -32,7 +32,7 @@ public class Constants {
     static int LEFT_SOL_RV = 2;
     static int RIGHT_SOL_FWD = 5;
     static int RIGHT_SOL_RV = 4;
-    static int PCM_PORT = 15;
+    static int PCM_PORT = 8;
 
     // Port of the motor for intake, and the speed that it should run when set to max.
     static int INTAKE_MOTOR = 14;

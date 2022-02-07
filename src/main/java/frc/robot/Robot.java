@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Joystick;
+
+
 import com.revrobotics.ColorSensorV3;
 import frc.robot.Constants.AutonState;
 
@@ -27,6 +29,7 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
+  private double startTime;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -60,12 +63,15 @@ public class Robot extends TimedRobot {
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     System.out.println("Color sensors ready");
+    startTime = System.currentTimeMillis();
+    drivetrain.setPosition(0);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     // State machine for auton
+    autonState = AutonState.TRACK_BALL;
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
@@ -111,8 +117,12 @@ public class Robot extends TimedRobot {
         break;
         
       case TRACK_BALL:
-        drivetrain.auton();
-        Limelight.setLedOn(true);
+        if (System.currentTimeMillis()-startTime <= 2000) {
+          drivetrain.auton();
+        } else {
+          drivetrain.stop();
+        }
+        // Limelight.setLedOn(true);
         break;
     }
   }

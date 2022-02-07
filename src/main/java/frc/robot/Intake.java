@@ -24,8 +24,8 @@ public class Intake {
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
         intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR);
-        intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.CTREPCM, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
-        intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.CTREPCM, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
+        intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
+        intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
     }
 
     /** At beginning of auton, move the intake down and start the motor */

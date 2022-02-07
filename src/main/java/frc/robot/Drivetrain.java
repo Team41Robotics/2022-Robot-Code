@@ -1,6 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -10,6 +13,10 @@ public class Drivetrain {
     private Joystick rightJoy;
     private TalonFX talonLF, talonLB, talonRF, talonRB;
     private TalonFX[] talonList = new TalonFX[4];
+    private PID leftBackPID;
+    private PID leftFrontPID;
+    private PID rightBackPID;
+    private PID rightFrontPID;
     
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain() {
@@ -23,11 +30,16 @@ public class Drivetrain {
         talonList[2] = talonRF;
         talonList[3] = talonRB;
 
-        talonRB.setInverted(true); 
-        talonRF.setInverted(true);
+        talonLB.setInverted(true); 
+        talonLF.setInverted(true);
         
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
+
+        leftBackPID = new PID(talonLB, 0.7, 0.00002, 0.004, 1.2, 2);
+        leftFrontPID = new PID(talonLF, 0.7, 0.00002, 0.004, 1.2, 2);
+        rightBackPID = new PID(talonRB, 0.7, 0.00002, 0.004, 1.2, 2);
+        rightFrontPID = new PID(talonRF, 0.7, 0.00002, 0.004, 1.2, 2);
     }
 
     /**
@@ -53,9 +65,15 @@ public class Drivetrain {
      * @param speed desired speed of the robot [-1, 1]
      */
     public void set(double speed) {
-        for(TalonFX i : talonList){
-            i.set(TalonFXControlMode.PercentOutput, speed);
-        }
+        leftBackPID.run(speed);
+        leftFrontPID.run(speed);
+        rightBackPID.run(speed);
+        rightFrontPID.run(speed);
+
+        SmartDashboard.putNumber("err", leftBackPID.getError());
+        SmartDashboard.putNumber("vel", leftBackPID.getVelocity());
+        SmartDashboard.putNumber("ctrl", leftBackPID.getControlSignal());
+        SmartDashboard.putNumber("current", talonLB.getStatorCurrent());
     }
 
     /**
@@ -88,8 +106,8 @@ public class Drivetrain {
      * @param speed desired speed
      */
     public void setLeft(double speed) {
-        talonLF.set(TalonFXControlMode.PercentOutput, speed);
-        talonLB.set(TalonFXControlMode.PercentOutput, speed);
+        leftBackPID.run(speed);
+        leftFrontPID.run(speed);
     }
 
     /**
@@ -97,22 +115,31 @@ public class Drivetrain {
      * @param speed desired speed
      */
     public void setRight(double speed) {
-        talonRF.set(TalonFXControlMode.PercentOutput, speed);
-        talonRB.set(TalonFXControlMode.PercentOutput, speed);
+        rightBackPID.run(speed);
+        rightFrontPID.run(speed);
     }
 
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
     public void auton() {
-        double angle = Limelight.getHorizontalAngle();
-        if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
-            setRight(-Constants.AUTON_SPEED/2);
-            setLeft(Constants.AUTON_SPEED/2);
-        } else if (angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
-            setRight(Constants.AUTON_SPEED/2);
-            setLeft(-Constants.AUTON_SPEED/2);
-        } else {
-            set(0);
-            System.out.println("Buffer Moment");
-        }
+        // double angle = Limelight.getHorizontalAngle();
+        // if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+        //     setRight(-Constants.AUTON_SPEED/2);
+        //     setLeft(Constants.AUTON_SPEED/2);
+        // } else if (angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+        //     setRight(Constants.AUTON_SPEED/2);
+        //     setLeft(-Constants.AUTON_SPEED/2);
+        // } else {
+        //     set(0);
+        //     System.out.println("Buffer Moment");
+        // }
+        set(.16);
+
+        // System.out.print(leftFrontPID.getVelocity());
+        // System.out.print(", ");
+        // System.out.print(leftBackPID.getVelocity());
+        // System.out.print(", ");
+        // System.out.print(rightFrontPID.getVelocity());
+        // System.out.print(", ");
+        // System.out.println(rightBackPID.getVelocity());
     }
 }
