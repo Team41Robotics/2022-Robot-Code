@@ -32,10 +32,10 @@ public class Drivetrain {
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
 
-        leftBackPID = new PID(talonLB, 0.7, 0.00002, 0.004, 1.2, 2);
-        leftFrontPID = new PID(talonLF, 0.7, 0.00002, 0.004, 1.2, 2);
-        rightBackPID = new PID(talonRB, 0.7, 0.00002, 0.004, 1.2, 2);
-        rightFrontPID = new PID(talonRF, 0.7, 0.00002, 0.004, 1.2, 2);
+        leftBackPID = new PID(talonLB, 0.675, 0.005, 0.0004, 1.2, 0.5);
+        leftFrontPID = new PID(talonLF, 0.675, 0.005, 0.0004, 1.2, 0.5);
+        rightBackPID = new PID(talonRB, 0.675, 0.005, 0.0004, 1.2, 0.5);
+        rightFrontPID = new PID(talonRF, 0.675, 0.005, 0.0004, 1.2, 0.5);
     }
 
     /**
@@ -81,8 +81,8 @@ public class Drivetrain {
     
     /** Run the drivetrain at half the speed of the joysticks */
     public void teleop() { 
-        double leftSpeed = leftJoy.getY()/2;
-        double rightSpeed = rightJoy.getY()/2;
+        double leftSpeed = joystickTransfer(-leftJoy.getY());
+        double rightSpeed = joystickTransfer(-rightJoy.getY());
     
         if(Math.abs(leftSpeed) > .1) {
             setLeft(leftSpeed);
@@ -117,25 +117,52 @@ public class Drivetrain {
 
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
     public void auton() {
-        // double angle = Limelight.getHorizontalAngle();
-        // if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
-        //     setRight(-Constants.AUTON_SPEED/2);
-        //     setLeft(Constants.AUTON_SPEED/2);
-        // } else if (angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
-        //     setRight(Constants.AUTON_SPEED/2);
-        //     setLeft(-Constants.AUTON_SPEED/2);
-        // } else {
-        //     set(0);
-        //     System.out.println("Buffer Moment");
-        // }
-        set(.16);
+        double angle = Limelight.getHorizontalAngle();
+        if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+            setRight(-Constants.AUTON_SPEED/2);
+            setLeft(Constants.AUTON_SPEED/2);
+        } else if (angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+            setRight(Constants.AUTON_SPEED/2);
+            setLeft(-Constants.AUTON_SPEED/2);
+        } else {
+            set(0);
+            System.out.println("Buffer Moment");
+        }
+    }
+    
+    // max rpm: 6380 
+    public void runInverseKinematics(double angularVel, double linearVel) {
+        double leftWheelAngularVelocity;
+        double rightWheelAngularVelocity;
 
-        // System.out.print(leftFrontPID.getVelocity());
-        // System.out.print(", ");
-        // System.out.print(leftBackPID.getVelocity());
-        // System.out.print(", ");
-        // System.out.print(rightFrontPID.getVelocity());
-        // System.out.print(", ");
-        // System.out.println(rightBackPID.getVelocity());
+        rightWheelAngularVelocity = (1/Constants.WHEEL_RAD)*(linearVel + angularVel*Constants.ROBOT_DIAMETER);
+        leftWheelAngularVelocity = (1/Constants.WHEEL_RAD)*(linearVel - angularVel*Constants.ROBOT_DIAMETER);
+
+        rightWheelAngularVelocity *= Constants.WHEEL_RADPERSEC_TO_MOTOR_RPM;
+        leftWheelAngularVelocity *= Constants.WHEEL_RADPERSEC_TO_MOTOR_RPM;
+
+        setLeft(leftWheelAngularVelocity/Constants.MAX_RPM);
+        setRight(rightWheelAngularVelocity/Constants.MAX_RPM);
+    }
+
+    /**
+     * Function to convert joystick input to a function (basically joystick acceleration)
+     * @param joy the Joystick object that will be transferred
+     * @return the adjusted value
+     */
+    public double joystickTransfer(double joyVal) {
+        // joyVal = Math.pow(joyVal, Constants.JOYSTICK_CURVE_POWER);
+        // joyVal *= Constants.DRIVETRAIN_MAX_SPEED;
+        // return joyVal;
+
+        // double newJoyVal = Math.pow(joyVal, 2);
+        // newJoyVal *= Constants.DRIVETRAIN_MAX_SPEED;
+        // if (joyVal > 0) {
+        //     return newJoyVal;
+        // } else {
+        //     return -newJoyVal;
+        // }
+
+        return joyVal*.6;
     }
 }

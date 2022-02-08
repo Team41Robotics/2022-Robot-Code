@@ -29,7 +29,6 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
-  private double startTime;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -63,7 +62,6 @@ public class Robot extends TimedRobot {
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     System.out.println("Color sensors ready");
-    startTime = System.currentTimeMillis();
     drivetrain.setPosition(0);
   }
 
@@ -71,7 +69,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     // State machine for auton
-    autonState = AutonState.TRACK_BALL;
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
@@ -117,12 +114,7 @@ public class Robot extends TimedRobot {
         break;
         
       case TRACK_BALL:
-        if (System.currentTimeMillis()-startTime <= 2000) {
-          drivetrain.auton();
-        } else {
-          drivetrain.stop();
-        }
-        // Limelight.setLedOn(true);
+        Limelight.setLedOn(true);
         break;
     }
   }

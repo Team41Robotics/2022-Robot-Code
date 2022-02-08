@@ -23,9 +23,16 @@ public class Constants {
     static int FALCON_LB = 9;
     static int FALCON_RF = 7;
     static int FALCON_RB = 8;
+    static double DRIVETRAIN_MAX_SPEED = 0.9;
+    static double JOYSTICK_CURVE_POWER = 3; // x^3 function
+    static double MAX_RPM = 6380;
 
     // Measurements for the physical robot
     static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
+    static double WHEEL_RAD = 0.0762;
+    static double ROBOT_DIAMETER = 0.6604;
+    static double WHEEL_RADPERSEC_TO_MOTOR_RPM = 3000/(11*Math.PI);
+
     
     // Ports for pneumatics
     static int LEFT_SOL_FWD = 3;
@@ -51,4 +58,6 @@ public class Constants {
         PICKUP_BALL,
         TRACK_BALL
     }
+    
+
 }
