@@ -23,7 +23,8 @@ public class Constants {
     static int FALCON_LB = 9;
     static int FALCON_RF = 7;
     static int FALCON_RB = 8;
-    static double DRIVETRAIN_MAX_SPEED = 0.9;
+    static double DRIVETRAIN_MAX_SPEED = 0.85;
+    static double CLIMBING_MAX_SPEED = 0.4;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
     static double MAX_RPM = 6380;
 
@@ -51,12 +52,17 @@ public class Constants {
     static double LIMELIGHT_ANGLE = 6;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
+    // Ports for shooter talons
+    static int port1 = 0;
+    static int port2 = 0;
+
     //different states for auton
     public enum AutonState {
         FIND_LINE,
         GOTO_BALL,
         PICKUP_BALL,
-        TRACK_BALL
+        TRACK_BALL,
+        NONE
     }
     
 

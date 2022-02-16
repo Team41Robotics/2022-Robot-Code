@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
+    private boolean climbing;
     private Joystick leftJoy;
     private Joystick rightJoy;
     private TalonFX talonLF, talonLB, talonRF, talonRB;
@@ -32,10 +33,10 @@ public class Drivetrain {
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
 
-        leftBackPID = new PID(talonLB, 0.675, 0.005, 0.0004, 1.2, 0.5);
-        leftFrontPID = new PID(talonLF, 0.675, 0.005, 0.0004, 1.2, 0.5);
-        rightBackPID = new PID(talonRB, 0.675, 0.005, 0.0004, 1.2, 0.5);
-        rightFrontPID = new PID(talonRF, 0.675, 0.005, 0.0004, 1.2, 0.5);
+        leftBackPID = new PID(talonLB, 0.6, 0.25, 0.000275, 1.1, 0);
+        leftFrontPID = new PID(talonLF, 0.6, 0.25, 0.000275, 1.1, 0);
+        rightBackPID = new PID(talonRB, 0.6, 0.25, 0.000275, 1.1, 0);
+        rightFrontPID = new PID(talonRF, 0.6, 0.25, 0.000275, 1.1, 0);
     }
 
     /**
@@ -84,17 +85,22 @@ public class Drivetrain {
         double leftSpeed = joystickTransfer(-leftJoy.getY());
         double rightSpeed = joystickTransfer(-rightJoy.getY());
     
-        if(Math.abs(leftSpeed) > .1) {
+        if(Math.abs(leftSpeed) > (climbing ? 0.001 : 0.1)) {
             setLeft(leftSpeed);
         } else {
             setLeft(0);
         }
 
-        if(Math.abs(rightSpeed) > .1) {
+        if(Math.abs(rightSpeed) > (climbing ? 0.001 : 0.1)) {
             setRight(rightSpeed);
         } else {
             setRight(0);
         }
+
+        if (rightJoy.getRawButtonPressed(2)) {
+            climbing = !climbing;
+        }
+        System.out.println(climbing ? "Climbing" : "Normal");
     }
 
     /**
@@ -151,10 +157,12 @@ public class Drivetrain {
      * @return the adjusted value
      */
     public double joystickTransfer(double joyVal) {
+        /** Cubic */
         // joyVal = Math.pow(joyVal, Constants.JOYSTICK_CURVE_POWER);
         // joyVal *= Constants.DRIVETRAIN_MAX_SPEED;
         // return joyVal;
 
+        /** Quadratic */
         // double newJoyVal = Math.pow(joyVal, 2);
         // newJoyVal *= Constants.DRIVETRAIN_MAX_SPEED;
         // if (joyVal > 0) {
@@ -163,6 +171,20 @@ public class Drivetrain {
         //     return -newJoyVal;
         // }
 
-        return joyVal*.6;
+        /** Linear */
+        // return joyVal*.85;
+
+        if (climbing) {
+            double newJoyVal = Math.pow(joyVal, 2);
+            newJoyVal *= Constants.CLIMBING_MAX_SPEED;
+            newJoyVal += 4e-4;
+            if (joyVal > 0) {
+                return newJoyVal;
+            } else {
+                return -newJoyVal;
+            } 
+        } else {
+            return joyVal * Constants.DRIVETRAIN_MAX_SPEED;
+        }
     }
 }

@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
+  private double startTime;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -61,7 +62,7 @@ public class Robot extends TimedRobot {
     intake.autonInit();
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
-    System.out.println("Color sensors ready");
+    startTime = System.currentTimeMillis();
     drivetrain.setPosition(0);
   }
 
@@ -69,6 +70,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     // State machine for auton
+    autonState = AutonState.NONE;
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
@@ -97,7 +99,6 @@ public class Robot extends TimedRobot {
       
       // After the line, go to where we know the ball is (~40in outside of the tape)
       case GOTO_BALL:
-        System.out.println(drivetrain.getPosition());
         if(drivetrain.getPosition() <= Constants.AUTON_DISTANCE ) {
           drivetrain.stop();
           autonState = AutonState.PICKUP_BALL;
@@ -116,6 +117,15 @@ public class Robot extends TimedRobot {
       case TRACK_BALL:
         Limelight.setLedOn(true);
         break;
+
+      case NONE:
+        System.out.println(System.currentTimeMillis() - startTime);
+        if (System.currentTimeMillis() - startTime <= 2000) {
+          drivetrain.set(0.2);
+        } else {
+          drivetrain.set(0);
+        }
+        break;
     }
   }
 
@@ -133,7 +143,6 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
-    System.out.println(Limelight.estimateDistance());
   }
   
   /** doesnt have any code yet */
