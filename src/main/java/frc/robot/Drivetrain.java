@@ -97,7 +97,7 @@ public class Drivetrain {
             setRight(0);
         }
 
-        if (rightJoy.getRawButtonPressed(2)) {
+        if (rightJoy.getRawButtonPressed(Constants.CLIMBING_DRIVE_BUTTON)) {
             climbing = !climbing;
         }
         System.out.println(climbing ? "Climbing" : "Normal");
@@ -176,7 +176,7 @@ public class Drivetrain {
 
         if (climbing) {
             double newJoyVal = Math.pow(joyVal, 2);
-            newJoyVal *= Constants.CLIMBING_MAX_SPEED;
+            newJoyVal *= Constants.CLIMBING_DRIVE_MAX_SPEED;
             newJoyVal += 4e-4;
             if (joyVal > 0) {
                 return newJoyVal;

@@ -29,7 +29,6 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
-  private double startTime;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -62,7 +61,6 @@ public class Robot extends TimedRobot {
     intake.autonInit();
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
-    startTime = System.currentTimeMillis();
     drivetrain.setPosition(0);
   }
 
@@ -119,12 +117,7 @@ public class Robot extends TimedRobot {
         break;
 
       case NONE:
-        System.out.println(System.currentTimeMillis() - startTime);
-        if (System.currentTimeMillis() - startTime <= 2000) {
-          drivetrain.set(0.2);
-        } else {
-          drivetrain.set(0);
-        }
+        drivetrain.runInverseKinematics(.25, -0.5);
         break;
     }
   }

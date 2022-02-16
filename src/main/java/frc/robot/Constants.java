@@ -4,6 +4,9 @@ package frc.robot;
 public class Constants {
     /** Driver station IDs of Joysticks */
     static int LEFT_JOY = 0, RIGHT_JOY = 1;
+    static int CLIMBING_DRIVE_BUTTON = 2;
+    static int FIRST_STAGE_CLIMBING_BUTTON = 2;
+
 
     //Thresholds at which color sensors will detect the line
     static double BLUE_TAPE_LEFT_THRESHOLD = 50000000;
@@ -24,7 +27,8 @@ public class Constants {
     static int FALCON_RF = 7;
     static int FALCON_RB = 8;
     static double DRIVETRAIN_MAX_SPEED = 0.85;
-    static double CLIMBING_MAX_SPEED = 0.4;
+    static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
+    static double CLIMBING_SPEED = 0.5;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
     static double MAX_RPM = 6380;
 
@@ -40,7 +44,7 @@ public class Constants {
     static int LEFT_SOL_RV = 2;
     static int RIGHT_SOL_FWD = 5;
     static int RIGHT_SOL_RV = 4;
-    static int PCM_PORT = 8;
+    static int PCM_PORT = 12;
 
     // Port of the motor for intake, and the speed that it should run when set to max.
     static int INTAKE_MOTOR = 14;
@@ -52,9 +56,8 @@ public class Constants {
     static double LIMELIGHT_ANGLE = 6;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
-    // Ports for shooter talons
-    static int port1 = 0;
-    static int port2 = 0;
+    static int FIRST_STAGE_SPARK = null;
+
 
     //different states for auton
     public enum AutonState {
