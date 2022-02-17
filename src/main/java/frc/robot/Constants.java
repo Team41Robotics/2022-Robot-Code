@@ -5,7 +5,8 @@ public class Constants {
     /** Driver station IDs of Joysticks */
     static int LEFT_JOY = 0, RIGHT_JOY = 1;
     static int CLIMBING_DRIVE_BUTTON = 2;
-    static int FIRST_STAGE_CLIMBING_BUTTON = 2;
+    static int FIRST_STAGE_CLIMBING_DOWN = 3;
+    static int FIRST_STAGE_CLIMBING_UP = 4;
 
 
     //Thresholds at which color sensors will detect the line
@@ -28,7 +29,7 @@ public class Constants {
     static int FALCON_RB = 8;
     static double DRIVETRAIN_MAX_SPEED = 0.85;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
-    static double CLIMBING_SPEED = 0.5;
+    static double CLIMBING_SPEED = 0.7;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
     static double MAX_RPM = 6380;
 
@@ -47,7 +48,7 @@ public class Constants {
     static int PCM_PORT = 12;
 
     // Port of the motor for intake, and the speed that it should run when set to max.
-    static int INTAKE_MOTOR = 14;
+    static int INTAKE_MOTOR = 11;
     static double INTAKE_FULL_SPEED = .6;
 
     // Measurements for the Limelight
@@ -56,7 +57,8 @@ public class Constants {
     static double LIMELIGHT_ANGLE = 6;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
-    static int FIRST_STAGE_SPARK = null;
+    static int FIRST_STAGE_SPARK_F = 1;
+    static int FIRST_STAGE_SPARK_B = 2;
 
 
     //different states for auton

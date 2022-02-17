@@ -6,9 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
-
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.revrobotics.ColorSensorV3;
 import frc.robot.Constants.AutonState;
 
@@ -25,10 +27,12 @@ public class Robot extends TimedRobot {
   private boolean onTapeR;
   private boolean onTapeL;
   private Intake intake;
+  private Climber climber;
   private Drivetrain drivetrain;
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
+  private Compressor comp;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,6 +44,9 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     leftColorSensor = new ColorSensor(new ColorSensorV3(Port.kMXP));
     rightColorSensor = new ColorSensor(new ColorSensorV3(Port.kOnboard));
+    comp = new Compressor(12, PneumaticsModuleType.REVPH);
+    comp.disable();
+    climber = new Climber();
   }
 
   /**
@@ -136,6 +143,7 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
+    climber.teleop();
   }
   
   /** doesnt have any code yet */
