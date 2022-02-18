@@ -62,8 +62,8 @@ public class PID {
         double deltaT = (currentTime-time)/1000.0;
         double reqDeltaSpeed = speed-currSpeed;
         time = currentTime;
-
-        if (deltaT > 0.1) {
+        //throws out deltaT if it is too large, happens during startup
+        if (deltaT > Constants.PID_ERROR) {
             System.out.println("deltaT is too big");
             return;
         }
