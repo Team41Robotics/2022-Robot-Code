@@ -41,6 +41,14 @@ public class Constants {
 
     
     // Ports for pneumatics
+    static int OUTER_GEAR_LOCK_ON = 0;
+    static int OUTER_GEAR_LOCK_OFF = 0;
+    static int INNER_GEAR_LOCK_ON = 0;
+    static int INNER_GEAR_LOCK_OFF = 0;
+    static int MIDDLE_ARM_RELEASE = 0;
+    static int MIDDLE_ARM_LOCK = 0;
+    static int MOVE_TO_INNER_ARM = 0;
+    static int MOVE_TO_OUTER_ARMS = 0;
     static int LEFT_SOL_FWD = 3;
     static int LEFT_SOL_RV = 2;
     static int RIGHT_SOL_FWD = 5;
@@ -57,8 +65,8 @@ public class Constants {
     static double LIMELIGHT_ANGLE = 6;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
-    static int FIRST_STAGE_SPARK_F = 1;
-    static int FIRST_STAGE_SPARK_B = 2;
+    static int CLIMBING_SPARK_F = 1;
+    static int CLIMBING_SPARK_B = 2;
 
 
     //different states for auton

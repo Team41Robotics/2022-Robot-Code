@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
-import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.revrobotics.ColorSensorV3;
 import frc.robot.Constants.AutonState;
 
