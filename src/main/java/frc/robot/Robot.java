@@ -23,10 +23,12 @@ public class Robot extends TimedRobot {
   public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
+  public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   private boolean onTapeR;
   private boolean onTapeL;
   private Intake intake;
   private Climber climber;
+  private Shooter shooter;
   private Drivetrain drivetrain;
   private AutonState autonState;
   private ColorSensor leftColorSensor;
@@ -45,7 +47,8 @@ public class Robot extends TimedRobot {
     rightColorSensor = new ColorSensor(new ColorSensorV3(Port.kOnboard));
     comp = new Compressor(12, PneumaticsModuleType.REVPH);
     comp.disable();
-    climber = new Climber();
+    shooter = new Shooter();
+    // climber = new Climber();
   }
 
   /**
@@ -142,7 +145,8 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
-    climber.teleop();
+    shooter.teleop();
+    // climber.teleop();
   }
   
   /** doesnt have any code yet */

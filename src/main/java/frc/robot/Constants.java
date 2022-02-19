@@ -5,6 +5,7 @@ public class Constants {
     /** Driver station IDs of Joysticks */
     static int LEFT_JOY = 0, RIGHT_JOY = 1;
     static int CLIMBING_DRIVE_BUTTON = 2;
+    static int RIGHT_DRIVER_STATION= 2;
     static int FIRST_STAGE_CLIMBING_DOWN = 3;
     static int FIRST_STAGE_CLIMBING_UP = 4;
 
@@ -57,7 +58,13 @@ public class Constants {
 
     // Port of the motor for intake, and the speed that it should run when set to max.
     static int INTAKE_MOTOR = 11;
-    static double INTAKE_FULL_SPEED = .6;
+    static int CONVEYOR_MOTOR = 3;
+    static int FEEDER_MOTOR = 4;
+    static int ELEVATOR_MOTOR = 6;
+    static double INTAKE_FULL_SPEED = 0.5;
+    static double CONVEYOR_FULL_SPEED = 0.5;
+    static double FEEDER_FULL_SPEED = 0.5;
+    static double ELEVATOR_FULL_SPEED = 0.5;
 
     // Measurements for the Limelight
     static double LIMELIGHT_HEIGHT_OF_TARGET = 49.5;
@@ -67,7 +74,9 @@ public class Constants {
 
     static int CLIMBING_SPARK_F = 1;
     static int CLIMBING_SPARK_B = 2;
-
+    static int SHOOTER_TALON_1 = 14;
+    static int SHOOTER_TALON_2 = 15;
+    static double SHOOTER_SPEED = 0.45;
 
     //different states for auton
     public enum AutonState {
