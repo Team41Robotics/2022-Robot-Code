@@ -38,6 +38,9 @@ public class Climber {
         secondStageRelease.set(DoubleSolenoid.Value.kReverse);
         firstStageGearLock.set(DoubleSolenoid.Value.kOff);
         gearShifter.get();  
+
+        firstStageLeftSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_L);
+        firstStageRightSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_R);
     }
 
     public void moveIntake(double speed) {

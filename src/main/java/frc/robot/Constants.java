@@ -74,9 +74,17 @@ public class Constants {
 
     static int CLIMBING_SPARK_F = 1;
     static int CLIMBING_SPARK_B = 2;
+    static int FIRST_STAGE_LIMIT_SWITCH_R = 0;
+    static int FIRST_STAGE_LIMIT_SWITCH_L = 0;
+    static int SECOND_STAGE_LIMIT_SWITCH = 0;
     static int SHOOTER_TALON_1 = 14;
     static int SHOOTER_TALON_2 = 15;
-    static double SHOOTER_SPEED = 0.45;
+    static double SHOOTER_SPEED = 0.55;
+
+    static int HOOD_SPARK = 5;
+    static int HOOD_TOP_LIMIT_SWITCH = 8;
+    static int HOOD_BOTTOM_LIMIT_SWITCH = 9;
+    
 
     //different states for auton
     public enum AutonState {

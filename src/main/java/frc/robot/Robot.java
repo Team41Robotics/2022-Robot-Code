@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   private boolean onTapeL;
   private Intake intake;
   private Climber climber;
+  private Hood hood;
   private Shooter shooter;
   private Drivetrain drivetrain;
   private AutonState autonState;
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
     comp = new Compressor(12, PneumaticsModuleType.REVPH);
     comp.disable();
     shooter = new Shooter();
+    hood = new Hood();
     // climber = new Climber();
   }
 
@@ -146,6 +148,7 @@ public class Robot extends TimedRobot {
     leftColorSensor.teleop();
     rightColorSensor.teleop();
     shooter.teleop();
+    hood.teleop();
     // climber.teleop();
   }
   
@@ -160,5 +163,7 @@ public class Robot extends TimedRobot {
   public void testInit() {}
   /**doesnt have any code yet */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    hood.teleop();
+  }
 }
