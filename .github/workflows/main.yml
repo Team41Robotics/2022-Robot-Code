@@ -7,9 +7,7 @@ name: CI
 # events but only for the main branch.
 on:
   push:
-    branches: [ 00_testRobot ]
   pull_request:
-    branches: [ 00_testRobot ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

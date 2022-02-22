@@ -94,6 +94,8 @@ public class Constants {
         TRACK_BALL,
         NONE
     }
+    //Error level for PID to ignore DeltaT if aboce
+    static double PID_ERROR = 0.1;
     
 
 }
