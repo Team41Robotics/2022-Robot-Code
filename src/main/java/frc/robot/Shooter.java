@@ -1,9 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -22,8 +20,6 @@ public class Shooter {
         // maybe add some D
         leftFalconPID = new PID(leftFalcon, 0.5, 0.03, 0.0005, 1.1, 1);
         rightFalconPID = new PID(rightFalcon, 0.5, 0.03, 0.0005, 1.1, 1);
-
-        intake = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushless);
         conveyor = new CANSparkMax(Constants.CONVEYOR_MOTOR, MotorType.kBrushless);
         feeder = new CANSparkMax(Constants.FEEDER_MOTOR, MotorType.kBrushless);
         elevator = new CANSparkMax(Constants.ELEVATOR_MOTOR, MotorType.kBrushless);

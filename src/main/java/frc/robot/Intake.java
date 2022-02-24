@@ -1,19 +1,19 @@
+
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /** Controls the intake on the robot */
 public class Intake {
     private boolean intakeOn;
     private boolean intakeUp;
-    private Joystick leftJoy;
-    private Joystick rightJoy;
-    private TalonSRX intakeMotor;
+    private Joystick leftJoy, rightJoy;
+    private CANSparkMax intakeMotor;
     private DoubleSolenoid intakeSolLeft;
     private DoubleSolenoid intakeSolRight;
 
@@ -23,7 +23,8 @@ public class Intake {
         intakeUp = false;
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
-        intakeMotor = new TalonSRX(Constants.INTAKE_MOTOR);
+        intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushless);
+        intakeMotor.setIdleMode(IdleMode.kBrake);
         intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
         intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
     }
@@ -33,7 +34,7 @@ public class Intake {
         intakeSolLeft.set(DoubleSolenoid.Value.kForward);
         intakeSolRight.set(DoubleSolenoid.Value.kForward);
         intakeUp = true;
-        intakeMotor.set(ControlMode.PercentOutput, Constants.INTAKE_FULL_SPEED);
+        intakeMotor.set(Constants.INTAKE_FULL_SPEED);
     }
 
     /**
@@ -41,7 +42,7 @@ public class Intake {
      * @param speed desired speed of the intake motor [-1, 1]
      */
     public void setIntakeMotor(double speed){
-        intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
+        intakeMotor.set(speed);
     }
 
     /** In teleop, use joystick triggers to raise/lower the intake and toggle the motor */
@@ -53,7 +54,8 @@ public class Intake {
           }
           if (rightJoy.getRawButtonPressed(1)) {
             intakeOn = !intakeOn;
-            intakeMotor.set(TalonSRXControlMode.PercentOutput, intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
+            intakeMotor.set(Constants.INTAKE_FULL_SPEED);
+            // intakeMotor.set(intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
           }
     }
 

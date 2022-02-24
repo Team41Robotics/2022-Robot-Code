@@ -30,7 +30,8 @@ public class Constants {
     static int FALCON_RB = 8;
     static double DRIVETRAIN_MAX_SPEED = 0.85;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
-    static double CLIMBING_SPEED = 0.7;
+    static double CLIMBING_MAX_SPEED = 0.7;
+    static double CLIMBING_SLOW_SPEED = 0.5;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
     static double MAX_RPM = 6380;
 
@@ -42,18 +43,18 @@ public class Constants {
 
     
     // Ports for pneumatics
-    static int OUTER_GEAR_LOCK_ON = 0;
-    static int OUTER_GEAR_LOCK_OFF = 0;
-    static int INNER_GEAR_LOCK_ON = 0;
-    static int INNER_GEAR_LOCK_OFF = 0;
-    static int MIDDLE_ARM_RELEASE = 0;
-    static int MIDDLE_ARM_LOCK = 0;
-    static int MOVE_TO_INNER_ARM = 0;
-    static int MOVE_TO_OUTER_ARMS = 0;
-    static int LEFT_SOL_FWD = 3;
-    static int LEFT_SOL_RV = 2;
-    static int RIGHT_SOL_FWD = 5;
-    static int RIGHT_SOL_RV = 4;
+    static int OUTER_GEAR_LOCK_ON = 4;
+    static int OUTER_GEAR_LOCK_OFF = 11;
+    static int INNER_GEAR_LOCK_ON = 10;
+    static int INNER_GEAR_LOCK_OFF = 5;
+    static int MIDDLE_ARM_RELEASE = 3;
+    static int MIDDLE_ARM_LOCK = 12;
+    static int MOVE_TO_INNER_ARM = 1;
+    static int MOVE_TO_OUTER_ARMS = 14;
+    static int LEFT_SOL_FWD = 0;
+    static int LEFT_SOL_RV = 15;
+    static int RIGHT_SOL_FWD = 2;
+    static int RIGHT_SOL_RV = 13;
     static int PCM_PORT = 12;
 
     // Port of the motor for intake, and the speed that it should run when set to max.
@@ -74,9 +75,9 @@ public class Constants {
 
     static int CLIMBING_SPARK_F = 1;
     static int CLIMBING_SPARK_B = 2;
-    static int FIRST_STAGE_LIMIT_SWITCH_R = 0;
+    static int FIRST_STAGE_LIMIT_SWITCH_R = 1;
     static int FIRST_STAGE_LIMIT_SWITCH_L = 0;
-    static int SECOND_STAGE_LIMIT_SWITCH = 0;
+    static int SECOND_STAGE_LIMIT_SWITCH = 5;
     static int SHOOTER_TALON_1 = 14;
     static int SHOOTER_TALON_2 = 15;
     static double SHOOTER_SPEED = 0.55;
@@ -84,6 +85,7 @@ public class Constants {
     static int HOOD_SPARK = 5;
     static int HOOD_TOP_LIMIT_SWITCH = 8;
     static int HOOD_BOTTOM_LIMIT_SWITCH = 9;
+    static double HOOD_SPEED = 0.1;
     
 
     //different states for auton

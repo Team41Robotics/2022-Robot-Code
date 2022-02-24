@@ -47,10 +47,9 @@ public class Robot extends TimedRobot {
     leftColorSensor = new ColorSensor(new ColorSensorV3(Port.kMXP));
     rightColorSensor = new ColorSensor(new ColorSensorV3(Port.kOnboard));
     comp = new Compressor(12, PneumaticsModuleType.REVPH);
-    comp.disable();
     shooter = new Shooter();
     hood = new Hood();
-    // climber = new Climber();
+    climber = new Climber();
   }
 
   /**
@@ -149,7 +148,7 @@ public class Robot extends TimedRobot {
     rightColorSensor.teleop();
     shooter.teleop();
     hood.teleop();
-    // climber.teleop();
+    climber.teleop();
   }
   
   /** doesnt have any code yet */

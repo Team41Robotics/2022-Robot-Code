@@ -100,7 +100,7 @@ public class Drivetrain {
         if (rightJoy.getRawButtonPressed(Constants.CLIMBING_DRIVE_BUTTON)) {
             climbing = !climbing;
         }
-        System.out.println(climbing ? "Climbing" : "Normal");
+        // System.out.println(climbing ? "Climbing" : "Normal");
     }
 
     /**
@@ -132,7 +132,6 @@ public class Drivetrain {
             setLeft(-Constants.AUTON_SPEED/2);
         } else {
             set(0);
-            System.out.println("Buffer Moment");
         }
     }
     
