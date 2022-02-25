@@ -54,10 +54,20 @@ public class Intake {
           }
           if (rightJoy.getRawButtonPressed(1)) {
             intakeOn = !intakeOn;
-            intakeMotor.set(Constants.INTAKE_FULL_SPEED);
-            // intakeMotor.set(intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
+            intakeMotor.set(intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
           }
     }
 
+    public void test() {
+        if (leftJoy.getRawButtonPressed(1)) {
+            intakeUp = !intakeUp;
+            intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+            intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+          }
+          if (rightJoy.getRawButtonPressed(1)) {
+            intakeOn = !intakeOn;
+            intakeMotor.set(intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
+          }
+    }
 }   
 

@@ -13,6 +13,7 @@ public class Hood {
     DigitalInput topSwitch, bottomSwitch;
     Joystick station;
     RelativeEncoder enc;
+    public double angle;
 
     public Hood() {
         // Bottom switch needs to be inverted
@@ -23,18 +24,46 @@ public class Hood {
         enc = hoodMotor.getEncoder();
         enc.setPosition(0);
         station = Robot.secondDS;
+        angle = 0;
     }
 
     public void teleop() {
-        // System.out.print(topSwitch.get());
-        // System.out.println(!bottomSwitch.get());
-        if (!topSwitch.get() && station.getRawButton(9)) {
+        double pos = enc.getPosition();
+        if (!topSwitch.get() && station.getRawButton(7) && pos <= 50) {
             hoodMotor.set(Constants.HOOD_SPEED);
-        } else if (bottomSwitch.get() && station.getRawButton(10)) {
+        } else if (bottomSwitch.get() && station.getRawButton(8)) {
             hoodMotor.set(-Constants.HOOD_SPEED/2);
         } else {
             hoodMotor.set(0);
         }
-        // System.out.println(enc.getPosition());
+    }
+
+    private void setToPosition(double pos, double angle) {
+        if (!topSwitch.get() && (pos - angle) < -1) {
+            hoodMotor.set(Constants.HOOD_SPEED/2);
+        } else if (bottomSwitch.get() && (pos-angle) > 1) {
+            hoodMotor.set(-Constants.HOOD_SPEED/4);
+        } else {
+            hoodMotor.set(0);
+        }
+    }
+
+    // Adjust angle based on switch
+    public void test() {
+        double pos = enc.getPosition();
+        if (!topSwitch.get() && station.getRawButtonPressed(9) && pos <= 50) {
+            angle += (angle < 50) ? 1 : 0;
+        } else if (bottomSwitch.get() && station.getRawButtonPressed(10)) {
+            angle -= (angle > 0) ? 1 : 0;
+        }
+
+        setToPosition(pos, angle);
+    }
+
+    public void home() {
+        while (bottomSwitch.get()) {
+            hoodMotor.set(-Constants.HOOD_SPEED/4);
+        }
+        enc.setPosition(0);
     }
 }

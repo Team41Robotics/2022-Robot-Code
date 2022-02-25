@@ -159,10 +159,18 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
   /**doesnt have any code yet */
   @Override
-  public void testInit() {}
+  public void testInit() {
+    hood.home();
+  }
   /**doesnt have any code yet */
   @Override
   public void testPeriodic() {
-    hood.teleop();
+    // intake.test();
+    hood.test();
+    shooter.test();
+    System.out.print("Hood Angle: ");
+    System.out.print(hood.angle);
+    System.out.print("\t\tShooter Speed: ");
+    System.out.println(shooter.speed);
   }
 }

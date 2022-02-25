@@ -9,8 +9,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Shooter {
     TalonFX leftFalcon, rightFalcon;
     CANSparkMax intake, conveyor, feeder, elevator;
-    Joystick rightDS;
+    Joystick rightDS, rightJoy;
     PID leftFalconPID, rightFalconPID;
+    public double speed = 0;
+    boolean testOn = false;
     
     public Shooter() {
         leftFalcon = new TalonFX(Constants.SHOOTER_TALON_2);
@@ -24,6 +26,8 @@ public class Shooter {
         feeder = new CANSparkMax(Constants.FEEDER_MOTOR, MotorType.kBrushless);
         elevator = new CANSparkMax(Constants.ELEVATOR_MOTOR, MotorType.kBrushless);
         conveyor.setInverted(true);
+        speed = 0;
+        rightJoy = Robot.rightJoy;
 
         rightDS = Robot.secondDS;
     }
@@ -56,6 +60,29 @@ public class Shooter {
             rightFalconPID.run(0);
         }
         if (rightDS.getRawButton(4) || rightDS.getRawButton(3)) {
+            feeder.set(Constants.FEEDER_FULL_SPEED);
+        } else {
+            feeder.set(0);
+        }
+    }
+
+    public void test() {
+        if (rightDS.getRawButtonPressed(11)) {
+            speed += (speed < 0.89) ? 0.025 : 0;
+        } else if (rightDS.getRawButtonPressed(12)) {
+            speed -= (speed > 0.01) ? 0.025 : 0;
+        }
+
+        leftFalconPID.run(speed);
+        rightFalconPID.run(speed);
+
+
+        if (rightJoy.getRawButtonPressed(1)) {
+            conveyor.set(testOn ? Constants.CONVEYOR_FULL_SPEED : 0);
+            elevator.set(testOn ? Constants.ELEVATOR_FULL_SPEED : 0);
+            testOn = !testOn;
+        }
+        if (rightDS.getRawButton(1)) {
             feeder.set(Constants.FEEDER_FULL_SPEED);
         } else {
             feeder.set(0);
