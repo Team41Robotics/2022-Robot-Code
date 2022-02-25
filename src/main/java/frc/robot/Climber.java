@@ -42,7 +42,7 @@ public class Climber {
         secondStageRelease = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.MIDDLE_ARM_LOCK, Constants.MIDDLE_ARM_RELEASE);
         gearShifter = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.MOVE_TO_OUTER_ARMS, Constants.MOVE_TO_INNER_ARM);
 
-        this.driverStation = new Joystick(2);
+        this.driverStation = Robot.secondDS;
         this.leftJoy = Robot.leftJoy;
 
         firstStageUp = false;
