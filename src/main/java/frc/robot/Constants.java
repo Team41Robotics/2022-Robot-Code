@@ -47,12 +47,12 @@ public class Constants {
     static int OUTER_GEAR_LOCK_OFF = 11;
     static int INNER_GEAR_LOCK_ON = 10;
     static int INNER_GEAR_LOCK_OFF = 5;
-    static int MIDDLE_ARM_RELEASE = 3;
-    static int MIDDLE_ARM_LOCK = 12;
+    static int MIDDLE_ARM_RELEASE = 0;
+    static int MIDDLE_ARM_LOCK = 15;
     static int MOVE_TO_INNER_ARM = 1;
     static int MOVE_TO_OUTER_ARMS = 14;
-    static int LEFT_SOL_FWD = 0;
-    static int LEFT_SOL_RV = 15;
+    static int LEFT_SOL_FWD = 3;
+    static int LEFT_SOL_RV = 12;
     static int RIGHT_SOL_FWD = 2;
     static int RIGHT_SOL_RV = 13;
     static int PCM_PORT = 12;
@@ -85,7 +85,7 @@ public class Constants {
     static int HOOD_SPARK = 5;
     static int HOOD_TOP_LIMIT_SWITCH = 8;
     static int HOOD_BOTTOM_LIMIT_SWITCH = 9;
-    static double HOOD_SPEED = 0.1;
+    static double HOOD_SPEED = 0.4;
     
 
     //different states for auton
