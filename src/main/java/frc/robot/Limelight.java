@@ -15,7 +15,7 @@ class Limelight {
         double dif = Constants.LIMELIGHT_HEIGHT_OF_TARGET - Constants.LIMELIGHT_HEIGHT;
         double ty = limelightTable.getEntry("ty").getDouble(0);
         double distance = dif/Math.tan(Math.toRadians(Constants.LIMELIGHT_ANGLE + ty));
-        return distance;
+        return distance-27;
     }
 
     /**
@@ -34,5 +34,7 @@ class Limelight {
         limelightTable.getEntry("ledMode").setNumber(mode ? 3 : 1);
     }  
 
-    
+    public static void test() {
+        System.out.println(estimateDistance());
+    }    
 }
