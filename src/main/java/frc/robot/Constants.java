@@ -87,6 +87,10 @@ public class Constants {
     static int HOOD_BOTTOM_LIMIT_SWITCH = 9;
     static double HOOD_SPEED = 0.4;
     
+    static double HOOD_MID_SPEED_SLOPE = 0.0731;
+    static double HOOD_MID_SPEED_OFFSET = 37.5;
+    static double HOOD_MID_ANGLE_SLOPE = 0.0997;
+    static double HOOD_MID_ANGLE_OFFSET = 17.15;
 
     //different states for auton
     public enum AutonState {
