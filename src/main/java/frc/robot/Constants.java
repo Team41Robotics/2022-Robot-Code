@@ -62,7 +62,7 @@ public class Constants {
     static int CONVEYOR_MOTOR = 3;
     static int FEEDER_MOTOR = 4;
     static int ELEVATOR_MOTOR = 6;
-    static double INTAKE_FULL_SPEED = 0.5;
+    static double INTAKE_FULL_SPEED = 0.8;
     static double CONVEYOR_FULL_SPEED = 0.5;
     static double FEEDER_FULL_SPEED = 0.5;
     static double ELEVATOR_FULL_SPEED = 0.5;
@@ -95,6 +95,12 @@ public class Constants {
         PICKUP_BALL,
         TRACK_BALL,
         NONE
+    }
+
+    public enum INTAKE_MODE {
+        FORWARD,
+        REVERSE,
+        OFF
     }
     //Error level for PID to ignore DeltaT if aboce
     static double PID_ERROR = 0.1;

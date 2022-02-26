@@ -4,6 +4,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import frc.robot.Constants.INTAKE_MODE;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -13,7 +15,7 @@ public class Intake {
     private boolean intakeOn;
     private boolean intakeUp;
     private Joystick leftJoy, rightJoy;
-    private CANSparkMax intakeMotor;
+    private CANSparkMax intakeMotor, conveyor;
     private DoubleSolenoid intakeSolLeft;
     private DoubleSolenoid intakeSolRight;
 
@@ -24,7 +26,9 @@ public class Intake {
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
         intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushless);
-        intakeMotor.setIdleMode(IdleMode.kBrake);
+        conveyor = new CANSparkMax(Constants.CONVEYOR_MOTOR, MotorType.kBrushless);
+        conveyor.setInverted(true);
+        intakeMotor.setIdleMode(IdleMode.kCoast);
         intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
         intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
     }
@@ -48,14 +52,14 @@ public class Intake {
     /** In teleop, use joystick triggers to raise/lower the intake and toggle the motor */
     public void teleop(){
         if (leftJoy.getRawButtonPressed(1)) {
-            intakeUp = !intakeUp;
-            intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
-            intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+          intakeUp = !intakeUp;
+          intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
+          intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
           }
-          if (rightJoy.getRawButtonPressed(1)) {
-            intakeOn = !intakeOn;
-            intakeMotor.set(intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
-          }
+        if (rightJoy.getRawButtonPressed(1)) {
+          intakeOn = !intakeOn;
+          run(intakeOn ? INTAKE_MODE.FORWARD : INTAKE_MODE.OFF);
+        }
     }
 
     public void test() {
@@ -66,8 +70,28 @@ public class Intake {
           }
           if (rightJoy.getRawButtonPressed(1)) {
             intakeOn = !intakeOn;
-            intakeMotor.set(intakeOn ? Constants.INTAKE_FULL_SPEED : 0);
+            run(intakeOn ? INTAKE_MODE.FORWARD : INTAKE_MODE.OFF);
           }
+    }
+
+    // true - forward; false - reverse
+    public void run(Constants.INTAKE_MODE dir) {
+      switch (dir) {
+        case FORWARD:
+          intakeMotor.set(Constants.INTAKE_FULL_SPEED);
+          conveyor.set(Constants.CONVEYOR_FULL_SPEED);
+          break;
+        case REVERSE:
+          intakeMotor.set(-Constants.INTAKE_FULL_SPEED);
+          conveyor.set(-Constants.CONVEYOR_FULL_SPEED);
+        case OFF:
+          intakeMotor.set(0);
+          conveyor.set(0);
+      }
+    }
+
+    public void setIntakeOn(boolean val) {
+      intakeOn = val;
     }
 }   
 
