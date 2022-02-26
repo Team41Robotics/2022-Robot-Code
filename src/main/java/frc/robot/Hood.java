@@ -38,7 +38,8 @@ public class Hood {
         }
     }
 
-    private void setToPosition(double pos, double angle) {
+    public void setToPosition(double angle) {
+        double pos = enc.getPosition();
         if (!topSwitch.get() && (pos - angle) < -1) {
             hoodMotor.set(Constants.HOOD_SPEED/2);
         } else if (bottomSwitch.get() && (pos-angle) > 1) {
@@ -57,7 +58,7 @@ public class Hood {
             angle -= (angle > 0) ? 1 : 0;
         }
 
-        setToPosition(pos, angle);
+        setToPosition(angle);
     }
 
     public void home() {

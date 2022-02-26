@@ -146,9 +146,19 @@ public class Robot extends TimedRobot {
     intake.teleop();
     leftColorSensor.teleop();
     rightColorSensor.teleop();
-    shooter.teleop();
-    hood.teleop();
     climber.teleop();
+
+    double distance = Limelight.estimateDistance();
+    double speed = (distance*0.0731)+35.2;
+    double angle = (distance*0.0997)+17.15;
+
+    if (secondDS.getRawButton(6)) {
+      shooter.setSpeed(speed);
+      hood.setToPosition(angle);
+    } else {
+      shooter.teleop();
+      hood.teleop();
+    }
   }
   
   /** doesnt have any code yet */
@@ -168,6 +178,7 @@ public class Robot extends TimedRobot {
     // intake.test();
     hood.test();
     shooter.test();
+    // Limelight.test();
     System.out.print("Hood Angle: ");
     System.out.print(hood.angle);
     System.out.print("\t\tShooter Speed: ");

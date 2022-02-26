@@ -1,6 +1,5 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -33,12 +32,6 @@ public class Shooter {
     }
 
     public void teleop() {
-        SmartDashboard.putNumber("Shooter 1 Supply Current", leftFalcon.getSupplyCurrent());
-        SmartDashboard.putNumber("Shooter 1 Stator Current", leftFalcon.getStatorCurrent());
-        SmartDashboard.putNumber("Shooter 2 Stator Current", rightFalcon.getStatorCurrent());
-        SmartDashboard.putNumber("Shooter 2 Supply Current", rightFalcon.getSupplyCurrent());
-        SmartDashboard.putNumber("Shooter 1 Speed", leftFalcon.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Shooter 2 Speed", rightFalcon.getSelectedSensorVelocity());
         /**
          * 1st - conveyor
          * 2nd - elevator and shooter
@@ -87,5 +80,10 @@ public class Shooter {
         } else {
             feeder.set(0);
         }
+    }
+
+    public void setSpeed(double speed) {
+        leftFalconPID.run(speed);
+        rightFalconPID.run(speed);
     }
 }
