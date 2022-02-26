@@ -68,9 +68,9 @@ public class Constants {
     static double ELEVATOR_FULL_SPEED = 0.5;
 
     // Measurements for the Limelight
-    static double LIMELIGHT_HEIGHT_OF_TARGET = 49.5;
-    static double LIMELIGHT_HEIGHT = 24.75;
-    static double LIMELIGHT_ANGLE = 6;
+    static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
+    static double LIMELIGHT_HEIGHT = 35;
+    static double LIMELIGHT_ANGLE = 24.5;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
     static int CLIMBING_SPARK_F = 1;
