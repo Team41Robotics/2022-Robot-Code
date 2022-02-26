@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.ColorSensorV3;
 import frc.robot.Constants.AutonState;
+import frc.robot.Constants.INTAKE_MODE;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -114,12 +115,13 @@ public class Robot extends TimedRobot {
       
       // Turn off intake after the ball is picked up
       case PICKUP_BALL:
-        intake.setIntakeMotor(0);
+        intake.run(INTAKE_MODE.FORWARD);
         autonState = AutonState.TRACK_BALL;
         break;
         
       case TRACK_BALL:
         Limelight.setLedOn(true);
+        drivetrain.alignToGoal();
         break;
 
       case NONE:
