@@ -6,9 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 import com.revrobotics.ColorSensorV3;
 import frc.robot.Constants.AutonState;
@@ -34,7 +32,6 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
-  private Compressor comp;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -46,7 +43,6 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     leftColorSensor = new ColorSensor(new ColorSensorV3(Port.kMXP));
     rightColorSensor = new ColorSensor(new ColorSensorV3(Port.kOnboard));
-    comp = new Compressor(12, PneumaticsModuleType.REVPH);
     shooter = new Shooter();
     hood = new Hood();
     climber = new Climber();
