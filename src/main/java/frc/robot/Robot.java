@@ -120,6 +120,7 @@ public class Robot extends TimedRobot {
         
       case TRACK_BALL:
         Limelight.setLedOn(true);
+        drivetrain.alignToGoal();
         break;
 
       case NONE:

@@ -122,7 +122,7 @@ public class Drivetrain {
     }
 
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
-    public void auton() {
+    public void alignToGoal() {
         double angle = Limelight.getHorizontalAngle();
         if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
             setRight(-Constants.AUTON_SPEED/2);
