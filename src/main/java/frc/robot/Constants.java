@@ -89,7 +89,7 @@ public class Constants {
     static int HOOD_BOTTOM_LIMIT_SWITCH = 9;
     static double HOOD_SPEED = 0.4;
     
-    // Constants for Hood Auto Alligning
+    // Constants for Hood Auto Allign
     static double HOOD_MID_SPEED_SLOPE = 0.0731;
     static double HOOD_MID_SPEED_OFFSET = 37.5;
     static double HOOD_MID_ANGLE_SLOPE = 0.0997;
