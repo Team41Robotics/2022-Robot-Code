@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   private boolean onTapeR;
   private boolean onTapeL;
-  private Intake intake;
+  public static Intake intake;
   private Climber climber;
   private Hood hood;
   private Shooter shooter;
@@ -137,6 +137,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
+    shooter.setSpeed(0);
+    hood.home();
   }
 
   /** This function is called periodically during operator control. */
@@ -147,17 +149,22 @@ public class Robot extends TimedRobot {
     leftColorSensor.teleop();
     rightColorSensor.teleop();
     climber.teleop();
+    shooter.teleop();
 
     double distance = Limelight.estimateDistance();
-    double speed = (distance*0.0731)+35.2;
+    double speed = (distance*0.0731)+37.5;
     double angle = (distance*0.0997)+17.15;
 
     if (secondDS.getRawButton(6)) {
-      shooter.setSpeed(speed);
+      shooter.setSpeed(speed/100);
       hood.setToPosition(angle);
+      System.out.print("Speed: ");
+      System.out.print(speed/100);
+      System.out.print("\t\tAngle: ");
+      System.out.println(angle);
     } else {
-      shooter.teleop();
       hood.teleop();
+      shooter.setSpeed(0);
     }
   }
   
