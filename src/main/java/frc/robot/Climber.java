@@ -82,7 +82,6 @@ public class Climber {
                 case (0):
                     climbingMotor1.set(0);
                     climbingMotor2.set(0);
-                    hood.setToPosition(0);
                     break;            
                 case(45):
                     if (!firstStageUp) {
