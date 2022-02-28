@@ -91,7 +91,7 @@ public class Constants {
     
     // Constants for Hood Auto Alligning
     static double HOOD_MID_SPEED_SLOPE = 0.0731;
-    static double HOOD_MID_SPEED_OFFSET = 37.5;
+    static double HOOD_MID_SPEED_OFFSET = 35.2;
     static double HOOD_MID_ANGLE_SLOPE = 0.2457;
     static double HOOD_MID_ANGLE_OFFSET = 6.5;
     static double HOOD_MID_ANGLE_CURVE = 0.000437;

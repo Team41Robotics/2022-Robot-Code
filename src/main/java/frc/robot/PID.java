@@ -1,7 +1,11 @@
 package frc.robot;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PID {
     public final double SENSOR_NORM = (10.0*60)/(2048*6380);

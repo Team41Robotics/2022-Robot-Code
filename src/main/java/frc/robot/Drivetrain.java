@@ -14,6 +14,7 @@ public class Drivetrain {
     private PID leftFrontPID;
     private PID rightBackPID;
     private PID rightFrontPID;
+    public long startTime;
     
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain() {
@@ -33,10 +34,10 @@ public class Drivetrain {
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
 
-        leftBackPID = new PID(talonLB, 0.6, 0.25, 0.000275, 1.1, 0);
-        leftFrontPID = new PID(talonLF, 0.6, 0.25, 0.000275, 1.1, 0);
-        rightBackPID = new PID(talonRB, 0.6, 0.25, 0.000275, 1.1, 0);
-        rightFrontPID = new PID(talonRF, 0.6, 0.25, 0.000275, 1.1, 0);
+        leftBackPID = new PID(talonLB, 0.8, 0.02, 0.0004, 1.5, 0.5);
+        leftFrontPID = new PID(talonLF, 0.8, 0.02, 0.0004, 1.5, 0.5);
+        rightBackPID = new PID(talonRB, 0.8, 0.02, 0.0004, 1.5, 0.5);
+        rightFrontPID = new PID(talonRF, 0.8, 0.02, 0.0004, 1.5, 0.5);
     }
 
     /**
@@ -101,6 +102,8 @@ public class Drivetrain {
             climbing = !climbing;
         }
         // System.out.println(climbing ? "Climbing" : "Normal");
+        
+        SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
     }
 
     /**
@@ -185,5 +188,14 @@ public class Drivetrain {
         } else {
             return joyVal * Constants.DRIVETRAIN_MAX_SPEED;
         }
+    }
+
+    public void test() {
+        if (System.currentTimeMillis() - startTime <= 2000) {
+            set(0.1);
+        } else {
+            set(0);
+        }
+        SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
     }
 }

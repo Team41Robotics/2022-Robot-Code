@@ -1,3 +1,4 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -6,6 +7,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.ColorSensorV3;
@@ -125,7 +127,8 @@ public class Robot extends TimedRobot {
         break;
 
       case NONE:
-        drivetrain.runInverseKinematics(.25, -0.5);
+        System.out.print(leftColorSensor.findLineMax());
+        System.out.println(rightColorSensor.findLineMax());
         break;
     }
   }
@@ -151,7 +154,7 @@ public class Robot extends TimedRobot {
 
     double distance = Limelight.estimateDistance();
     double speed = (distance*Constants.HOOD_MID_SPEED_SLOPE)+Constants.HOOD_MID_SPEED_OFFSET;
-    double angle = (distance*distance*Constants.HOOD_MID_ANGLE_CURVE)+(distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
+    double angle = (-distance*distance*Constants.HOOD_MID_ANGLE_CURVE)+(distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
 
     if (secondDS.getRawButton(6)) {
       shooter.setSpeed(speed/100);
@@ -160,6 +163,8 @@ public class Robot extends TimedRobot {
       System.out.print(speed/100);
       System.out.print("\t\tAngle: ");
       System.out.println(angle);
+      System.out.print("\t\tDistance: ");
+      System.out.println(distance);
     } else {
       hood.teleop();
       shooter.setSpeed(0);
@@ -175,18 +180,21 @@ public class Robot extends TimedRobot {
   /**doesnt have any code yet */
   @Override
   public void testInit() {
-    hood.home();
+    // hood.home();
+    drivetrain.startTime = System.currentTimeMillis();
   }
   /**doesnt have any code yet */
   @Override
   public void testPeriodic() {
+    LiveWindow.setEnabled(false);
     // intake.test();
-    hood.test();
-    shooter.test();
+    // hood.test();
+    // shooter.test();
     // Limelight.test();
-    System.out.print("Hood Angle: ");
-    System.out.print(hood.angle);
-    System.out.print("\t\tShooter Speed: ");
-    System.out.println(shooter.speed);
+    drivetrain.test();
+    // System.out.print("Hood Angle: ");
+    // System.out.print(hood.angle);
+    // System.out.print("\t\tShooter Speed: ");
+    // System.out.println(shooter.speed);
   }
 }
