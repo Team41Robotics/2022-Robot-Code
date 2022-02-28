@@ -29,6 +29,7 @@ public class Climber {
     private boolean firstStageUp;
     private boolean secondStageUp;
     private long startTime;
+    private Hood hood;
     private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
 
     public Climber() {
@@ -44,6 +45,7 @@ public class Climber {
 
         this.driverStation = Robot.secondDS;
         this.leftJoy = Robot.leftJoy;
+        this.hood = Robot.hood;
 
         firstStageUp = false;
         secondStageUp = false;
@@ -85,6 +87,7 @@ public class Climber {
                 case (0):
                     climbingMotor1.set(0);
                     climbingMotor2.set(0);
+                    hood.setToPosition(0);
                     break;            
                 case(45):
                     if (!firstStageUp) {

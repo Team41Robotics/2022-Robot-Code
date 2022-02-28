@@ -23,11 +23,11 @@ public class Robot extends TimedRobot {
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
+  public static Intake intake;
+  public static Hood hood;
   private boolean onTapeR;
   private boolean onTapeL;
-  public static Intake intake;
   private Climber climber;
-  private Hood hood;
   private Shooter shooter;
   private Drivetrain drivetrain;
   private AutonState autonState;
