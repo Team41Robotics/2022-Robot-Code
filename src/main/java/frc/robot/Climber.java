@@ -60,11 +60,7 @@ public class Climber {
         secondStageSwitch = new DigitalInput(Constants.SECOND_STAGE_LIMIT_SWITCH);
     }
 
-    public void moveIntake(double speed) {
-        climbingMotor1.set(speed);
-        climbingMotor2.set(speed);
-        SmartDashboard.putNumber("Motor 1 set speed", climbingMotor1.get());
-    }
+
 
     public void teleop() {
         if (driverStation.getRawButton(13)) {
@@ -83,7 +79,7 @@ public class Climber {
                 secondStageGearLock.set(Value.kForward);
             }
         } else {
-            switch((int) (this.getPOV())) {
+            switch((int) (driverStation.getPOV(1))) {
                 case (0):
                     climbingMotor1.set(0);
                     climbingMotor2.set(0);
@@ -93,6 +89,7 @@ public class Climber {
                     if (!firstStageUp) {
                         climbingMotor1.set(-Constants.CLIMBING_SLOW_SPEED);
                         climbingMotor2.set(-Constants.CLIMBING_SLOW_SPEED);
+                        hood.setToPosition(0);
                         if (!(firstStageLeftSwitch.get() && firstStageRightSwitch.get())) {
                             firstStageUp = true;
                             System.out.println("Pressed");
@@ -146,11 +143,4 @@ public class Climber {
             }
         }
     }
-
-    public double getPOV(){
-        return driverStation.getPOV(1);
-    }
-
-   
-
 }

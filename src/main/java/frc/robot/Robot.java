@@ -150,7 +150,7 @@ public class Robot extends TimedRobot {
     shooter.teleop();
 
     double distance = Limelight.estimateDistance();
-    double speed = (distance*Constants.HOOD_MID_SPEED_SLOPE)+Constants.HOOD_MID_SPEED_SLOPE;
+    double speed = (distance*Constants.HOOD_MID_SPEED_SLOPE)+Constants.HOOD_MID_SPEED_OFFSET;
     double angle = (distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
 
     if (secondDS.getRawButton(6)) {

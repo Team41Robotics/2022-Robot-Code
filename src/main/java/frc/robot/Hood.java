@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Hood {
@@ -35,6 +36,8 @@ public class Hood {
             hoodMotor.set(-Constants.HOOD_SPEED/2);
         } else {
             hoodMotor.set(0);
+        }if(station.getPOV(0)==90){
+            home();
         }
     }
 

@@ -73,6 +73,7 @@ public class Constants {
     static double LIMELIGHT_ANGLE = 24.5;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
 
+    // Ports for Climbing
     static int CLIMBING_SPARK_F = 1;
     static int CLIMBING_SPARK_B = 2;
     static int FIRST_STAGE_LIMIT_SWITCH_R = 1;
@@ -82,11 +83,13 @@ public class Constants {
     static int SHOOTER_TALON_2 = 15;
     static double SHOOTER_SPEED = 0.55;
 
+    // Ports and Constants for Hood
     static int HOOD_SPARK = 5;
     static int HOOD_TOP_LIMIT_SWITCH = 8;
     static int HOOD_BOTTOM_LIMIT_SWITCH = 9;
     static double HOOD_SPEED = 0.4;
     
+    // Constants for Hood Auto Alligning
     static double HOOD_MID_SPEED_SLOPE = 0.0731;
     static double HOOD_MID_SPEED_OFFSET = 37.5;
     static double HOOD_MID_ANGLE_SLOPE = 0.0997;
