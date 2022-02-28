@@ -83,12 +83,12 @@ public class Climber {
                 case (0):
                     climbingMotor1.set(0);
                     climbingMotor2.set(0);
-                    hood.setToPosition(0);
                     break;            
                 case(45):
                     if (!firstStageUp) {
                         climbingMotor1.set(-Constants.CLIMBING_SLOW_SPEED);
                         climbingMotor2.set(-Constants.CLIMBING_SLOW_SPEED);
+                        hood.setToPosition(0);
                         if (!(firstStageLeftSwitch.get() && firstStageRightSwitch.get())) {
                             firstStageUp = true;
                             System.out.println("Pressed");
