@@ -98,7 +98,7 @@ public class ColorSensor {
   /** Calculates the median color sensor data in preparation for running the robot */
   public void calcMedian() {
     for(int i = 0;i<256;i++){
-      findLine();
+      findLineMax();
     }
   }
 
@@ -122,5 +122,9 @@ public class ColorSensor {
       else
           median = (float) calc[calc.length / 2];
       return Math.round(median);
+  }
+
+  public int getRed() {
+    return sensor.getRed();
   }
 }

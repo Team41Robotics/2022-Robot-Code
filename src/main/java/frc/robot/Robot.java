@@ -8,6 +8,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.ColorSensorV3;
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
+  // private I2C testCS;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -49,6 +51,7 @@ public class Robot extends TimedRobot {
     shooter = new Shooter();
     hood = new Hood();
     climber = new Climber();
+    // testCS = new I2C(Port.kOnboard, 0x52);
   }
 
   /**
@@ -66,8 +69,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     onTapeL = false;
     onTapeR = false;
-    autonState = AutonState.FIND_LINE;
-    intake.autonInit();
+    // autonState = AutonState.FIND_LINE;
+    // intake.autonInit();
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     drivetrain.setPosition(0);
@@ -77,6 +80,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     // State machine for auton
+
     autonState = AutonState.NONE;
     switch (autonState) {
       // Go until ball finds the starting tape
@@ -129,6 +133,7 @@ public class Robot extends TimedRobot {
       case NONE:
         System.out.print(leftColorSensor.findLineMax());
         System.out.println(rightColorSensor.findLineMax());
+        // System.out.println(testCS.read(00, 1, new byte[1]));
         break;
     }
   }
@@ -181,7 +186,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // hood.home();
-    drivetrain.startTime = System.currentTimeMillis();
+    // drivetrain.startTime = System.currentTimeMillis();
   }
   /**doesnt have any code yet */
   @Override
@@ -191,7 +196,8 @@ public class Robot extends TimedRobot {
     // hood.test();
     // shooter.test();
     // Limelight.test();
-    drivetrain.test();
+    // drivetrain.teleop();
+    //drivetrain.test();
     // System.out.print("Hood Angle: ");
     // System.out.print(hood.angle);
     // System.out.print("\t\tShooter Speed: ");

@@ -15,7 +15,7 @@ public class Constants {
     static double RED_TAPE_LEFT_THRESHOLD = 1e8; // 2e7
     static double BLUE_TAPE_RIGHT_THRESHOLD = 27000000; 
     static double RED_TAPE_RIGHT_THRESHOLD = 1e8; 
-    static double MAX_TAPE_VALUES_THRESHOLD = 100;
+    static double MAX_TAPE_VALUES_THRESHOLD = 500;
     /** How long the circular buffer for smoothing color sensor data is */
     static int COLOR_BUFFER_LEN = 256;
 
