@@ -36,5 +36,13 @@ class Limelight {
 
     public static void test() {
         System.out.println(estimateDistance());
-    }    
+    }   
+    
+    public static double getRobotAngle(){
+        double cameraAngle = getHorizontalAngle();
+        double distance = estimateDistance();
+        double x = Constants.LIMELIGHT_DEPTH_OFFSET + distance * Math.cos(cameraAngle);
+        double y = Constants.LIMELIGHT_HORIZONTAL_OFFSET + distance * Math.sin(cameraAngle);
+        return(Math.atan2(y, x));
+    }
 }
