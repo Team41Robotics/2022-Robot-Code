@@ -8,6 +8,12 @@ public class Constants {
     static int RIGHT_DRIVER_STATION= 2;
     static int FIRST_STAGE_CLIMBING_DOWN = 3;
     static int FIRST_STAGE_CLIMBING_UP = 4;
+    
+    // IDs for controller control
+    static int CONTROLLER_PORT = 3;
+    static int CONTROLLER_CLIMBING_BUTTON = 1;
+    static int LEFT_AXIS_NUM = 1;
+    static int RIGHT_AXIS_NUM = 5;
 
 
     //Thresholds at which color sensors will detect the line

@@ -8,6 +8,7 @@ public class Drivetrain {
     private boolean climbing;
     private Joystick leftJoy;
     private Joystick rightJoy;
+    private Joystick controller;
     private TalonFX talonLF, talonLB, talonRF, talonRB;
     private TalonFX[] talonList = new TalonFX[4];
     private PID leftBackPID;
@@ -31,8 +32,7 @@ public class Drivetrain {
         talonLB.setInverted(true); 
         talonLF.setInverted(true);
         
-        leftJoy = Robot.leftJoy;
-        rightJoy = Robot.rightJoy;
+        controller = Robot.controller;
 
         leftBackPID = new PID(talonLB, 0.8, 0.02, 0.0004, 1.5, 0.5);
         leftFrontPID = new PID(talonLF, 0.8, 0.02, 0.0004, 1.5, 0.5);
@@ -83,8 +83,8 @@ public class Drivetrain {
     
     /** Run the drivetrain at half the speed of the joysticks */
     public void teleop() { 
-        double leftSpeed = joystickTransfer(-leftJoy.getY());
-        double rightSpeed = joystickTransfer(-rightJoy.getY());
+        double leftSpeed = joystickTransfer(controller.getRawAxis(Constants.LEFT_AXIS_NUM));
+        double rightSpeed = joystickTransfer(controller.getRawAxis(Constants.RIGHT_AXIS_NUM));
     
         if(Math.abs(leftSpeed) > (climbing ? 0.001 : 0.1)) {
             setLeft(leftSpeed);
@@ -98,7 +98,7 @@ public class Drivetrain {
             setRight(0);
         }
 
-        if (rightJoy.getRawButtonPressed(Constants.CLIMBING_DRIVE_BUTTON)) {
+        if (controller.getRawButtonPressed(Constants.CONTROLLER_CLIMBING_BUTTON)) {
             climbing = !climbing;
         }
         // System.out.println(climbing ? "Climbing" : "Normal");
@@ -137,6 +137,7 @@ public class Drivetrain {
             set(0);
         }
     }
+
     
     // max rpm: 6380 
     public void runInverseKinematics(double angularVel, double linearVel) {

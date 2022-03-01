@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
   public static boolean intakeOn = false;
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
+  public static Joystick controller = new Joystick(Constants.CONTROLLER_PORT);
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   public static Intake intake;
   public static Hood hood;
@@ -192,7 +193,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     LiveWindow.setEnabled(false);
-    System.out.println(Limelight.getRobotAngle());
+    System.out.println(Limelight.getActualAngle());
     // intake.test();
     // hood.test();
     // shooter.test();
