@@ -72,8 +72,8 @@ public class Constants {
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
     static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
-    static double LIMELIGHT_DEPTH_OFFSET = -2;
-    static double LIMELIGHT_HORIZONTAL_OFFSET=-4;
+    static double LIMELIGHT_DEPTH_OFFSET = 2;
+    static double LIMELIGHT_HORIZONTAL_OFFSET=-4.5;
 
     // Ports for Climbing
     static int CLIMBING_SPARK_F = 1;
@@ -104,6 +104,8 @@ public class Constants {
         GOTO_BALL,
         PICKUP_BALL,
         TRACK_BALL,
+        PREPARE_SHOOTER,
+        SHOOT_BALL,
         NONE
     }
 

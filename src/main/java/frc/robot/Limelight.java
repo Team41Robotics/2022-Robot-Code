@@ -40,10 +40,17 @@ class Limelight {
     }   
     
     public static double getRobotAngle(){
-        double cameraAngle = getHorizontalAngle();
+        double cameraAngle = Math.toRadians(getHorizontalAngle());
         double distance = estimateDistance();
-        double x = Constants.LIMELIGHT_DEPTH_OFFSET + distance * Math.cos(cameraAngle);
-        double y = Constants.LIMELIGHT_HORIZONTAL_OFFSET + distance * Math.sin(cameraAngle);
-        return(Math.atan2(y, x));
+        double x = Constants.LIMELIGHT_DEPTH_OFFSET + (distance * Math.cos(cameraAngle));
+        double y = Constants.LIMELIGHT_HORIZONTAL_OFFSET + (distance * Math.sin(cameraAngle));
+        SmartDashboard.putNumber("X", x);
+        SmartDashboard.putNumber("Y", y);
+        SmartDashboard.putNumber("Arctan", Math.atan(y/x));
+        return Math.toDegrees(Math.atan2(y, x));
+    }
+
+    public static boolean targetFound() {
+        return getHorizontalAngle() != 0.0;
     }
 }

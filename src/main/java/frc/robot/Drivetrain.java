@@ -125,17 +125,19 @@ public class Drivetrain {
     }
 
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
-    public void alignToGoal() {
-        double angle = Limelight.getHorizontalAngle();
-        if (angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+    public boolean alignToGoal() {
+        double angle = Limelight.getRobotAngle();
+        if (Limelight.targetFound() && angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
             setRight(-Constants.AUTON_SPEED/2);
             setLeft(Constants.AUTON_SPEED/2);
-        } else if (angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+        } else if (Limelight.targetFound() && angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
             setRight(Constants.AUTON_SPEED/2);
             setLeft(-Constants.AUTON_SPEED/2);
         } else {
             set(0);
+            return true;
         }
+        return false;
     }
     
     // max rpm: 6380 
