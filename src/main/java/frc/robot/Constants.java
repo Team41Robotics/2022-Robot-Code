@@ -15,13 +15,13 @@ public class Constants {
     static double RED_TAPE_LEFT_THRESHOLD = 1e8; // 2e7
     static double BLUE_TAPE_RIGHT_THRESHOLD = 27000000; 
     static double RED_TAPE_RIGHT_THRESHOLD = 1e8; 
-    static double MAX_TAPE_VALUES_THRESHOLD = 500;
+    static double MAX_TAPE_VALUES_THRESHOLD = 200;
     /** How long the circular buffer for smoothing color sensor data is */
     static int COLOR_BUFFER_LEN = 256;
 
     // Auton parameters
-    static double AUTON_SPEED = -0.1;
-    static int AUTON_DISTANCE = -20;
+    static double AUTON_SPEED = 0.1;
+    static int AUTON_DISTANCE = 50;
 
     // Ports for drivetrain Talons
     static int FALCON_LF = 10;
@@ -36,7 +36,8 @@ public class Constants {
     static double MAX_RPM = 6380;
 
     // Measurements for the physical robot
-    static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
+    // static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
+    static double WHEEL_CONVERSION_FACTOR = 0.000322265628223*Math.PI;
     static double WHEEL_RAD = 0.0762;
     static double ROBOT_DIAMETER = 0.6604;
     static double WHEEL_RADPERSEC_TO_MOTOR_RPM = 3000/(11*Math.PI);
