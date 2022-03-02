@@ -46,6 +46,7 @@ public class ColorSensor {
     colorData[0] = sensor.getRed();
     colorData[1] = sensor.getGreen();
     colorData[2] = sensor.getBlue();
+    // System.out.println(Arrays.toString(colorData));
     return Math.max(colorData[0]-medians[0], colorData[2]-medians[2]);
   }
 

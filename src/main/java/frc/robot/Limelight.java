@@ -3,6 +3,7 @@ import java.lang.Math;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class Limelight {
     private static NetworkTable limelightTable  = NetworkTableInstance.getDefault().getTable("limelight");
