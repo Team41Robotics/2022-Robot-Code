@@ -182,7 +182,7 @@ public class Robot extends TimedRobot {
 
     double distance = Limelight.estimateDistance();
     double speed = (distance*Constants.HOOD_MID_SPEED_SLOPE)+Constants.HOOD_MID_SPEED_OFFSET;
-    double angle = (-distance*distance*Constants.HOOD_MID_ANGLE_CURVE)+(distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
+    double angle = (distance*distance*Constants.HOOD_MID_ANGLE_CURVE)+(distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
 
     if (secondDS.getRawButton(6)) {
       Limelight.setLedOn(true);
