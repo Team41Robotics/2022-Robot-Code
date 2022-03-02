@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Intake {
     private boolean intakeOn;
     private boolean intakeUp;
-    private Joystick leftJoy, rightJoy;
+    private Joystick leftJoy, rightJoy, secondDS;
     private CANSparkMax intakeMotor, conveyor;
     private DoubleSolenoid intakeSolLeft;
     private DoubleSolenoid intakeSolRight;
@@ -25,6 +25,7 @@ public class Intake {
         intakeUp = false;
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
+        secondDS = Robot.secondDS;
         intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushless);
         conveyor = new CANSparkMax(Constants.CONVEYOR_MOTOR, MotorType.kBrushless);
         conveyor.setInverted(true);
@@ -55,10 +56,18 @@ public class Intake {
           intakeUp = !intakeUp;
           intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
           intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
-          }
-        if (rightJoy.getRawButtonPressed(1)) {
+        }
+        if (Shooter.reverseOn) {
+          conveyor.set(-Constants.CONVEYOR_FULL_SPEED);
+          intakeMotor.set(-Constants.INTAKE_FULL_SPEED);
+        } else if (rightJoy.getRawButtonPressed(1)) {
           intakeOn = !intakeOn;
           run(intakeOn ? INTAKE_MODE.FORWARD : INTAKE_MODE.OFF);
+        } else if (secondDS.getRawButton(1)) {
+          conveyor.set(Constants.CONVEYOR_FULL_SPEED);
+        } else if (!intakeOn) {
+          conveyor.set(0);
+          intakeMotor.set(0);
         }
     }
 
@@ -92,6 +101,10 @@ public class Intake {
 
     public void setIntakeOn(boolean val) {
       intakeOn = val;
+    }
+
+    public void runConveyor(boolean on) {
+      conveyor.set(on ? Constants.CONVEYOR_FULL_SPEED : 0);
     }
 }   
 

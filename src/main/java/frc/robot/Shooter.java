@@ -10,9 +10,10 @@ public class Shooter {
     TalonFX leftFalcon, rightFalcon;
     CANSparkMax feeder, elevator;
     Joystick rightDS, rightJoy;
-    PID leftFalconPID, rightFalconPID;
+    public PID leftFalconPID, rightFalconPID;
     public double speed = 0;
-    boolean testOn = false, reverseOn;
+    public boolean testOn = false;
+    public static boolean reverseOn = false;
     Intake intake;
     
     public Shooter() {
@@ -35,15 +36,17 @@ public class Shooter {
     public void teleop() {
         if (rightJoy.getRawButtonPressed(3)) {
             reverseOn = !reverseOn;
-            intake.run(reverseOn ? Constants.INTAKE_MODE.REVERSE : INTAKE_MODE.OFF);
-            intake.setIntakeOn(false);
+            System.out.print("ReverseOn: ");
+            System.out.println(reverseOn);
             elevator.set(reverseOn ? -Constants.ELEVATOR_FULL_SPEED : 0);
             feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);
         } else {
             if (rightDS.getRawButton(1)) {
                 feeder.set(Constants.FEEDER_FULL_SPEED);
             } else {
-                feeder.set(0);
+                if (!reverseOn) {
+                   feeder.set(0);   
+                }
             }
         }
     }
