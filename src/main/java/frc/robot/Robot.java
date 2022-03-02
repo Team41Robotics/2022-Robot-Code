@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.ColorSensorV3;
@@ -139,8 +138,8 @@ public class Robot extends TimedRobot {
 
       case PREPARE_SHOOTER:
         double distance = Limelight.estimateDistance();
-        double speed = (distance*Constants.HOOD_MID_SPEED_SLOPE)+Constants.HOOD_MID_SPEED_OFFSET;
-        double angle = (-distance*distance*Constants.HOOD_MID_ANGLE_CURVE)+(distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
+        double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
+        double angle = (-distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
         shooter.setSpeed(speed/100);
         hood.setToPosition(angle);
         if (shooter.isReady() && hood.isReady()) {
@@ -181,8 +180,8 @@ public class Robot extends TimedRobot {
     shooter.teleop();
 
     double distance = Limelight.estimateDistance();
-    double speed = (distance*Constants.HOOD_MID_SPEED_SLOPE)+Constants.HOOD_MID_SPEED_OFFSET;
-    double angle = (distance*distance*Constants.HOOD_MID_ANGLE_CURVE)+(distance*Constants.HOOD_MID_ANGLE_SLOPE)+Constants.HOOD_MID_ANGLE_OFFSET;
+    double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
+    double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
 
     if (secondDS.getRawButton(6)) {
       Limelight.setLedOn(true);
