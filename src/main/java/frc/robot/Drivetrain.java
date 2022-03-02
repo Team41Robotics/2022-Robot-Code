@@ -34,10 +34,10 @@ public class Drivetrain {
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
 
-        leftBackPID = new PID(talonLB, 0.8, 0.02, 0.0004, 1.5, 0.5);
-        leftFrontPID = new PID(talonLF, 0.8, 0.02, 0.0004, 1.5, 0.5);
-        rightBackPID = new PID(talonRB, 0.8, 0.02, 0.0004, 1.5, 0.5);
-        rightFrontPID = new PID(talonRF, 0.8, 0.02, 0.0004, 1.5, 0.5);
+        leftBackPID = new PID(talonLB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
+        leftFrontPID = new PID(talonLF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
+        rightBackPID = new PID(talonRB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
+        rightFrontPID = new PID(talonRF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
     }
 
     /**

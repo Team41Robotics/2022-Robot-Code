@@ -36,7 +36,6 @@ public class Constants {
     static double MAX_RPM = 6380;
 
     // Measurements for the physical robot
-    // static double WHEEL_CONVERSION_FACTOR = Math.PI/2;
     static double WHEEL_CONVERSION_FACTOR = 0.000322265628223*Math.PI;
     static double WHEEL_RAD = 0.0762;
     static double ROBOT_DIAMETER = 0.6604;
@@ -94,10 +93,18 @@ public class Constants {
     
     // Constants for Hood Auto Alligning
     static double HOOD_MID_SPEED_SLOPE = 0.0731;
-    static double HOOD_MID_SPEED_OFFSET = 35.2;
+    static double HOOD_MID_SPEED_OFFSET = 37;
     static double HOOD_MID_ANGLE_SLOPE = 0.2457;
     static double HOOD_MID_ANGLE_OFFSET = 6.5;
     static double HOOD_MID_ANGLE_CURVE = 0.000437;
+
+    static double kP = 0.8;
+    static double kI = 0.02;
+    static double kD = 0.004;
+    static double kFF = 1.5;
+    static double RAMP_TIME = 1.0;
+
+    static double PID_MIN_ERR = 0.05;
 
     //different states for auton
     public enum AutonState {
