@@ -14,6 +14,7 @@ public class Hood {
     Joystick station;
     RelativeEncoder enc;
     public double angle;
+    private boolean ready;
 
     public Hood() {
         // Bottom switch needs to be inverted
@@ -25,6 +26,7 @@ public class Hood {
         enc.setPosition(0);
         station = Robot.secondDS;
         angle = 0;
+        ready = false;
     }
 
     public void teleop() {
@@ -44,10 +46,13 @@ public class Hood {
         double pos = enc.getPosition();
         if (topSwitch.get() && (pos - angle) < -1 && pos < 50) {
             hoodMotor.set(Constants.HOOD_SPEED/2);
-        } else if (bottomSwitch.get() && (pos-angle) > 1) {
+            ready = false;
+        } else if (bottomSwitch.get() && (pos-angle) > 1 && pos > 0) {
             hoodMotor.set(-Constants.HOOD_SPEED/4);
+            ready = false;
         } else {
             hoodMotor.set(0);
+            ready = true;
         }
     }
 
@@ -68,5 +73,9 @@ public class Hood {
             hoodMotor.set(-Constants.HOOD_SPEED/4);
         }
         enc.setPosition(0);
+    }
+
+    public boolean isReady() {
+        return ready;
     }
 }

@@ -113,4 +113,8 @@ public class PID {
     public double getControlSignal() {
         return controlSignal;
     }
+
+    public boolean isReady() {
+        return err < Constants.PID_MIN_ERR;
+    }
 }

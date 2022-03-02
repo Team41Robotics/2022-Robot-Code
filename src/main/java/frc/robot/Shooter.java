@@ -78,4 +78,12 @@ public class Shooter {
             elevator.set(0);
         }
     }
+
+    public boolean isReady() {
+        return leftFalconPID.isReady();
+    }
+
+    public void runFeeder(boolean on) {
+        feeder.set(on ? Constants.FEEDER_FULL_SPEED : 0);
+    }
 }
