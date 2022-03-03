@@ -98,6 +98,13 @@ public class Constants {
     static double HOOD_ANGLE_OFFSET = 6.5;
     static double HOOD_ANGLE_CURVE = -0.000437;
 
+    static double SHOOTER_DEFAULT_SPEED = 0.35;
+    static double HOOD_DEFAULT_ANGLE = 20;
+
+    static double LOW_GOAL_SPEED = 0.22;
+    static double LOW_GOAL_ANGLE = 20;
+
+    // P: 0.8   I: 0.02   D: 0.004   FF: 1.5
     static double kP = 0.8;
     static double kI = 0.02;
     static double kD = 0.004;

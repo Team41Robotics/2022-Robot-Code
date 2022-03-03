@@ -184,13 +184,22 @@ public class Robot extends TimedRobot {
     double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
     double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
 
-    if (secondDS.getRawButton(6)) {
+    if (secondDS.getRawButton(5)) {
+      Limelight.setLedOn(false);
+      shooter.setSpeed(Constants.LOW_GOAL_SPEED);
+      hood.setToPosition(Constants.LOW_GOAL_ANGLE);
+      drivetrain.alignToGoal();
+    } else if (secondDS.getRawButton(6)) {
       Limelight.setLedOn(true);
       if (Limelight.targetFound()) {
         shooter.setSpeed(speed/100);
         hood.setToPosition(angle);
         drivetrain.alignToGoal();
       }
+    } else if (secondDS.getRawButton(15)) {
+      shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+      hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
+      drivetrain.teleop();
     } else {
       drivetrain.teleop();
       hood.teleop();
