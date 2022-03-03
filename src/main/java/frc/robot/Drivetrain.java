@@ -103,7 +103,10 @@ public class Drivetrain {
         }
         // System.out.println(climbing ? "Climbing" : "Normal");
         
-        SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
+        // SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
+        // SmartDashboard.putNumber("Motor Ctrl", leftBackPID.getControlSignal());
+        // SmartDashboard.putNumber("Left JS Input", leftSpeed);
+        // SmartDashboard.putNumber("Right JS Input", rightSpeed);
     }
 
     /**
