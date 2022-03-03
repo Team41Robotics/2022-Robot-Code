@@ -4,7 +4,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.INTAKE_MODE;
+
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -69,6 +71,8 @@ public class Intake {
           conveyor.set(0);
           intakeMotor.set(0);
         }
+
+        SmartDashboard.putBoolean("Intake On", intakeOn);
     }
 
     public void test() {
