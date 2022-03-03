@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.ColorSensorV3;
@@ -111,6 +110,7 @@ public class Robot extends TimedRobot {
       
       // After the line, go to where we know the ball is (~40in outside of the tape)
       case GOTO_BALL:
+        Limelight.setLedOn(true);
         if(drivetrain.getPosition() >= Constants.AUTON_DISTANCE ) {
           drivetrain.stop();
           autonState = AutonState.PICKUP_BALL;
@@ -127,7 +127,6 @@ public class Robot extends TimedRobot {
         break;
         
       case TRACK_BALL:
-        Limelight.setLedOn(true);
         if (drivetrain.alignToGoal()) {
           autonState = Constants.AutonState.PREPARE_SHOOTER;
         }
@@ -206,9 +205,6 @@ public class Robot extends TimedRobot {
       shooter.setSpeed(0);
       Limelight.setLedOn(false);
     }
-
-    SmartDashboard.putNumber("Motor 1 velocity", shooter.leftFalconPID.getVelocity());
-    SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
   }
   
   /** doesnt have any code yet */
