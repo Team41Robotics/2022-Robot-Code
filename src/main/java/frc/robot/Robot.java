@@ -168,6 +168,7 @@ public class Robot extends TimedRobot {
     shooter.setSpeed(0);
     hood.home();
     Limelight.setLedOn(false);
+    climber.reset();
   }
 
   /** This function is called periodically during operator control. */

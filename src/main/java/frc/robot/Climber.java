@@ -61,6 +61,15 @@ public class Climber {
 
 
 
+    public void reset() {
+        secondStageGearLock.set(DoubleSolenoid.Value.kForward);
+        secondStageRelease.set(DoubleSolenoid.Value.kForward);
+        firstStageGearLock.set(DoubleSolenoid.Value.kReverse);
+        gearShifter.set(Value.kForward); 
+        firstStageUp = false; 
+        secondStageUp = false;
+    }
+
     public void teleop() {
         if (driverStation.getRawButton(13)) {
             if (leftJoy.getRawButton(3)) {
