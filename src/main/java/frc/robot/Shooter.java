@@ -33,20 +33,15 @@ public class Shooter {
     }
 
     public void teleop() {
-        if (rightJoy.getRawButtonPressed(3)) {
-            reverseOn = !reverseOn;
-            System.out.print("ReverseOn: ");
-            System.out.println(reverseOn);
+        if (rightJoy.getRawButton(3)) {
+            reverseOn = true;
+        } else {
+            reverseOn = false;
+            if (rightDS.getRawButton(1) && reverseOn == false) {
+                feeder.set(Constants.FEEDER_FULL_SPEED);
+            }
             elevator.set(reverseOn ? -Constants.ELEVATOR_FULL_SPEED : 0);
             feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);
-        } else {
-            if (rightDS.getRawButton(1)) {
-                feeder.set(Constants.FEEDER_FULL_SPEED);
-            } else {
-                if (!reverseOn) {
-                   feeder.set(0);   
-                }
-            }
         }
     }
 
