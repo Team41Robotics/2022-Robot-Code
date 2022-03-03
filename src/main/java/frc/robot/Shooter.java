@@ -1,6 +1,5 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.Constants.INTAKE_MODE;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
