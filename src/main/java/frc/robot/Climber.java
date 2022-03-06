@@ -155,4 +155,12 @@ public class Climber {
             }
         }
     }
+
+    public boolean getLSwitch() {
+        return firstStageLeftSwitch.get();
+    }
+
+    public boolean getRSwitch() {
+        return firstStageRightSwitch.get();
+    }
 }
