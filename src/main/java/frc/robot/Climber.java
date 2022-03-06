@@ -30,6 +30,7 @@ public class Climber {
     private long startTime;
     private Hood hood;
     private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
+    public boolean climbing;
 
     public Climber() {
         climbingMotor1 = new CANSparkMax(Constants.CLIMBING_SPARK_F, MotorType.kBrushless);
@@ -57,6 +58,8 @@ public class Climber {
         firstStageLeftSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_L);
         firstStageRightSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_R);
         secondStageSwitch = new DigitalInput(Constants.SECOND_STAGE_LIMIT_SWITCH);
+        
+        climbing = false;
     }
 
 
@@ -68,6 +71,7 @@ public class Climber {
         gearShifter.set(Value.kForward); 
         firstStageUp = false; 
         secondStageUp = false;
+        climbing = false;
     }
 
     public void teleop() {
@@ -93,10 +97,11 @@ public class Climber {
                     climbingMotor2.set(0);
                     break;            
                 case(45):
+                    climbing = true;
+                    hood.setToPosition(0);
                     if (!firstStageUp) {
                         climbingMotor1.set(-Constants.CLIMBING_SLOW_SPEED);
                         climbingMotor2.set(-Constants.CLIMBING_SLOW_SPEED);
-                        hood.setToPosition(0);
                         if (!(firstStageLeftSwitch.get() && firstStageRightSwitch.get())) {
                             firstStageUp = true;
                             System.out.println("Pressed");
