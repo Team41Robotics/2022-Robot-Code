@@ -42,6 +42,7 @@ public class Intake {
         intakeSolRight.set(DoubleSolenoid.Value.kForward);
         intakeUp = true;
         intakeMotor.set(Constants.INTAKE_FULL_SPEED);
+        conveyor.set(Constants.CONVEYOR_FULL_SPEED);
     }
 
     /**
@@ -109,6 +110,11 @@ public class Intake {
 
     public void runConveyor(boolean on) {
       conveyor.set(on ? Constants.CONVEYOR_FULL_SPEED : 0);
+    }
+
+    public void stop() {
+      conveyor.set(0);
+      intakeMotor.set(0);
     }
 }   
 
