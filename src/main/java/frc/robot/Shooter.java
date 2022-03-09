@@ -1,5 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -35,14 +37,18 @@ public class Shooter {
     public void teleop() {
         if (rightJoy.getRawButton(3)) {
             reverseOn = true;
+            elevator.set(reverseOn ? -Constants.ELEVATOR_FULL_SPEED : 0);
+            feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);
         } else {
             reverseOn = false;
             if (rightDS.getRawButton(1) && reverseOn == false) {
                 feeder.set(Constants.FEEDER_FULL_SPEED);
+            } else {
+                feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);
+                
             }
-            elevator.set(reverseOn ? -Constants.ELEVATOR_FULL_SPEED : 0);
-            feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);
         }
+        SmartDashboard.putNumber("Shooter Error", leftFalconPID.getError());
     }
 
     public void test() {
@@ -82,5 +88,13 @@ public class Shooter {
 
     public void runFeeder(boolean on) {
         feeder.set(on ? Constants.FEEDER_FULL_SPEED : 0);
+    }
+
+    public double getErr() {
+        return leftFalconPID.getError();
+    }
+
+    public void runElevator(double speed) {
+        elevator.set(speed);
     }
 }
