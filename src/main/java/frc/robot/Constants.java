@@ -28,10 +28,10 @@ public class Constants {
     static int FALCON_LB = 9;
     static int FALCON_RF = 7;
     static int FALCON_RB = 8;
-    static double DRIVETRAIN_MAX_SPEED = 0.85;
+    static double DRIVETRAIN_MAX_SPEED = 0.75;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
     static double CLIMBING_MAX_SPEED = 0.7;
-    static double CLIMBING_SLOW_SPEED = 0.5;
+    static double CLIMBING_SLOW_SPEED = 0.4;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
     static double MAX_RPM = 6380;
 
@@ -109,9 +109,9 @@ public class Constants {
     static double kI = 0.02;
     static double kD = 0.004;
     static double kFF = 1.5;
-    static double RAMP_TIME = 1.25;
+    static double RAMP_TIME = 0.9;
 
-    static double PID_MIN_ERR = 0.05;
+    static double PID_MIN_ERR = 0.03;
 
     //different states for auton
     public enum AutonState {
