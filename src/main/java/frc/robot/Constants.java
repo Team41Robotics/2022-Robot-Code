@@ -71,7 +71,7 @@ public class Constants {
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
-    static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 2;  
+    static double LIMELIGHT_HORIZONTAL_THRESHHOLD = 1;  
     static double LIMELIGHT_DEPTH_OFFSET = 2;
     static double LIMELIGHT_HORIZONTAL_OFFSET=-4.5;
 
@@ -94,8 +94,8 @@ public class Constants {
     // Constants for Hood Auto Alligning
     static double HOOD_SPEED_SLOPE = 0.0731;
     static double HOOD_SPEED_OFFSET = 35.2;
-    static double HOOD_ANGLE_SLOPE = 0.2457;
-    static double HOOD_ANGLE_OFFSET = 6.5;
+    static double HOOD_ANGLE_SLOPE = 0.231;
+    static double HOOD_ANGLE_OFFSET = 8.96;
     static double HOOD_ANGLE_CURVE = -0.000437;
 
     static double SHOOTER_DEFAULT_SPEED = 0.35;
