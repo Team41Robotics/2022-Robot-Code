@@ -84,7 +84,12 @@ public class PID {
             usedDeltaSpeed = Math.min(reqDeltaSpeed, deltaSpeed);
         }
 
-        currSpeed += usedDeltaSpeed;
+        runCore(currSpeed+usedDeltaSpeed, deltaT);
+        time = System.currentTimeMillis();
+    }
+
+    private void runCore(double s, double deltaT) {
+        currSpeed = s;
         vel = motor.getSelectedSensorVelocity()*SENSOR_NORM;
         err = currSpeed-vel;
 
@@ -98,8 +103,14 @@ public class PID {
 
         controlSignal = p(err)+i(err, deltaT)+d(err, deltaT);
         controlSignal += currSpeed*kF;
-        time = currentTime;
         motor.set(ControlMode.PercentOutput, controlSignal);
+    }
+
+    public void runNoRamp(double speed) {
+        long currentTime = System.currentTimeMillis();
+        double deltaT = (currentTime-time)/1000.0;
+        runCore(speed, deltaT);
+        time = System.currentTimeMillis();
     }
 
     public double getError() {
