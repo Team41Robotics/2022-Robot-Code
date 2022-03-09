@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
   private AutonState autonState;
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
+  private int autonCounter;
   // private I2C testCS;
 
   /**
@@ -67,6 +68,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    autonCounter = 0;
     onTapeL = false;
     onTapeR = false;
     autonState = AutonState.FIND_LINE;
@@ -74,17 +76,131 @@ public class Robot extends TimedRobot {
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     drivetrain.setPosition(0);
-    shooter.setSpeed(0);
     hood.home();
+    Limelight.resetZoom();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    if (SmartDashboard.getBoolean("Do Real Auton", true)) {
+      fullAuton();
+    } else {
+      simpleAuton();
+    }
+
+  }
+
+  /** This function is called once when teleop is enabled. */
+  @Override
+  public void teleopInit() {
+    leftColorSensor.calcMedian();
+    rightColorSensor.calcMedian();
+    shooter.setSpeed(0);
+    hood.home();
+    intake.stop();
+    Limelight.setLedOn(false);
+    climber.reset();
+  }
+
+  /** This function is called periodically during operator control. */
+  @Override
+  public void teleopPeriodic() {
+    intake.teleop();
+    leftColorSensor.teleop();
+    rightColorSensor.teleop();
+    climber.teleop();
+    shooter.teleop();
+    Limelight.manualZoom(secondDS);
+
+    double distance = Limelight.estimateDistance();
+    double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
+    double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+
+
+    if (secondDS.getRawButton(11)) {
+      Constants.HOOD_SPEED_OFFSET += 0.5;
+    } else if (secondDS.getRawButton(12)) {
+      Constants.HOOD_SPEED_OFFSET -= 0.5;
+    }
+    if (secondDS.getRawButton(14)) {
+      shooter.setSpeed(-secondDS.getRawAxis(0));
+    } else if (secondDS.getRawButton(5)) {
+      Limelight.setLedOn(false);
+      shooter.setSpeed(Constants.LOW_GOAL_SPEED);
+      hood.setToPosition(Constants.LOW_GOAL_ANGLE);
+      drivetrain.alignToGoal();
+    } else if (secondDS.getRawButton(6)) {
+      Limelight.setLedOn(true);
+      if (Limelight.targetFound()) {
+        shooter.setSpeed(speed/100);
+        hood.setToPosition(angle);
+        drivetrain.alignToGoal();
+      }
+    } else if (secondDS.getRawButton(15)) {
+      Limelight.setLedOn(true);
+      shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+      hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
+      drivetrain.teleop();
+    } else if (climber.climbing) { 
+      shooter.setSpeed(0);
+      Limelight.setLedOn(false);
+      drivetrain.teleop();
+    } else {
+      drivetrain.teleop();
+      hood.teleop();
+      shooter.setSpeed(0);
+      Limelight.setLedOn(false);
+    }
+
+    
+    SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
+    SmartDashboard.putNumber("Shooter Offset", Constants.HOOD_SPEED_OFFSET);
+    SmartDashboard.putBoolean("Shooter Ready", shooter.isReady());
+  }
+  
+  /** doesnt have any code yet */
+  @Override
+  public void disabledInit() {}
+  /**doesnt have any code yet */
+  @Override
+  public void disabledPeriodic() {}
+  /**doesnt have any code yet */
+  @Override
+  public void testInit() {
+    leftColorSensor.calcMedian();
+    rightColorSensor.calcMedian();
+    // hood.home();
+    // drivetrain.startTime = System.currentTimeMillis();
+  }
+  /**doesnt have any code yet */
+  @Override
+  public void testPeriodic() {
+    LiveWindow.setEnabled(false);
+    System.out.print(leftColorSensor.findLineMax());
+    System.out.println(rightColorSensor.findLineMax());
+    SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
+    // System.out.print(Limelight.getRobotAngle());
+    // System.out.println(Limelight.getHorizontalAngle());
+    // intake.test();
+    // hood.test();
+    // shooter.test();
+    // Limelight.test();
+    // drivetrain.teleop();
+    //drivetrain.test();
+    // System.out.print("Hood Angle: ");
+    // System.out.print(hood.angle);
+    // System.out.print("\t\tShooter Speed: ");
+    // System.out.println(shooter.speed);
+  }
+
+  public void fullAuton() {
+    SmartDashboard.putNumber("PID Err", shooter.getErr());
     // State machine for auton
     switch (autonState) {
       // Go until ball finds the starting tape
       case FIND_LINE:
+        shooter.setSpeed(35.5);
         if(leftColorSensor.findLineMax()){
           onTapeL = true;
           System.out.println("Left Sensor has found the tape");
@@ -137,17 +253,19 @@ public class Robot extends TimedRobot {
 
       case PREPARE_SHOOTER:
         double distance = Limelight.estimateDistance();
-        double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
-        double angle = (-distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+        double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
+        double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
         shooter.setSpeed(speed/100);
         hood.setToPosition(angle);
-        if (shooter.isReady() && hood.isReady()) {
+        if (hood.isReady() && ++autonCounter > 150) {
           autonState = AutonState.SHOOT_BALL;
         }
+        drivetrain.setNoRamp(0);
         break;
 
       case SHOOT_BALL:
         shooter.runFeeder(true);
+        shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
         intake.runConveyor(true);
         break;
 
@@ -159,82 +277,21 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called once when teleop is enabled. */
-  @Override
-  public void teleopInit() {
-    leftColorSensor.calcMedian();
-    rightColorSensor.calcMedian();
-    shooter.setSpeed(0);
-    hood.home();
-    Limelight.setLedOn(false);
-    climber.reset();
-  }
-
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {
-    intake.teleop();
-    leftColorSensor.teleop();
-    rightColorSensor.teleop();
-    climber.teleop();
-    shooter.teleop();
-
-    double distance = Limelight.estimateDistance();
-    double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
-    double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
-
-    if (secondDS.getRawButton(5)) {
-      Limelight.setLedOn(false);
-      shooter.setSpeed(Constants.LOW_GOAL_SPEED);
-      hood.setToPosition(Constants.LOW_GOAL_ANGLE);
-      drivetrain.alignToGoal();
-    } else if (secondDS.getRawButton(6)) {
-      Limelight.setLedOn(true);
-      if (Limelight.targetFound()) {
-        shooter.setSpeed(speed/100);
-        hood.setToPosition(angle);
-        drivetrain.alignToGoal();
+  public void simpleAuton() {
+    Limelight.setLedOn(true);
+    if(drivetrain.getPosition() >= 60 ) {
+      double distance = Limelight.estimateDistance();
+      double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
+      double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+      shooter.setSpeed(speed/100);
+      hood.setToPosition(angle);
+      if (shooter.isReady() && hood.isReady()) {
+        shooter.runFeeder(true);
+        intake.runConveyor(true);
       }
-    } else if (secondDS.getRawButton(15)) {
-      shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-      hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
-      drivetrain.teleop();
-    } else {
-      drivetrain.teleop();
-      hood.teleop();
-      shooter.setSpeed(0);
-      Limelight.setLedOn(false);
     }
-  }
-  
-  /** doesnt have any code yet */
-  @Override
-  public void disabledInit() {}
-  /**doesnt have any code yet */
-  @Override
-  public void disabledPeriodic() {}
-  /**doesnt have any code yet */
-  @Override
-  public void testInit() {
-    // hood.home();
-    // drivetrain.startTime = System.currentTimeMillis();
-  }
-  /**doesnt have any code yet */
-  @Override
-  public void testPeriodic() {
-    LiveWindow.setEnabled(false);
-    // System.out.print(Limelight.getRobotAngle());
-    // System.out.println(Limelight.getHorizontalAngle());
-    // intake.test();
-    // hood.test();
-    // shooter.test();
-    // Limelight.test();
-    // drivetrain.teleop();
-    //drivetrain.test();
-    // System.out.print("Hood Angle: ");
-    // System.out.print(hood.angle);
-    // System.out.print("\t\tShooter Speed: ");
-    // System.out.println(shooter.speed);
-    leftColorSensor.findLineMax();
+    else {
+      drivetrain.set(Constants.AUTON_SPEED);
+    } 
   }
 }
