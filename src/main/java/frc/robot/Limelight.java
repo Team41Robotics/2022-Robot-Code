@@ -3,6 +3,7 @@ import java.lang.Math;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class Limelight {
@@ -52,5 +53,18 @@ class Limelight {
 
     public static boolean targetFound() {
         return getHorizontalAngle() != 0.0;
+    }
+    
+    public static void manualZoom(Joystick secondDS) {
+        int POVVal = secondDS.getPOV();
+        if (POVVal == 0) {
+            limelightTable.getEntry("pipeline").setNumber(0);
+        } else {
+            limelightTable.getEntry("pipeline").setNumber(1);
+        }
+    }
+
+    public static void resetZoom() {
+        limelightTable.getEntry("pipeline").setNumber(0);
     }
 }
