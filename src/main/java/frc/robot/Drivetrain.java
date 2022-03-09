@@ -74,6 +74,18 @@ public class Drivetrain {
         SmartDashboard.putNumber("current", talonLB.getStatorCurrent());
     }
 
+    public void setNoRamp(double speed) {
+        leftBackPID.runNoRamp(speed);
+        leftFrontPID.runNoRamp(speed);
+        rightBackPID.runNoRamp(speed);
+        rightFrontPID.runNoRamp(speed);
+        
+        SmartDashboard.putNumber("err", leftBackPID.getError());
+        SmartDashboard.putNumber("vel", leftBackPID.getVelocity());
+        SmartDashboard.putNumber("ctrl", leftBackPID.getControlSignal());
+        SmartDashboard.putNumber("current", talonLB.getStatorCurrent());
+    }
+
     /**
      * Stop the drivetrain
      */
@@ -137,7 +149,7 @@ public class Drivetrain {
             setRight(Constants.AUTON_SPEED/2);
             setLeft(-Constants.AUTON_SPEED/2);
         } else {
-            set(0);
+            setNoRamp(0);
             return true;
         }
         return false;
