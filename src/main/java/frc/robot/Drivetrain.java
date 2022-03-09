@@ -6,8 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
     private boolean climbing;
-    private Joystick leftJoy;
-    private Joystick rightJoy;
+    //private Joystick leftJoy;
+    //private Joystick rightJoy;
     private Joystick controller;
     private TalonFX talonLF, talonLB, talonRF, talonRB;
     private TalonFX[] talonList = new TalonFX[4];
@@ -85,6 +85,8 @@ public class Drivetrain {
     public void teleop() { 
         double leftSpeed = joystickTransfer(controller.getRawAxis(Constants.LEFT_AXIS_NUM));
         double rightSpeed = joystickTransfer(controller.getRawAxis(Constants.RIGHT_AXIS_NUM));
+        SmartDashboard.putNumber("leftSpeed", leftSpeed);
+        SmartDashboard.putNumber("rightSpeed", rightSpeed);
     
         if(Math.abs(leftSpeed) > (climbing ? 0.001 : 0.1)) {
             setLeft(leftSpeed);

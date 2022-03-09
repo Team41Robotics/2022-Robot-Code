@@ -12,8 +12,8 @@ public class Constants {
     // IDs for controller control
     static int CONTROLLER_PORT = 3;
     static int CONTROLLER_CLIMBING_BUTTON = 1;
-    static int LEFT_AXIS_NUM = 1;
-    static int RIGHT_AXIS_NUM = 5;
+    static int LEFT_AXIS_NUM = 5;
+    static int RIGHT_AXIS_NUM = 1;
 
 
     //Thresholds at which color sensors will detect the line
@@ -30,10 +30,10 @@ public class Constants {
     static int AUTON_DISTANCE = -20;
 
     // Ports for drivetrain Talons
-    static int FALCON_LF = 10;
-    static int FALCON_LB = 9;
-    static int FALCON_RF = 7;
-    static int FALCON_RB = 8;
+    static int FALCON_LF = 1;//10;
+    static int FALCON_LB = 15;//9;
+    static int FALCON_RF = 4;//7;
+    static int FALCON_RB = 5;//8;
     static double DRIVETRAIN_MAX_SPEED = 0.85;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
     static double CLIMBING_MAX_SPEED = 0.7;
