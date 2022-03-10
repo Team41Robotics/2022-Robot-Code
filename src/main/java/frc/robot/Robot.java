@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.ColorSensorV3;
@@ -37,7 +39,7 @@ public class Robot extends TimedRobot {
   private ColorSensor leftColorSensor;
   private ColorSensor rightColorSensor;
   private int autonCounter;
-  // private I2C testCS;
+  private NetworkTable telemetryTable;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -52,7 +54,7 @@ public class Robot extends TimedRobot {
     shooter = new Shooter();
     hood = new Hood();
     climber = new Climber();
-    // testCS = new I2C(Port.kOnboard, 0x52);
+    telemetryTable = NetworkTableInstance.getDefault().getTable("telemetry");
   }
 
   /**
@@ -61,7 +63,9 @@ public class Robot extends TimedRobot {
    *
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    gatherData();
+  }
 
   /**
    * This code runs right as auton mode is started
@@ -293,5 +297,9 @@ public class Robot extends TimedRobot {
     else {
       drivetrain.set(Constants.AUTON_SPEED);
     } 
+  }
+
+  public void gatherData() {
+    climber.telemetry(telemetryTable);
   }
 }

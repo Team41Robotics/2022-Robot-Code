@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -31,6 +33,7 @@ public class Climber {
     private Hood hood;
     private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
     public boolean climbing;
+    private int climbingState;
     private double motorSpeed;
 
     public Climber() {
@@ -87,7 +90,8 @@ public class Climber {
                 secondStageGearLock.set(Value.kForward);
             }
         } else {
-            switch((int) (driverStation.getPOV(1))) {
+            climbingState = driverStation.getPOV(1);
+            switch(climbingState) {
                 case (0):
                     motorSpeed = 0;
                     break;            
@@ -151,5 +155,91 @@ public class Climber {
 
     public boolean getRSwitch() {
         return firstStageRightSwitch.get();
+    }
+
+    public void telemetry(NetworkTable table) {
+        NetworkTable motorTable = table.getSubTable("motors");
+        
+        NetworkTable climberMotor1Table = motorTable.getSubTable("Climber Motor 1");
+        climberMotor1Table.getEntry("name").setString("Climber Motor 1");
+        climberMotor1Table.getEntry("loop_error").setDouble(-1);
+        climberMotor1Table.getEntry("p").setDouble(-1);
+        climberMotor1Table.getEntry("i").setDouble(-1);
+        climberMotor1Table.getEntry("d").setDouble(-1);
+        climberMotor1Table.getEntry("requested_input_speed").setDouble(-1);
+        climberMotor1Table.getEntry("actual_input_speed").setDouble(-1);
+        climberMotor1Table.getEntry("raw_input_speed").setDouble(climbingMotor1.get());
+        climberMotor1Table.getEntry("output_speed").setDouble(climbingMotor1.getEncoder().getVelocity());
+        climberMotor1Table.getEntry("position").setDouble(climbingMotor1.getEncoder().getPosition());
+        climberMotor1Table.getEntry("position").setDouble(climbingMotor1.getOutputCurrent());
+       
+        NetworkTable climberMotor2Table = motorTable.getSubTable("Climber Motor 2");
+        climberMotor2Table.getEntry("name").setString("Climber Motor 2");
+        climberMotor2Table.getEntry("loop_error").setDouble(-1);
+        climberMotor2Table.getEntry("p").setDouble(-1);
+        climberMotor2Table.getEntry("i").setDouble(-1);
+        climberMotor2Table.getEntry("d").setDouble(-1);
+        climberMotor2Table.getEntry("requested_input_speed").setDouble(-1);
+        climberMotor2Table.getEntry("actual_input_speed").setDouble(-1);
+        climberMotor2Table.getEntry("raw_input_speed").setDouble(climbingMotor2.get());
+        climberMotor2Table.getEntry("output_speed").setDouble(climbingMotor2.getEncoder().getVelocity());
+        climberMotor2Table.getEntry("position").setDouble(climbingMotor2.getEncoder().getPosition());
+        climberMotor2Table.getEntry("position").setDouble(climbingMotor2.getOutputCurrent());
+
+        
+        NetworkTable switchTable = table.getSubTable("limit_switches");
+        
+        NetworkTable firstStageLeftSwitchTable = switchTable.getSubTable("First Climber Stage Left Limit Switch");
+        firstStageLeftSwitchTable.getEntry("name").setString("First Climber Stage Left Limit Switch");
+        firstStageLeftSwitchTable.getEntry("status").setBoolean(firstStageLeftSwitch.get());
+
+        NetworkTable firstStageRightSwitchTable = switchTable.getSubTable("First Climber Stage Right Limit Switch");
+        firstStageRightSwitchTable.getEntry("name").setString("First Climber Stage Right Limit Switch");
+        firstStageRightSwitchTable.getEntry("status").setBoolean(firstStageRightSwitch.get());
+                
+        NetworkTable secondStageSwitchTable = switchTable.getSubTable("Second Climber Stage Limit Switch");
+        secondStageSwitchTable.getEntry("name").setString("Second Climber Stage Limit Switch");
+        secondStageSwitchTable.getEntry("status").setBoolean(secondStageSwitch.get());
+
+        
+        NetworkTable solenoidTable = table.getSubTable("solenoids");
+
+        NetworkTable secondStageGearLockTable = solenoidTable.getSubTable("Second Stage Friction Brake");
+        secondStageGearLockTable.getEntry("name").setString("Second Stage Friction Brake");
+        secondStageGearLockTable.getEntry("status").setDouble(secondStageGearLock.get() == Value.kForward ? 1 : (secondStageGearLock.get() == Value.kReverse ? -1 : 0));
+        
+        NetworkTable firstStageGearLockTable = solenoidTable.getSubTable("Gear Jammer");
+        firstStageGearLockTable.getEntry("name").setString("Gear Jammer");
+        firstStageGearLockTable.getEntry("status").setDouble(firstStageGearLock.get() == Value.kForward ? 1 : (firstStageGearLock.get() == Value.kReverse ? -1 : 0));
+
+        NetworkTable secondStageReleaseTable = solenoidTable.getSubTable("Second Stage Release");
+        secondStageReleaseTable.getEntry("name").setString("Second Stage Release");
+        secondStageReleaseTable.getEntry("status").setDouble(secondStageRelease.get() == Value.kForward ? 1 : (secondStageRelease.get() == Value.kReverse ? -1 : 0));
+
+        NetworkTable gearShifterTable = solenoidTable.getSubTable("Gear Shifter");
+        gearShifterTable.getEntry("name").setString("Gear Shifter");
+        gearShifterTable.getEntry("status").setDouble(gearShifter.get() == Value.kForward ? 1 : (gearShifter.get() == Value.kReverse ? -1 : 0));
+
+
+        NetworkTableEntry climbingStateEntry = table.getEntry("state_climber");
+        switch (climbingState) {
+            case 0:
+                climbingStateEntry.setDouble(-1);
+                break;
+            case 45:
+                climbingStateEntry.setDouble(0);
+                break;
+            case 90:
+                climbingStateEntry.setDouble(1);
+                break;
+            case 135:
+                climbingStateEntry.setDouble(2);
+                break;
+            case 180:
+                climbingStateEntry.setDouble(3);
+                break;
+            case 225:
+                climbingStateEntry.setDouble(4);
+        }
     }
 }
