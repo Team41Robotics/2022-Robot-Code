@@ -31,6 +31,7 @@ public class Climber {
     private Hood hood;
     private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
     public boolean climbing;
+    private double motorSpeed;
 
     public Climber() {
         climbingMotor1 = new CANSparkMax(Constants.CLIMBING_SPARK_F, MotorType.kBrushless);
@@ -62,8 +63,6 @@ public class Climber {
         climbing = false;
     }
 
-
-
     public void reset() {
         secondStageGearLock.set(DoubleSolenoid.Value.kForward);
         secondStageRelease.set(DoubleSolenoid.Value.kForward);
@@ -77,14 +76,11 @@ public class Climber {
     public void teleop() {
         if (driverStation.getRawButton(13)) {
             if (leftJoy.getRawButton(3)) {
-                climbingMotor1.set(Constants.CLIMBING_MAX_SPEED);
-                climbingMotor2.set(Constants.CLIMBING_MAX_SPEED);
+                motorSpeed = Constants.CLIMBING_MAX_SPEED;
             } else if (leftJoy.getRawButton(4)) {
-                climbingMotor1.set(-Constants.CLIMBING_MAX_SPEED);
-                climbingMotor2.set(-Constants.CLIMBING_MAX_SPEED);
+                motorSpeed = -Constants.CLIMBING_MAX_SPEED;
             } else {
-                climbingMotor1.set(0);
-                climbingMotor2.set(0);
+                motorSpeed = 0;
             }
 
             if (driverStation.getRawButton(14)) {
@@ -93,22 +89,19 @@ public class Climber {
         } else {
             switch((int) (driverStation.getPOV(1))) {
                 case (0):
-                    climbingMotor1.set(0);
-                    climbingMotor2.set(0);
+                    motorSpeed = 0;
                     break;            
                 case(45):
                     climbing = true;
                     hood.setToPosition(0);
                     if (!firstStageUp) {
-                        climbingMotor1.set(-Constants.CLIMBING_SLOW_SPEED);
-                        climbingMotor2.set(-Constants.CLIMBING_SLOW_SPEED);
+                        motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
                         if (!(firstStageLeftSwitch.get() && firstStageRightSwitch.get())) {
                             firstStageUp = true;
                             System.out.println("Pressed");
                         }
                     } else { 
-                        climbingMotor1.set(0);
-                        climbingMotor2.set(0);
+                        motorSpeed = 0;
                     }
                     break;
                 case(90):
@@ -124,16 +117,14 @@ public class Climber {
                 case(135):
                     // send out third arm 
                     if (!secondStageUp) {
-                        climbingMotor1.set(-Constants.CLIMBING_SLOW_SPEED);
-                        climbingMotor2.set(-Constants.CLIMBING_SLOW_SPEED);
+                        motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
 
                         if (!secondStageSwitch.get()) {
                             secondStageUp = true;
                             System.out.println("Second stage bueno");
                         }
                     } else {
-                        climbingMotor1.set(0);
-                        climbingMotor2.set(0);
+                        motorSpeed = 0;
                     }
                     break;
                 case(180):
@@ -141,18 +132,16 @@ public class Climber {
                     secondStageRelease.set(Value.kReverse);
                     break;
                 case(225):
-                    // pull in third arm
-                    climbingMotor1.set(Constants.CLIMBING_MAX_SPEED);
-                    climbingMotor2.set(Constants.CLIMBING_MAX_SPEED);
+                    // hold in place
+                    motorSpeed = 0;
                     break;
                 case(270):
-                    // hold in place
-                    climbingMotor1.set(0);
-                    climbingMotor2.set(0);
                     break;
                 case(315):
                     break;
             }
+            climbingMotor1.set(motorSpeed);
+            climbingMotor2.set(motorSpeed);
         }
     }
 
