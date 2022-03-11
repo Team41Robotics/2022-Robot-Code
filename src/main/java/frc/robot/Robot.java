@@ -301,6 +301,8 @@ public class Robot extends TimedRobot {
 
   public void gatherData() {
     climber.telemetry(telemetryTable);
+    leftColorSensor.telemetry(telemetryTable, "Left Color Sensor");
+    rightColorSensor.telemetry(telemetryTable, "Right Color Sensor");
     drivetrain.telemetry(telemetryTable);
     hood.telemetry(telemetryTable);
     intake.telemetry(telemetryTable);

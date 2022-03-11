@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.Arrays;
 import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -128,4 +130,22 @@ public class ColorSensor {
   public int getRed() {
     return sensor.getRed();
   }
+
+  public void telemetry(NetworkTable table, String name){
+    NetworkTable lightSensorTable = table.getSubTable("light_sensors");
+
+    Number[] mediansConverted = new Number[3];
+    for (int i = 0; i < medians.length; i++) {
+      mediansConverted[i] = medians[i];
+    }
+
+    NetworkTable thisSensorTable = lightSensorTable.getSubTable(name);
+    thisSensorTable.getEntry("name").setString(name);
+    thisSensorTable.getEntry("bias").setNumberArray(mediansConverted);
+    thisSensorTable.getEntry("filter_output").setNumber(maxFilter());
+    thisSensorTable.getEntry("r").setNumber(sensor.getRed());
+    thisSensorTable.getEntry("g").setNumber(sensor.getGreen());
+    thisSensorTable.getEntry("b").setNumber(sensor.getBlue());
+  }
+
 }
