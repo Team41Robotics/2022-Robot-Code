@@ -171,7 +171,7 @@ public class Climber {
         climberMotor1Table.getEntry("raw_input_speed").setDouble(climbingMotor1.get());
         climberMotor1Table.getEntry("output_speed").setDouble(climbingMotor1.getEncoder().getVelocity());
         climberMotor1Table.getEntry("position").setDouble(climbingMotor1.getEncoder().getPosition());
-        climberMotor1Table.getEntry("position").setDouble(climbingMotor1.getOutputCurrent());
+        climberMotor1Table.getEntry("current").setDouble(climbingMotor1.getOutputCurrent());
        
         NetworkTable climberMotor2Table = motorTable.getSubTable("Climber Motor 2");
         climberMotor2Table.getEntry("name").setString("Climber Motor 2");
@@ -184,7 +184,7 @@ public class Climber {
         climberMotor2Table.getEntry("raw_input_speed").setDouble(climbingMotor2.get());
         climberMotor2Table.getEntry("output_speed").setDouble(climbingMotor2.getEncoder().getVelocity());
         climberMotor2Table.getEntry("position").setDouble(climbingMotor2.getEncoder().getPosition());
-        climberMotor2Table.getEntry("position").setDouble(climbingMotor2.getOutputCurrent());
+        climberMotor2Table.getEntry("current").setDouble(climbingMotor2.getOutputCurrent());
 
         
         NetworkTable switchTable = table.getSubTable("limit_switches");

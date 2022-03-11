@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -77,5 +78,33 @@ public class Hood {
 
     public boolean isReady() {
         return ready;
+    }
+
+    public void telemetry(NetworkTable table) {
+        NetworkTable motorTable = table.getSubTable("motors");
+        
+        NetworkTable hoodMotorTable = motorTable.getSubTable("Hood Motor");
+        hoodMotorTable.getEntry("name").setString("Hood Motor");
+        hoodMotorTable.getEntry("loop_error").setDouble(-1);
+        hoodMotorTable.getEntry("p").setDouble(-1);
+        hoodMotorTable.getEntry("i").setDouble(-1);
+        hoodMotorTable.getEntry("d").setDouble(-1);
+        hoodMotorTable.getEntry("requested_input_speed").setDouble(-1);
+        hoodMotorTable.getEntry("actual_input_speed").setDouble(-1);
+        hoodMotorTable.getEntry("raw_input_speed").setDouble(hoodMotor.get());
+        hoodMotorTable.getEntry("output_speed").setDouble(hoodMotor.getEncoder().getVelocity());
+        hoodMotorTable.getEntry("position").setDouble(hoodMotor.getEncoder().getPosition());
+        hoodMotorTable.getEntry("current").setDouble(hoodMotor.getOutputCurrent());
+
+
+        NetworkTable switchTable = table.getSubTable("limit_switches");
+        
+        NetworkTable topSwitchTable = switchTable.getSubTable("Hood Max Angle Limit Switch");
+        topSwitchTable.getEntry("name").setString("Hood Max Angle Limit Switch");
+        topSwitchTable.getEntry("status").setBoolean(topSwitch.get());
+
+        NetworkTable bottomSwitchTable = switchTable.getSubTable("Hood Min Angle Limit Switch");
+        bottomSwitchTable.getEntry("name").setString("Hood Min Angle Limit Switch");
+        bottomSwitchTable.getEntry("status").setBoolean(bottomSwitch.get());
     }
 }

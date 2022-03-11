@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -214,5 +215,14 @@ public class Drivetrain {
             set(0);
         }
         SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
+    }
+
+    public void telemetry(NetworkTable table) {
+        NetworkTable motorTable = table.getSubTable("motors");
+
+        leftFrontPID.telemetry(motorTable, "Left Front Drivetrain Motor");
+        leftBackPID.telemetry(motorTable, "Left Back Drivetrain Motor");
+        rightFrontPID.telemetry(motorTable, "Right Front Drivetrain Motor");
+        rightBackPID.telemetry(motorTable, "Right Back Drivetrain Motor");
     }
 }

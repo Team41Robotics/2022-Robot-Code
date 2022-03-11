@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.networktables.NetworkTable;
+
 public class PID {
     public final double SENSOR_NORM = (10.0*60)/(2048*6380);
     private TalonFX motor;
@@ -19,6 +21,8 @@ public class PID {
     private double prevErr;
     private double rampTime;
     private double currSpeed;
+    private double reqSpeed;
+    private double actInputSpeed;
 
     public PID(TalonFX motor, double kP, double kI, double kD, double kF, double rampTime) {
         this.motor = motor;
@@ -29,6 +33,8 @@ public class PID {
         this.rampTime = rampTime;
         ready = false;
         currSpeed = 0;
+        reqSpeed = 0;
+        actInputSpeed = 0;
         time = System.currentTimeMillis();
     }
 
@@ -56,6 +62,7 @@ public class PID {
     }
 
     public void run(double speed) {
+        reqSpeed = speed;
         double deltaSpeed;
         double usedDeltaSpeed;
         long currentTime = System.currentTimeMillis();
@@ -89,6 +96,7 @@ public class PID {
     }
 
     private void runCore(double s, double deltaT) {
+        actInputSpeed = s;
         currSpeed = s;
         vel = motor.getSelectedSensorVelocity()*SENSOR_NORM;
         err = currSpeed-vel;
@@ -107,6 +115,7 @@ public class PID {
     }
 
     public void runNoRamp(double speed) {
+        reqSpeed = speed;
         long currentTime = System.currentTimeMillis();
         double deltaT = (currentTime-time)/1000.0;
         runCore(speed, deltaT);
@@ -123,5 +132,21 @@ public class PID {
 
     public boolean isReady() {
         return err < Constants.PID_MIN_ERR;
+    }
+
+    public void telemetry(NetworkTable table, String name) {
+        NetworkTable currentTable = table.getSubTable(name);
+
+        currentTable.getEntry("name").setString(name);
+        currentTable.getEntry("loop_error").setDouble(err);
+        currentTable.getEntry("p").setDouble(kP);
+        currentTable.getEntry("i").setDouble(kI);
+        currentTable.getEntry("d").setDouble(kD);
+        currentTable.getEntry("requested_input_speed").setDouble(reqSpeed);
+        currentTable.getEntry("actual_input_speed").setDouble(actInputSpeed);
+        currentTable.getEntry("raw_input_speed").setDouble(getControlSignal());
+        currentTable.getEntry("output_speed").setDouble(motor.getSelectedSensorVelocity());
+        currentTable.getEntry("position").setDouble(motor.getSelectedSensorPosition());
+        currentTable.getEntry("current").setDouble(motor.getSupplyCurrent());
     }
 }
