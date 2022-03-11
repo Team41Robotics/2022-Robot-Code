@@ -80,7 +80,7 @@ public class Hood {
         return ready;
     }
 
-    public void telelmetry(NetworkTable table) {
+    public void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
         
         NetworkTable hoodMotorTable = motorTable.getSubTable("Hood Motor");

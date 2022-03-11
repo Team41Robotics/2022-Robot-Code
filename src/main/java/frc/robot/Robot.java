@@ -301,5 +301,7 @@ public class Robot extends TimedRobot {
 
   public void gatherData() {
     climber.telemetry(telemetryTable);
+    drivetrain.telemetry(telemetryTable);
+    hood.telemetry(telemetryTable);
   }
 }
