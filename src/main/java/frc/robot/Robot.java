@@ -304,5 +304,6 @@ public class Robot extends TimedRobot {
     drivetrain.telemetry(telemetryTable);
     hood.telemetry(telemetryTable);
     intake.telemetry(telemetryTable);
+    shooter.telemetry(telemetryTable);
   }
 }

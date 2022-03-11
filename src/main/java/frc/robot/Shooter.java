@@ -1,4 +1,5 @@
 package frc.robot;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -96,5 +97,38 @@ public class Shooter {
 
     public void runElevator(double speed) {
         elevator.set(speed);
+    }
+
+    public void telemetry(NetworkTable table) {
+        NetworkTable motorTable = table.getSubTable("motors");
+
+        leftFalconPID.telemetry(motorTable, "Left Shooter Motor");
+        rightFalconPID.telemetry(motorTable, "Right Shooter Motor");
+        
+        NetworkTable feederMotorTable = motorTable.getSubTable("Feeder Motor");
+        feederMotorTable.getEntry("name").setString("Elevator Motor");
+        feederMotorTable.getEntry("loop_error").setDouble(-1);
+        feederMotorTable.getEntry("p").setDouble(-1);
+        feederMotorTable.getEntry("i").setDouble(-1);
+        feederMotorTable.getEntry("d").setDouble(-1);
+        feederMotorTable.getEntry("requested_input_speed").setDouble(-1);
+        feederMotorTable.getEntry("actual_input_speed").setDouble(-1);
+        feederMotorTable.getEntry("raw_input_speed").setDouble(feeder.get());
+        feederMotorTable.getEntry("output_speed").setDouble(feeder.getEncoder().getVelocity());
+        feederMotorTable.getEntry("position").setDouble(feeder.getEncoder().getPosition());
+        feederMotorTable.getEntry("current").setDouble(feeder.getOutputCurrent());
+        
+        NetworkTable elevatorMotorTable = motorTable.getSubTable("Elevator Motor");
+        elevatorMotorTable.getEntry("name").setString("Elevator Motor");
+        elevatorMotorTable.getEntry("loop_error").setDouble(-1);
+        elevatorMotorTable.getEntry("p").setDouble(-1);
+        elevatorMotorTable.getEntry("i").setDouble(-1);
+        elevatorMotorTable.getEntry("d").setDouble(-1);
+        elevatorMotorTable.getEntry("requested_input_speed").setDouble(-1);
+        elevatorMotorTable.getEntry("actual_input_speed").setDouble(-1);
+        elevatorMotorTable.getEntry("raw_input_speed").setDouble(elevator.get());
+        elevatorMotorTable.getEntry("output_speed").setDouble(elevator.getEncoder().getVelocity());
+        elevatorMotorTable.getEntry("position").setDouble(elevator.getEncoder().getPosition());
+        elevatorMotorTable.getEntry("current").setDouble(elevator.getOutputCurrent());
     }
 }
