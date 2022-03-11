@@ -2,8 +2,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.INTAKE_MODE;
 
@@ -115,6 +117,47 @@ public class Intake {
     public void stop() {
       conveyor.set(0);
       intakeMotor.set(0);
+    }
+
+    public void telemetry(NetworkTable table) {
+      NetworkTable motorTable = table.getSubTable("motors");
+
+      NetworkTable intakeMotorTable = motorTable.getSubTable("Intake Motor");
+      intakeMotorTable.getEntry("name").setString("Intake Motor");
+      intakeMotorTable.getEntry("loop_error").setDouble(-1);
+      intakeMotorTable.getEntry("p").setDouble(-1);
+      intakeMotorTable.getEntry("i").setDouble(-1);
+      intakeMotorTable.getEntry("d").setDouble(-1);
+      intakeMotorTable.getEntry("requested_input_speed").setDouble(-1);
+      intakeMotorTable.getEntry("actual_input_speed").setDouble(-1);
+      intakeMotorTable.getEntry("raw_input_speed").setDouble(intakeMotor.get());
+      intakeMotorTable.getEntry("output_speed").setDouble(intakeMotor.getEncoder().getVelocity());
+      intakeMotorTable.getEntry("position").setDouble(intakeMotor.getEncoder().getPosition());
+      intakeMotorTable.getEntry("current").setDouble(intakeMotor.getOutputCurrent());
+
+      NetworkTable conveyorMotorTable = motorTable.getSubTable("Conveyor Motor");
+      conveyorMotorTable.getEntry("name").setString("Conveyor Motor");
+      conveyorMotorTable.getEntry("loop_error").setDouble(-1);
+      conveyorMotorTable.getEntry("p").setDouble(-1);
+      conveyorMotorTable.getEntry("i").setDouble(-1);
+      conveyorMotorTable.getEntry("d").setDouble(-1);
+      conveyorMotorTable.getEntry("requested_input_speed").setDouble(-1);
+      conveyorMotorTable.getEntry("actual_input_speed").setDouble(-1);
+      conveyorMotorTable.getEntry("raw_input_speed").setDouble(conveyor.get());
+      conveyorMotorTable.getEntry("output_speed").setDouble(conveyor.getEncoder().getVelocity());
+      conveyorMotorTable.getEntry("position").setDouble(conveyor.getEncoder().getPosition());
+      conveyorMotorTable.getEntry("current").setDouble(conveyor.getOutputCurrent());
+
+
+      NetworkTable solenoidTable = table.getSubTable("solenoids");
+
+      NetworkTable intakeSolLeftTable = solenoidTable.getSubTable("Left Intake Solenoid");
+      intakeSolLeftTable.getEntry("name").setString("Left Intake Solenoid");
+      intakeSolLeftTable.getEntry("status").setDouble(intakeSolLeft.get() == Value.kForward ? 1 : (intakeSolLeft.get() == Value.kReverse ? -1 : 0));
+      
+      NetworkTable intakeSolRightTable = solenoidTable.getSubTable("Right Intake Solenoid");
+      intakeSolRightTable.getEntry("name").setString("Right Intake Solenoid");
+      intakeSolRightTable.getEntry("status").setDouble(intakeSolRight.get() == Value.kForward ? 1 : (intakeSolRight.get() == Value.kReverse ? -1 : 0));
     }
 }   
 

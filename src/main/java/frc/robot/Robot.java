@@ -303,5 +303,6 @@ public class Robot extends TimedRobot {
     climber.telemetry(telemetryTable);
     drivetrain.telemetry(telemetryTable);
     hood.telemetry(telemetryTable);
+    intake.telemetry(telemetryTable);
   }
 }
