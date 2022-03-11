@@ -1,4 +1,3 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -30,6 +29,7 @@ public class Robot extends TimedRobot {
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   public static Intake intake;
   public static Hood hood;
+  public static boolean inUse = Intake.inUse;
   private boolean onTapeR;
   private boolean onTapeL;
   private Climber climber;
@@ -102,7 +102,11 @@ public class Robot extends TimedRobot {
     rightColorSensor.calcMedian();
     shooter.setSpeed(0);
     hood.home();
-    intake.stop();
+    if(inUse == false){
+      inUse = true;
+      intake.stop();
+      inUse = false;
+    }
     Limelight.setLedOn(false);
     climber.reset();
   }
@@ -110,7 +114,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    intake.teleop();
+    if(inUse == false){
+      inUse = true;
+      intake.teleop();
+      inUse = false;
+    }
     leftColorSensor.teleop();
     rightColorSensor.teleop();
     climber.teleop();
@@ -201,83 +209,87 @@ public class Robot extends TimedRobot {
   public void fullAuton() {
     SmartDashboard.putNumber("PID Err", shooter.getErr());
     // State machine for auton
-    switch (autonState) {
-      // Go until ball finds the starting tape
-      case FIND_LINE:
-        shooter.setSpeed(35.5);
-        if(leftColorSensor.findLineMax()){
-          onTapeL = true;
-          System.out.println("Left Sensor has found the tape");
-          drivetrain.setLeft(0);
-        }
-        if(rightColorSensor.findLineMax()){
-          onTapeR = true;
-         System.out.println("Right Sensor has found tape");
-          drivetrain.setRight(0);
-        }    
-        if(!onTapeL){
-          drivetrain.setLeft(Constants.AUTON_SPEED);
-        }
-        if(!onTapeR){
-          drivetrain.setRight(Constants.AUTON_SPEED);
-        }
-        if(onTapeL && onTapeR) {
-          autonState = AutonState.GOTO_BALL;
-          drivetrain.setPosition(0);
-          drivetrain.stop();
-        }
-        break;
-      
-      // After the line, go to where we know the ball is (~40in outside of the tape)
-      case GOTO_BALL:
-        Limelight.setLedOn(true);
-        if(drivetrain.getPosition() >= Constants.AUTON_DISTANCE ) {
-          drivetrain.stop();
-          autonState = AutonState.PICKUP_BALL;
-        }
-        else {
-          drivetrain.set(Constants.AUTON_SPEED);
-        }  
-        break;
-      
-      // Turn off intake after the ball is picked up
-      case PICKUP_BALL:
-        intake.run(INTAKE_MODE.OFF);
-        autonState = AutonState.TRACK_BALL;
-        break;
+    if(inUse == false){
+      inUse = true;
+      switch (autonState) {
+        // Go until ball finds the starting tape
+        case FIND_LINE:
+          shooter.setSpeed(35.5);
+          if(leftColorSensor.findLineMax()){
+            onTapeL = true;
+            System.out.println("Left Sensor has found the tape");
+            drivetrain.setLeft(0);
+          }
+          if(rightColorSensor.findLineMax()){
+            onTapeR = true;
+          System.out.println("Right Sensor has found tape");
+            drivetrain.setRight(0);
+          }    
+          if(!onTapeL){
+            drivetrain.setLeft(Constants.AUTON_SPEED);
+          }
+          if(!onTapeR){
+            drivetrain.setRight(Constants.AUTON_SPEED);
+          }
+          if(onTapeL && onTapeR) {
+            autonState = AutonState.GOTO_BALL;
+            drivetrain.setPosition(0);
+            drivetrain.stop();
+          }
+          break;
         
-      case TRACK_BALL:
-        if (drivetrain.alignToGoal()) {
-          autonState = Constants.AutonState.PREPARE_SHOOTER;
-        }
-        SmartDashboard.putNumber("Robot Angle", Limelight.getRobotAngle());
-        SmartDashboard.putNumber("LL Angle", Limelight.getHorizontalAngle());
-        SmartDashboard.putNumber("Distance", Limelight.estimateDistance());
-        break;
+        // After the line, go to where we know the ball is (~40in outside of the tape)
+        case GOTO_BALL:
+          Limelight.setLedOn(true);
+          if(drivetrain.getPosition() >= Constants.AUTON_DISTANCE ) {
+            drivetrain.stop();
+            autonState = AutonState.PICKUP_BALL;
+          }
+          else {
+            drivetrain.set(Constants.AUTON_SPEED);
+          }  
+          break;
+        
+        // Turn off intake after the ball is picked up
+        case PICKUP_BALL:
+          inUse = true;
+          intake.run(INTAKE_MODE.OFF);
+          autonState = AutonState.TRACK_BALL;
+          break;
+        case TRACK_BALL:
+          if (drivetrain.alignToGoal()) {
+            autonState = Constants.AutonState.PREPARE_SHOOTER;
+          }
+          SmartDashboard.putNumber("Robot Angle", Limelight.getRobotAngle());
+          SmartDashboard.putNumber("LL Angle", Limelight.getHorizontalAngle());
+          SmartDashboard.putNumber("Distance", Limelight.estimateDistance());
+          break;
 
-      case PREPARE_SHOOTER:
-        double distance = Limelight.estimateDistance();
-        double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
-        double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
-        shooter.setSpeed(speed/100);
-        hood.setToPosition(angle);
-        if (hood.isReady() && ++autonCounter > 150) {
-          autonState = AutonState.SHOOT_BALL;
-        }
-        drivetrain.setNoRamp(0);
-        break;
+        case PREPARE_SHOOTER:
+          double distance = Limelight.estimateDistance();
+          double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
+          double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+          shooter.setSpeed(speed/100);
+          hood.setToPosition(angle);
+          if (hood.isReady() && ++autonCounter > 150) {
+            autonState = AutonState.SHOOT_BALL;
+          }
+          drivetrain.setNoRamp(0);
+          break;
 
-      case SHOOT_BALL:
-        shooter.runFeeder(true);
-        shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-        intake.runConveyor(true);
-        break;
+        case SHOOT_BALL:
+          shooter.runFeeder(true);
+          shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
+          intake.runConveyor(true);
+          break;
 
-      case NONE:
-        leftColorSensor.findLineMax();
-        rightColorSensor.findLineMax();
-        // System.out.println(testCS.read(00, 1, new byte[1]));
-        break;
+        case NONE:
+          leftColorSensor.findLineMax();
+          rightColorSensor.findLineMax();
+          // System.out.println(testCS.read(00, 1, new byte[1]));
+          break;
+      }
+      inUse = false;
     }
   }
 
@@ -289,9 +301,11 @@ public class Robot extends TimedRobot {
       double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
       shooter.setSpeed(speed/100);
       hood.setToPosition(angle);
-      if (shooter.isReady() && hood.isReady()) {
+      if (shooter.isReady() && hood.isReady() && inUse == false) {
+        inUse = true;
         shooter.runFeeder(true);
         intake.runConveyor(true);
+        inUse = false;
       }
     }
     else {

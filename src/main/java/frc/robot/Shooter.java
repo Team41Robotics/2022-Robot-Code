@@ -15,6 +15,7 @@ public class Shooter {
     public double speed = 0;
     public boolean testOn = false;
     public static boolean reverseOn = false;
+    public static boolean inUse = Intake.inUse;
     Intake intake;
     
     public Shooter() {

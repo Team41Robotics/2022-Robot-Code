@@ -20,9 +20,11 @@ public class Intake {
     private CANSparkMax intakeMotor, conveyor;
     private DoubleSolenoid intakeSolLeft;
     private DoubleSolenoid intakeSolRight;
+    public static boolean inUse;
 
     /** Initialize all parts of the intake */
     public Intake(){
+        inUse = false;
         intakeOn = false;
         intakeUp = false;
         leftJoy = Robot.leftJoy;
