@@ -4,6 +4,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+import org.photonvision.PhotonCamera;
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
     private boolean climbing;
@@ -16,6 +18,9 @@ public class Drivetrain {
     private PID rightBackPID;
     private PID rightFrontPID;
     public long startTime;
+    public boolean aligningToGoal;
+    public boolean aligningToBall;
+    private PhotonCamera driverCam;
     
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain() {
@@ -34,6 +39,7 @@ public class Drivetrain {
         
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
+        driverCam = Robot.driverCam;
 
         leftBackPID = new PID(talonLB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         leftFrontPID = new PID(talonLF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
@@ -142,15 +148,37 @@ public class Drivetrain {
 
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
     public boolean alignToGoal() {
+        aligningToGoal = true;
         double angle = Limelight.getRobotAngle();
-        if (Limelight.targetFound() && angle>Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+        if (Limelight.targetFound() && angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
             setRight(-Constants.AUTON_SPEED/2);
             setLeft(Constants.AUTON_SPEED/2);
-        } else if (Limelight.targetFound() && angle<-Constants.LIMELIGHT_HORIZONTAL_THRESHHOLD) {
+        } else if (Limelight.targetFound() && angle<-Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
             setRight(Constants.AUTON_SPEED/2);
             setLeft(-Constants.AUTON_SPEED/2);
         } else {
             setNoRamp(0);
+            aligningToGoal = false;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean alignToBall() {
+        aligningToBall = true;
+        if (!driverCam.getLatestResult().hasTargets()) {
+            return false;
+        }
+        double angle = driverCam.getLatestResult().getTargets().get(0).getYaw();
+        if (angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
+            setRight(-Constants.AUTON_SPEED/2);
+            setLeft(Constants.AUTON_SPEED/2);
+        } else if (angle<-Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
+            setRight(Constants.AUTON_SPEED/2);
+            setLeft(-Constants.AUTON_SPEED/2);
+        } else {
+            setNoRamp(0);
+            aligningToBall = false;
             return true;
         }
         return false;
