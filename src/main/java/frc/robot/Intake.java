@@ -8,21 +8,19 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.INTAKE_MODE;
-
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /** Controls the intake on the robot */
 public class Intake {
+    public static boolean inUse;
     private boolean intakeOn;
     private boolean intakeUp;
-    private Joystick leftJoy, rightJoy, secondDS;
     private CANSparkMax intakeMotor, conveyor;
     private DoubleSolenoid intakeSolLeft;
     private DoubleSolenoid intakeSolRight;
-    public static boolean inUse;
+    private Joystick leftJoy, rightJoy, secondDS;
 
     /** Initialize all parts of the intake */
     public Intake(){

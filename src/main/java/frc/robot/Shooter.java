@@ -9,15 +9,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Shooter {
-    TalonFX leftFalcon, rightFalcon;
-    CANSparkMax feeder, elevator;
-    Joystick rightDS, rightJoy;
-    public PID leftFalconPID, rightFalconPID;
-    public double speed = 0;
-    public boolean testOn = false;
     public static boolean reverseOn = false;
     public static boolean inUse = Intake.inUse;
-    Intake intake;
+    public boolean testOn = false;
+    public PID leftFalconPID, rightFalconPID;
+    public double speed = 0;
+    private CANSparkMax feeder, elevator;
+    private Intake intake;
+    private Joystick rightDS, rightJoy;
+    private TalonFX leftFalcon, rightFalcon;
     
     public Shooter() {
         leftFalcon = new TalonFX(Constants.SHOOTER_TALON_2);

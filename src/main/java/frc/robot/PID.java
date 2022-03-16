@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTable;
 
 public class PID {
     public final double SENSOR_NORM = (10.0*60)/(2048*6380);
-    private TalonFX motor;
+    private boolean ready;
     private double kP;
     private double kI;
     private double kD;
@@ -15,14 +15,14 @@ public class PID {
     private double err;
     private double vel;
     private double controlSignal;
-    private long time;
-    private boolean ready;
     private double acc;
     private double prevErr;
     private double rampTime;
     private double currSpeed;
     private double reqSpeed;
     private double actInputSpeed;
+    private long time;
+    private TalonFX motor;
 
     public PID(TalonFX motor, double kP, double kI, double kD, double kF, double rampTime) {
         this.motor = motor;

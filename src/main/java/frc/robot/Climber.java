@@ -22,19 +22,18 @@ import edu.wpi.first.wpilibj.Joystick;
 
 
 public class Climber {
-    private CANSparkMax climbingMotor1;
-    private CANSparkMax climbingMotor2;
-    private Joystick leftJoy;
-    private Joystick driverStation;
-    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, firstStageMidSwitch;
-    private boolean firstStageUp;
-    private boolean secondStageUp;
-    private long startTime;
-    private Hood hood;
-    private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
     public boolean climbing;
+    private boolean firstStageUp, secondStageUp;
     private int climbingState;
     private double motorSpeed;
+    private long startTime;
+    private CANSparkMax climbingMotor1;
+    private CANSparkMax climbingMotor2;
+    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, firstStageMidSwitch;
+    private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
+    private Hood hood;
+    private Joystick leftJoy;
+    private Joystick driverStation;
 
     public Climber() {
         climbingMotor1 = new CANSparkMax(Constants.CLIMBING_SPARK_F, MotorType.kBrushless);

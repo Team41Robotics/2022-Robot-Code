@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Hood {
-    CANSparkMax hoodMotor;
-    DigitalInput topSwitch, bottomSwitch;
-    Joystick station;
-    RelativeEncoder enc;
     public double angle;
     private boolean ready;
+    private CANSparkMax hoodMotor;
+    private DigitalInput topSwitch, bottomSwitch;
+    private Joystick station;
+    private RelativeEncoder enc;
 
     public Hood() {
         // Bottom switch needs to be inverted

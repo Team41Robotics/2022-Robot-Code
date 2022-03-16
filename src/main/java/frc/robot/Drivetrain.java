@@ -8,19 +8,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.photonvision.PhotonCamera;
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
+    public boolean aligningToGoal, aligningToBall;
+    public long startTime;
     private boolean climbing;
     private Joystick leftJoy;
     private Joystick rightJoy;
-    private TalonFX talonLF, talonLB, talonRF, talonRB;
-    private TalonFX[] talonList = new TalonFX[4];
+    private PhotonCamera driverCam;
     private PID leftBackPID;
     private PID leftFrontPID;
     private PID rightBackPID;
     private PID rightFrontPID;
-    public long startTime;
-    public boolean aligningToGoal;
-    public boolean aligningToBall;
-    private PhotonCamera driverCam;
+    private TalonFX talonLF, talonLB, talonRF, talonRB;
+    private TalonFX[] talonList = new TalonFX[4];
     
     /** Intialize all sparks, joysticks, and encoder */
     public Drivetrain() {
