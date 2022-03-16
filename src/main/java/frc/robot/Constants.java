@@ -116,6 +116,7 @@ public class Constants {
     //different states for auton
     public enum AutonState {
         FIND_LINE,
+        ALIGN_TO_BALL,
         GOTO_BALL,
         PICKUP_BALL,
         TRACK_BALL,

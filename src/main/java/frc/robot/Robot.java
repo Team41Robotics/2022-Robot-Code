@@ -242,6 +242,13 @@ public class Robot extends TimedRobot {
           break;
         
         // After the line, go to where we know the ball is (~40in outside of the tape)
+        
+        case ALIGN_TO_BALL:
+          if (drivetrain.alignToBall()) {
+            drivetrain.setNoRamp(0);
+            autonState = AutonState.GOTO_BALL;
+          }
+
         case GOTO_BALL:
           Limelight.setLedOn(true);
           if(drivetrain.getPosition() >= Constants.AUTON_DISTANCE ) {
@@ -263,9 +270,6 @@ public class Robot extends TimedRobot {
           if (drivetrain.alignToGoal()) {
             autonState = Constants.AutonState.PREPARE_SHOOTER;
           }
-          SmartDashboard.putNumber("Robot Angle", Limelight.getRobotAngle());
-          SmartDashboard.putNumber("LL Angle", Limelight.getHorizontalAngle());
-          SmartDashboard.putNumber("Distance", Limelight.estimateDistance());
           break;
 
         case PREPARE_SHOOTER:
