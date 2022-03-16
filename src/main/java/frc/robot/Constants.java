@@ -80,6 +80,7 @@ public class Constants {
     static int CLIMBING_SPARK_B = 2;
     static int FIRST_STAGE_LIMIT_SWITCH_R = 1;
     static int FIRST_STAGE_LIMIT_SWITCH_L = 0;
+    static int FIRST_STAGE_LIMIT_SWTICH_M = 3;
     static int SECOND_STAGE_LIMIT_SWITCH = 5;
     static int SHOOTER_TALON_1 = 14;
     static int SHOOTER_TALON_2 = 15;

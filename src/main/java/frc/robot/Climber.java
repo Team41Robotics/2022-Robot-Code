@@ -26,7 +26,7 @@ public class Climber {
     private CANSparkMax climbingMotor2;
     private Joystick leftJoy;
     private Joystick driverStation;
-    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch;
+    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, firstStageMidSwitch;
     private boolean firstStageUp;
     private boolean secondStageUp;
     private long startTime;
@@ -61,6 +61,7 @@ public class Climber {
 
         firstStageLeftSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_L);
         firstStageRightSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_R);
+        firstStageMidSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWTICH_M);
         secondStageSwitch = new DigitalInput(Constants.SECOND_STAGE_LIMIT_SWITCH);
         
         climbing = false;
@@ -100,7 +101,7 @@ public class Climber {
                     hood.setToPosition(0);
                     if (!firstStageUp) {
                         motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
-                        if (!(firstStageLeftSwitch.get() && firstStageRightSwitch.get())) {
+                        if (!(firstStageLeftSwitch.get() || firstStageRightSwitch.get())) {
                             firstStageUp = true;
                             System.out.println("Pressed");
                         }
@@ -155,6 +156,10 @@ public class Climber {
 
     public boolean getRSwitch() {
         return firstStageRightSwitch.get();
+    }
+
+    public boolean getMSwitch() {
+        return firstStageMidSwitch.get();
     }
 
     public void telemetry(NetworkTable table) {
