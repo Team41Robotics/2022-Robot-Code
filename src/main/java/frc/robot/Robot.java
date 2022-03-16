@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import org.photonvision.PhotonCamera;
 
 import com.revrobotics.ColorSensorV3;
 import frc.robot.Constants.AutonState;
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
+  public static PhotonCamera driverCam = new PhotonCamera("photonvision");
   public static Intake intake;
   public static Hood hood;
   public static boolean inUse = Intake.inUse;
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
   private ColorSensor rightColorSensor;
   private int autonCounter;
   private NetworkTable telemetryTable;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
