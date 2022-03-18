@@ -8,14 +8,11 @@ public class PositionalPID {
     private double kP;
     private double kI;
     private double kD;
-    private double kF;
     private double err;
     private double vel;
     private double controlSignal;
     private double acc;
     private double prevErr;
-    private double rampTime;
-    private double currSpeed;
     private double reqSpeed;
     private double actInputSpeed;
     private long time;
@@ -23,11 +20,8 @@ public class PositionalPID {
     public PositionalPID(double kP, double kI, double kD, double kF, double rampTime) {
         this.kP = kP;
         this.kD = kD;
-        this.kF = kF;
         this.kI = kI;
-        this.rampTime = rampTime;
         ready = false;
-        currSpeed = 0;
         reqSpeed = 0;
         actInputSpeed = 0;
         time = System.currentTimeMillis();
@@ -35,7 +29,6 @@ public class PositionalPID {
 
     public void clear() {
         ready = false;
-        currSpeed = 0;
     }
 
     public double getVelocity() {

@@ -15,7 +15,6 @@ public class Shooter {
     public PID leftFalconPID, rightFalconPID;
     public double speed = 0;
     private CANSparkMax feeder, elevator;
-    private Intake intake;
     private Joystick rightDS, rightJoy;
     private TalonFX leftFalcon, rightFalcon;
     
@@ -31,7 +30,6 @@ public class Shooter {
         elevator = new CANSparkMax(Constants.ELEVATOR_MOTOR, MotorType.kBrushless);
         speed = 0;
         rightJoy = Robot.rightJoy;
-        intake = Robot.intake;
         reverseOn = false;
         rightDS = Robot.secondDS;
     }
