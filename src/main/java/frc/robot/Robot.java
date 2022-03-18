@@ -78,11 +78,12 @@ public class Robot extends TimedRobot {
     autonCounter = 0;
     onTapeL = false;
     onTapeR = false;
-    autonState = AutonState.FIND_LINE;
+    autonState = AutonState.ALIGN_TO_BALL;
     intake.autonInit();
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     drivetrain.setPosition(0);
+    drivetrain.stop();
     hood.home();
     Limelight.resetZoom();
   }
@@ -248,6 +249,7 @@ public class Robot extends TimedRobot {
             drivetrain.setNoRamp(0);
             autonState = AutonState.GOTO_BALL;
           }
+          break;
 
         case GOTO_BALL:
           Limelight.setLedOn(true);
