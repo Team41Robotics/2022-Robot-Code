@@ -1,11 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
-import org.photonvision.PhotonCamera;
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
     public boolean aligningToGoal, aligningToBall;
@@ -13,11 +12,12 @@ public class Drivetrain {
     private boolean climbing;
     private Joystick leftJoy;
     private Joystick rightJoy;
-    private PhotonCamera driverCam;
+    private NetworkTable driverCam;
     private PID leftBackPID;
     private PID leftFrontPID;
     private PID rightBackPID;
     private PID rightFrontPID;
+    private PositionalPID ballTrackingPID;
     private TalonFX talonLF, talonLB, talonRF, talonRB;
     private TalonFX[] talonList = new TalonFX[4];
     
@@ -38,12 +38,14 @@ public class Drivetrain {
         
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
-        driverCam = Robot.driverCam;
+        driverCam = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("HD_USB_Camera");
 
         leftBackPID = new PID(talonLB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         leftFrontPID = new PID(talonLF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         rightBackPID = new PID(talonRB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         rightFrontPID = new PID(talonRF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
+        
+        ballTrackingPID = new PositionalPID(0.002, 0, 0, 0, 0);
     }
 
     /**
@@ -145,6 +147,17 @@ public class Drivetrain {
         rightFrontPID.run(speed);
     }
 
+
+    public void setLeftNoRamp(double speed) {
+        leftBackPID.runNoRamp(speed);
+        leftFrontPID.runNoRamp(speed);
+    }
+
+    public void setRightNoRamp(double speed) {
+        rightBackPID.runNoRamp(speed);
+        rightFrontPID.runNoRamp(speed);
+    }
+
     /** Adjusts the orientation of the robot in accordance to its relation with the tape */
     public boolean alignToGoal() {
         aligningToGoal = true;
@@ -165,16 +178,18 @@ public class Drivetrain {
 
     public boolean alignToBall() {
         aligningToBall = true;
-        if (!driverCam.getLatestResult().hasTargets()) {
+        if (!driverCam.getEntry("hasTarget").getBoolean(false)) {
             return false;
         }
-        double angle = driverCam.getLatestResult().getTargets().get(0).getYaw();
+        double angle = driverCam.getEntry("targetYaw").getDouble(0);
+        System.out.println(angle);
+        double speed = ballTrackingPID.run(angle);
         if (angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
-            setRight(-Constants.AUTON_SPEED/2);
-            setLeft(Constants.AUTON_SPEED/2);
+            setRightNoRamp(-speed);
+            setLeftNoRamp(speed);
         } else if (angle<-Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
-            setRight(Constants.AUTON_SPEED/2);
-            setLeft(-Constants.AUTON_SPEED/2);
+            setRightNoRamp(-speed);
+            setLeftNoRamp(speed);
         } else {
             setNoRamp(0);
             aligningToBall = false;
