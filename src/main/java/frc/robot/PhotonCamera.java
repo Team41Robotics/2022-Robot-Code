@@ -13,4 +13,8 @@ public class PhotonCamera {
     public static double getYaw() {
         return driverCam.getEntry("targetYaw").getDouble(0);
     }
+
+    public static boolean hasTarget() {
+        return driverCam.getEntry("hasTarget").getBoolean(false);
+    }
 }
