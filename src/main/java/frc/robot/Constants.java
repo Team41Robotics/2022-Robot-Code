@@ -22,6 +22,7 @@ public class Constants {
     // Auton parameters
     static double AUTON_SPEED = 0.1;
     static int AUTON_DISTANCE = 50;
+    static int BALL_DISTANCE_FROM_BOT = 40;
 
     // Ports for drivetrain Talons
     static int FALCON_LF = 10;
@@ -71,9 +72,10 @@ public class Constants {
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
-    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 1;  
+    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 0.75; 
+    static double DRIFTING_HORIZONTAL_THRESHOLD = 10; 
     static double LIMELIGHT_DEPTH_OFFSET = 2;
-    static double LIMELIGHT_HORIZONTAL_OFFSET=-4.5;
+    static double LIMELIGHT_HORIZONTAL_OFFSET = -4.5;
 
     // Ports for Climbing
     static int CLIMBING_SPARK_F = 1;
@@ -120,9 +122,14 @@ public class Constants {
         ALIGN_TO_BALL,
         GOTO_BALL,
         PICKUP_BALL,
-        TRACK_BALL,
+        TRACK_GOAL,
         PREPARE_SHOOTER,
         SHOOT_BALL,
+        ALIGN_TO_THIRD_BALL,
+        GOTO_THIRD_BALL,
+        PICKUP_THIRD_BALL,
+        ALIGN_TO_GOAL_AGAIN,
+        SHOOT_AGAIN,
         NONE
     }
 

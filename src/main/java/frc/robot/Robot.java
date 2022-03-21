@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
-import org.photonvision.PhotonCamera;
 
 import com.revrobotics.ColorSensorV3;
+
 import frc.robot.Constants.AutonState;
 import frc.robot.Constants.INTAKE_MODE;
 
@@ -28,7 +28,6 @@ public class Robot extends TimedRobot {
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
-  public static PhotonCamera driverCam = new PhotonCamera("photonvision");
   public static Intake intake;
   public static Hood hood;
   public static boolean inUse = Intake.inUse;
@@ -42,6 +41,7 @@ public class Robot extends TimedRobot {
   private ColorSensor rightColorSensor;
   private int autonCounter;
   private NetworkTable telemetryTable;
+  private long autonShootingStartTime;
   
 
   /**
@@ -253,11 +253,13 @@ public class Robot extends TimedRobot {
 
         case GOTO_BALL:
           Limelight.setLedOn(true);
-          if(drivetrain.getPosition() >= Constants.AUTON_DISTANCE ) {
-            drivetrain.stop();
+          if (PhotonCamera.getArea() >= 20) {
+            drivetrain.setPosition(0);
             autonState = AutonState.PICKUP_BALL;
           }
-          else {
+          else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {
+            autonState = AutonState.ALIGN_TO_BALL;
+          } else {
             drivetrain.set(Constants.AUTON_SPEED);
           }  
           break;
@@ -265,10 +267,15 @@ public class Robot extends TimedRobot {
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
           inUse = true;
-          intake.run(INTAKE_MODE.OFF);
-          autonState = AutonState.TRACK_BALL;
+          if (drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT) {
+            drivetrain.stop();
+            intake.run(INTAKE_MODE.OFF);
+            autonState = AutonState.TRACK_GOAL;
+          } else {
+            drivetrain.set(Constants.AUTON_SPEED);
+          }
           break;
-        case TRACK_BALL:
+        case TRACK_GOAL:
           if (drivetrain.alignToGoal()) {
             autonState = Constants.AutonState.PREPARE_SHOOTER;
           }
@@ -281,6 +288,7 @@ public class Robot extends TimedRobot {
           shooter.setSpeed(speed/100);
           hood.setToPosition(angle);
           if (hood.isReady() && ++autonCounter > 150) {
+            autonShootingStartTime = System.currentTimeMillis();
             autonState = AutonState.SHOOT_BALL;
           }
           drivetrain.setNoRamp(0);
@@ -290,6 +298,79 @@ public class Robot extends TimedRobot {
           shooter.runFeeder(true);
           shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
           intake.runConveyor(true);
+          if (System.currentTimeMillis() - autonShootingStartTime >= 5000) {
+            shooter.runFeeder(false);
+            shooter.runElevator(0);
+            intake.runConveyor(false);
+            autonState = AutonState.ALIGN_TO_THIRD_BALL;
+          }
+          break;
+
+        case ALIGN_TO_THIRD_BALL:
+          if (drivetrain.alignToBall()) {
+            drivetrain.setNoRamp(0);
+            intake.run(INTAKE_MODE.FORWARD);
+            intake.runConveyor(true);
+            // autonState = AutonState.GOTO_THIRD_BALL;
+          } else {
+            if (PhotonCamera.getArea() >= 20) {
+              drivetrain.stop();
+              drivetrain.setPosition(0);
+              autonState = AutonState.PICKUP_THIRD_BALL;
+            }
+            else {
+              drivetrain.set(Constants.AUTON_SPEED);
+            }  
+          }
+          break;
+
+        case GOTO_THIRD_BALL:
+          if (PhotonCamera.getArea() >= 20) {
+            drivetrain.stop();
+            drivetrain.setPosition(0);
+            autonState = AutonState.PICKUP_THIRD_BALL;
+          }
+          else {
+            drivetrain.set(Constants.AUTON_SPEED);
+          }  
+          break;
+          
+        case PICKUP_THIRD_BALL:
+          if(drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT ) {
+            drivetrain.stop();
+            autonState = AutonState.ALIGN_TO_GOAL_AGAIN;
+          }
+          else {
+            drivetrain.set(Constants.AUTON_SPEED);
+          }  
+          break;
+
+        case ALIGN_TO_GOAL_AGAIN:
+          if (drivetrain.alignToGoal()) {
+            autonState = Constants.AutonState.SHOOT_AGAIN;
+          }
+          break;
+
+        case SHOOT_AGAIN:
+          distance = Limelight.estimateDistance();
+          speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
+          angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+          shooter.setSpeed(speed/100);
+          hood.setToPosition(angle);
+          if (hood.isReady() && ++autonCounter > 150) {
+            autonShootingStartTime = System.currentTimeMillis();
+            shooter.runFeeder(true);
+            shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
+            intake.runConveyor(true);
+            if (System.currentTimeMillis() - autonShootingStartTime >= 5000) {
+              autonState = AutonState.ALIGN_TO_THIRD_BALL;
+              shooter.runFeeder(false);
+              shooter.runElevator(0);
+              intake.runConveyor(false);
+              Limelight.setLedOn(false);
+            }
+          }
+          drivetrain.setNoRamp(0);
           break;
 
         case NONE:

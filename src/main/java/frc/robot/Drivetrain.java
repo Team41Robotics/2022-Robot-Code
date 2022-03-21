@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -12,7 +11,6 @@ public class Drivetrain {
     private boolean climbing;
     private Joystick leftJoy;
     private Joystick rightJoy;
-    private NetworkTable driverCam;
     private PID leftBackPID;
     private PID leftFrontPID;
     private PID rightBackPID;
@@ -38,14 +36,13 @@ public class Drivetrain {
         
         leftJoy = Robot.leftJoy;
         rightJoy = Robot.rightJoy;
-        driverCam = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("HD_USB_Camera");
 
         leftBackPID = new PID(talonLB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         leftFrontPID = new PID(talonLF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         rightBackPID = new PID(talonRB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         rightFrontPID = new PID(talonRF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         
-        ballTrackingPID = new PositionalPID(0.002, 0, 0, 0, 0);
+        ballTrackingPID = new PositionalPID(0.0035, 0, 0, 0, 0);
     }
 
     /**
@@ -178,15 +175,17 @@ public class Drivetrain {
 
     public boolean alignToBall() {
         aligningToBall = true;
-        if (!driverCam.getEntry("hasTarget").getBoolean(false)) {
+        if (!PhotonCamera.hasTarget()) {
             return false;
         }
-        double angle = driverCam.getEntry("targetYaw").getDouble(0);
+        double angle = PhotonCamera.getYaw();
         System.out.println(angle);
         double speed = ballTrackingPID.run(angle);
+        if (speed < Constants.AUTON_SPEED/2.5) speed = Constants.AUTON_SPEED/2.5;
+        if (speed > -Constants.AUTON_SPEED/2.5) speed = -Constants.AUTON_SPEED/2.5;
         if (angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
-            setRightNoRamp(-speed);
-            setLeftNoRamp(speed);
+            setRightNoRamp(speed);
+            setLeftNoRamp(-speed);
         } else if (angle<-Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
             setRightNoRamp(-speed);
             setLeftNoRamp(speed);
