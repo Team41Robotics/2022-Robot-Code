@@ -176,6 +176,7 @@ public class Drivetrain {
     public boolean alignToBall() {
         aligningToBall = true;
         if (!PhotonCamera.hasTarget()) {
+            System.out.println("No Target");
             return false;
         }
         double angle = PhotonCamera.getYaw();

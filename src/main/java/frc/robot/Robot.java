@@ -196,6 +196,7 @@ public class Robot extends TimedRobot {
     System.out.print(leftColorSensor.findLineMax());
     System.out.println(rightColorSensor.findLineMax());
     SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
+    drivetrain.runInverseKinematics(0.2, 0.5);
     // System.out.print(Limelight.getRobotAngle());
     // System.out.println(Limelight.getHorizontalAngle());
     // intake.test();
@@ -258,7 +259,9 @@ public class Robot extends TimedRobot {
             autonState = AutonState.PICKUP_BALL;
           }
           else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {
-            autonState = AutonState.ALIGN_TO_BALL;
+            double angle = PhotonCamera.getYaw();
+            drivetrain.runInverseKinematics(AngularPController.run(-angle), 0.5);
+            // autonState = AutonState.ALIGN_TO_BALL;
           } else {
             drivetrain.set(Constants.AUTON_SPEED);
           }  
