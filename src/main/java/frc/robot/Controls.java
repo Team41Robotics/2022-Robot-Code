@@ -17,8 +17,18 @@ public class Controls {
 
         public static int HOOD_UP = 7;
         public static int HOOD_DOWN = 8;
+
+        public static int FEED_BALL_TO_SHOOTER = 1;
+    }
+
     public static class LeftJoy {
         public static int CLIMB_FWD = 3;
         public static int CLIMB_RV = 4;
+
+        public static int INTAKE_PISTON_TOGGLE = 1;
+    }
+
+    public static class RightJoy {
+        public static int INTAKE_TOGGLE = 1;
     }
 }

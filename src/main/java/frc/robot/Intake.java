@@ -57,7 +57,7 @@ public class Intake {
 
     /** In teleop, use joystick triggers to raise/lower the intake and toggle the motor */
     public void teleop(){
-        if (leftJoy.getRawButtonPressed(1)) {
+        if (leftJoy.getRawButtonPressed(Controls.LeftJoy.INTAKE_PISTON_TOGGLE)) {
           intakeUp = !intakeUp;
           intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
           intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
@@ -65,10 +65,10 @@ public class Intake {
         if (Shooter.reverseOn) {
           conveyor.set(-Constants.CONVEYOR_FULL_SPEED);
           intakeMotor.set(-Constants.INTAKE_FULL_SPEED);
-        } else if (rightJoy.getRawButtonPressed(1)) {
+        } else if (rightJoy.getRawButtonPressed(Controls.RightJoy.INTAKE_TOGGLE)) {
           intakeOn = !intakeOn;
           run(intakeOn ? INTAKE_MODE.FORWARD : INTAKE_MODE.OFF);
-        } else if (secondDS.getRawButton(1)) {
+        } else if (secondDS.getRawButton(Controls.SecondDriverStation.FEED_BALL_TO_SHOOTER)) {
           conveyor.set(Constants.CONVEYOR_FULL_SPEED);
         } else if (!intakeOn) {
           conveyor.set(0);
@@ -79,12 +79,12 @@ public class Intake {
     }
 
     public void test() {
-        if (leftJoy.getRawButtonPressed(1)) {
+        if (leftJoy.getRawButtonPressed(Controls.LeftJoy.INTAKE_PISTON_TOGGLE)) {
             intakeUp = !intakeUp;
             intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
             intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
           }
-          if (rightJoy.getRawButtonPressed(1)) {
+          if (rightJoy.getRawButtonPressed(Controls.RightJoy.INTAKE_TOGGLE)) {
             intakeOn = !intakeOn;
             run(intakeOn ? INTAKE_MODE.FORWARD : INTAKE_MODE.OFF);
           }
