@@ -30,5 +30,6 @@ public class Controls {
 
     public static class RightJoy {
         public static int INTAKE_TOGGLE = 1;
+        public static int INTAKE_REVERSE = 3;
     }
 }

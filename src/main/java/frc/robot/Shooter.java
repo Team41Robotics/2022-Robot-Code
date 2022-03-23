@@ -24,8 +24,8 @@ public class Shooter {
         rightFalcon.setInverted(true);
         leftFalcon.setInverted(false);
         // maybe add some D
-        leftFalconPID = new PID(leftFalcon, 0.5, 0.03, 0.0005, 1.1, 1);
-        rightFalconPID = new PID(rightFalcon, 0.5, 0.03, 0.0005, 1.1, 1);
+        leftFalconPID = new PID(leftFalcon, Constants.SHOOTER_kP, Constants.SHOOTER_kI, Constants.SHOOTER_kD, Constants.SHOOTER_kFF, Constants.SHOOTER_RAMP_TIME);
+        rightFalconPID = new PID(rightFalcon, Constants.SHOOTER_kP, Constants.SHOOTER_kI, Constants.SHOOTER_kD, Constants.SHOOTER_kFF, Constants.SHOOTER_RAMP_TIME);
         feeder = new CANSparkMax(Constants.FEEDER_MOTOR, MotorType.kBrushless);
         elevator = new CANSparkMax(Constants.ELEVATOR_MOTOR, MotorType.kBrushless);
         speed = 0;
@@ -35,13 +35,13 @@ public class Shooter {
     }
 
     public void teleop() {
-        if (rightJoy.getRawButton(3)) {
+        if (rightJoy.getRawButton(Controls.RightJoy.INTAKE_REVERSE)) {
             reverseOn = true;
             elevator.set(reverseOn ? -Constants.ELEVATOR_FULL_SPEED : 0);
             feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);
         } else {
             reverseOn = false;
-            if (rightDS.getRawButton(1) && reverseOn == false) {
+            if (rightDS.getRawButton(Controls.SecondDriverStation.FEED_BALL_TO_SHOOTER) && reverseOn == false) {
                 feeder.set(Constants.FEEDER_FULL_SPEED);
             } else {
                 feeder.set(reverseOn ? -Constants.FEEDER_FULL_SPEED : 0);

@@ -126,6 +126,13 @@ public class Constants {
     static double kFF = 1.5;
     static double RAMP_TIME = 0.9;
 
+    // 0.5, 0.03, 0.0005, 1.1, 1
+    static double SHOOTER_kP = 0.5;
+    static double SHOOTER_kI = 0.03;
+    static double SHOOTER_kD = 0.0005;
+    static double SHOOTER_kFF = 1.1;
+    static double SHOOTER_RAMP_TIME = 1;
+
     static double BALLTRACKING_P = 0.0035;
 
     static double PID_MIN_ERR = 0.03;
