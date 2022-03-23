@@ -105,7 +105,7 @@ public class Shooter {
         rightFalconPID.telemetry(motorTable, "Right Shooter Motor");
         
         NetworkTable feederMotorTable = motorTable.getSubTable("Feeder Motor");
-        feederMotorTable.getEntry("name").setString("Elevator Motor");
+        feederMotorTable.getEntry("name").setString("Feeder Motor");
         feederMotorTable.getEntry("loop_error").setDouble(-1);
         feederMotorTable.getEntry("p").setDouble(-1);
         feederMotorTable.getEntry("i").setDouble(-1);
