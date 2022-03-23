@@ -22,7 +22,9 @@ public class Constants {
     // Auton parameters
     static double AUTON_SPEED = 0.1;
     static int AUTON_DISTANCE = 50;
-    static int BALL_DISTANCE_FROM_BOT = 40;
+    static int BALL_DISTANCE_FROM_BOT = 20;
+    static int AUTON_BALL_AREA_THRESHOLD = 25;
+    static double AUTON_SPEED_M_PER_S = 0.5;
 
     // Ports for drivetrain Talons
     static int FALCON_LF = 10;

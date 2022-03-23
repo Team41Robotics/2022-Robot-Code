@@ -176,11 +176,9 @@ public class Drivetrain {
     public boolean alignToBall() {
         aligningToBall = true;
         if (!PhotonCamera.hasTarget()) {
-            System.out.println("No Target");
             return false;
         }
         double angle = PhotonCamera.getYaw();
-        System.out.println(angle);
         double speed = ballTrackingPID.run(angle);
         if (speed < Constants.AUTON_SPEED/2.5) speed = Constants.AUTON_SPEED/2.5;
         if (speed > -Constants.AUTON_SPEED/2.5) speed = -Constants.AUTON_SPEED/2.5;

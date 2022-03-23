@@ -255,14 +255,17 @@ public class Robot extends TimedRobot {
 
         case GOTO_BALL:
           Limelight.setLedOn(true);
-          if (PhotonCamera.getArea() >= 20) {
+          if (PhotonCamera.getArea() >= Constants.AUTON_BALL_AREA_THRESHOLD) {
             drivetrain.setPosition(0);
+            System.out.println(drivetrain.getPosition());
+            while (drivetrain.getPosition() > 1) {
+              drivetrain.setPosition(0);
+            }
             autonState = AutonState.PICKUP_BALL;
           }
           else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {
             double angle = PhotonCamera.getYaw();
-            drivetrain.runInverseKinematics(AngularPController.run(-angle), 0.5);
-            // autonState = AutonState.ALIGN_TO_BALL;
+            drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
           } else {
             drivetrain.set(Constants.AUTON_SPEED);
           }  
@@ -271,9 +274,10 @@ public class Robot extends TimedRobot {
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
           inUse = true;
+          System.out.println(drivetrain.getPosition());
           if (drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT) {
-            drivetrain.stop();
-            intake.run(INTAKE_MODE.OFF);
+            drivetrain.setNoRamp(0);
+            // intake.run(INTAKE_MODE.OFF);
             autonState = AutonState.TRACK_GOAL;
           } else {
             drivetrain.set(Constants.AUTON_SPEED);
@@ -314,32 +318,30 @@ public class Robot extends TimedRobot {
           if (drivetrain.alignToBall()) {
             drivetrain.setNoRamp(0);
             intake.run(INTAKE_MODE.FORWARD);
-            intake.runConveyor(true);
-            // autonState = AutonState.GOTO_THIRD_BALL;
-          } else {
-            if (PhotonCamera.getArea() >= 20) {
-              drivetrain.stop();
-              drivetrain.setPosition(0);
-              autonState = AutonState.PICKUP_THIRD_BALL;
-            }
-            else {
-              drivetrain.set(Constants.AUTON_SPEED);
-            }  
+            autonState = AutonState.GOTO_THIRD_BALL;
           }
           break;
 
         case GOTO_THIRD_BALL:
-          if (PhotonCamera.getArea() >= 20) {
-            drivetrain.stop();
+          if (PhotonCamera.getArea() >= Constants.AUTON_BALL_AREA_THRESHOLD) {
+            System.out.println(drivetrain.getPosition());
             drivetrain.setPosition(0);
+            System.out.println(drivetrain.getPosition());
+            while (drivetrain.getPosition() > 1) {
+              drivetrain.setPosition(0);
+            }
             autonState = AutonState.PICKUP_THIRD_BALL;
           }
-          else {
+          else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {
+            angle = PhotonCamera.getYaw();
+            drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
+          } else {
             drivetrain.set(Constants.AUTON_SPEED);
           }  
           break;
           
         case PICKUP_THIRD_BALL:
+        System.out.println(drivetrain.getPosition());
           if(drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT ) {
             drivetrain.stop();
             autonState = AutonState.ALIGN_TO_GOAL_AGAIN;
@@ -378,9 +380,7 @@ public class Robot extends TimedRobot {
           break;
 
         case NONE:
-          leftColorSensor.findLineMax();
-          rightColorSensor.findLineMax();
-          // System.out.println(testCS.read(00, 1, new byte[1]));
+          drivetrain.setNoRamp(0);
           break;
       }
       inUse = false;
