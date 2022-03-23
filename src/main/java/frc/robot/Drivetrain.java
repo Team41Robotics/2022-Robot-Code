@@ -42,7 +42,7 @@ public class Drivetrain {
         rightBackPID = new PID(talonRB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         rightFrontPID = new PID(talonRF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         
-        ballTrackingPID = new PositionalPID(0.0035, 0, 0, 0, 0);
+        ballTrackingPID = new PositionalPID(Constants.BALLTRACKING_P, 0, 0, 0, 0);
     }
 
     /**
@@ -103,13 +103,13 @@ public class Drivetrain {
         double leftSpeed = joystickTransfer(-leftJoy.getY());
         double rightSpeed = joystickTransfer(-rightJoy.getY());
     
-        if(Math.abs(leftSpeed) > (climbing ? 0.001 : 0.1)) {
+        if(Math.abs(leftSpeed) > (climbing ? Constants.JOYSTICK_CLIMBING_MODE_DEADZONE : Constants.JOYSTICK_DEADZONE)) {
             setLeft(leftSpeed);
         } else {
             setLeft(0);
         }
 
-        if(Math.abs(rightSpeed) > (climbing ? 0.001 : 0.1)) {
+        if(Math.abs(rightSpeed) > (climbing ? Constants.JOYSTICK_CLIMBING_MODE_DEADZONE : Constants.JOYSTICK_DEADZONE)) {
             setRight(rightSpeed);
         } else {
             setRight(0);
@@ -118,12 +118,6 @@ public class Drivetrain {
         if (rightJoy.getRawButtonPressed(Constants.CLIMBING_DRIVE_BUTTON)) {
             climbing = !climbing;
         }
-        // System.out.println(climbing ? "Climbing" : "Normal");
-        
-        // SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
-        // SmartDashboard.putNumber("Motor Ctrl", leftBackPID.getControlSignal());
-        // SmartDashboard.putNumber("Left JS Input", leftSpeed);
-        // SmartDashboard.putNumber("Right JS Input", rightSpeed);
     }
 
     /**
@@ -237,7 +231,7 @@ public class Drivetrain {
         if (climbing) {
             double newJoyVal = Math.pow(joyVal, 2);
             newJoyVal *= Constants.CLIMBING_DRIVE_MAX_SPEED;
-            newJoyVal += 4e-4;
+            newJoyVal += Constants.CLIMBING_DRIVING_SPEED_OFFSET;
             if (joyVal > 0) {
                 return newJoyVal;
             } else {

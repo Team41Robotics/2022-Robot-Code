@@ -36,9 +36,12 @@ public class Constants {
     static int FALCON_RB = 8;
     static double DRIVETRAIN_MAX_SPEED = 0.75;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
+    static double CLIMBING_DRIVING_SPEED_OFFSET = 4e-4;
     static double CLIMBING_MAX_SPEED = 0.7;
     static double CLIMBING_SLOW_SPEED = 0.4;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
+    static double JOYSTICK_DEADZONE = 0.1;
+    static double JOYSTICK_CLIMBING_MODE_DEADZONE = 0.001;
     static int CLIMBING_PISTON_TIME_DELAY = 500; // ms
     static double MAX_RPM = 6380;
 
@@ -122,6 +125,8 @@ public class Constants {
     static double kD = 0.004;
     static double kFF = 1.5;
     static double RAMP_TIME = 0.9;
+
+    static double BALLTRACKING_P = 0.0035;
 
     static double PID_MIN_ERR = 0.03;
 
