@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
   private int autonCounter;
   private NetworkTable telemetryTable;
   private long autonShootingStartTime;
+  private boolean owenGlag;
   
 
   /**
@@ -404,12 +405,17 @@ public class Robot extends TimedRobot {
   }
 
   public void gatherData() {
-    climber.telemetry(telemetryTable);
-    leftColorSensor.telemetry(telemetryTable, "Left Color Sensor");
-    rightColorSensor.telemetry(telemetryTable, "Right Color Sensor");
-    drivetrain.telemetry(telemetryTable);
-    hood.telemetry(telemetryTable);
-    intake.telemetry(telemetryTable);
-    shooter.telemetry(telemetryTable);
+    owenGlag = telemetryTable.getEntry("owenGlag").getBoolean(true);
+    if(owenGlag){
+      telemetryTable.getEntry("time").setDouble(System.currentTimeMillis());
+      climber.telemetry(telemetryTable);
+      leftColorSensor.telemetry(telemetryTable, "Left Color Sensor");
+      rightColorSensor.telemetry(telemetryTable, "Right Color Sensor");
+      drivetrain.telemetry(telemetryTable);
+      hood.telemetry(telemetryTable);
+      intake.telemetry(telemetryTable);
+      shooter.telemetry(telemetryTable);
+      telemetryTable.getEntry("owenGlag").setBoolean(false);
+  }
   }
 }
