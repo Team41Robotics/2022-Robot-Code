@@ -42,7 +42,7 @@ public class Drivetrain {
         rightBackPID = new PID(talonRB, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         rightFrontPID = new PID(talonRF, Constants.kP, Constants.kI, Constants.kD, Constants.kFF, Constants.RAMP_TIME);
         
-        ballTrackingPID = new PositionalPID(Constants.BALLTRACKING_P, 0, 0, 0, 0);
+        ballTrackingPID = new PositionalPID(Constants.BALLTRACKING_P);
     }
 
     /**
