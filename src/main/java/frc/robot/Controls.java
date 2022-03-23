@@ -11,5 +11,13 @@ public class Controls {
         public static int LOW_GOAL_SETUP = 5;
         public static int AUTO_SHOOTING = 6;
         public static int SHOOTER_WARMUP = 15;
+
+        public static int MANUAL_CLIMBING_TOGGLE = 13;
+        public static int CLIMB_FWD = 3;
+        public static int CLIMB_RV = 4;
+
+        public static int ENABLE_PISTON_BRAKE = 14;
+
+        public static int CLIMBING_STATE_POV = 1;
     }
 }

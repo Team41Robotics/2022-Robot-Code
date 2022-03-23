@@ -77,20 +77,20 @@ public class Climber {
     }
 
     public void teleop() {
-        if (driverStation.getRawButton(13)) {
-            if (leftJoy.getRawButton(3)) {
+        if (driverStation.getRawButton(Controls.SecondDriverStation.MANUAL_CLIMBING_TOGGLE)) {
+            if (leftJoy.getRawButton(Controls.SecondDriverStation.CLIMB_FWD)) {
                 motorSpeed = Constants.CLIMBING_MAX_SPEED;
-            } else if (leftJoy.getRawButton(4)) {
+            } else if (leftJoy.getRawButton(Controls.SecondDriverStation.CLIMB_RV)) {
                 motorSpeed = -Constants.CLIMBING_MAX_SPEED;
             } else {
                 motorSpeed = 0;
             }
 
-            if (driverStation.getRawButton(14)) {
+            if (driverStation.getRawButton(Controls.SecondDriverStation.ENABLE_PISTON_BRAKE)) {
                 secondStageGearLock.set(Value.kForward);
             }
         } else {
-            climbingState = driverStation.getPOV(1);
+            climbingState = driverStation.getPOV(Controls.SecondDriverStation.CLIMBING_STATE_POV);
             switch(climbingState) {
                 case (0):
                     motorSpeed = 0;
@@ -114,7 +114,7 @@ public class Climber {
                         firstStageGearLock.set(DoubleSolenoid.Value.kForward);
                         secondStageGearLock.set(DoubleSolenoid.Value.kReverse);
                         startTime = System.currentTimeMillis();
-                    } else if ((System.currentTimeMillis() - startTime >= 500) && (gearShifter.get() == Value.kForward)) {
+                    } else if ((System.currentTimeMillis() - startTime >= Constants.CLIMBING_PISTON_TIME_DELAY) && (gearShifter.get() == Value.kForward)) {
                         gearShifter.set(Value.kReverse);
                     }
                     break;

@@ -39,6 +39,7 @@ public class Constants {
     static double CLIMBING_MAX_SPEED = 0.7;
     static double CLIMBING_SLOW_SPEED = 0.4;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
+    static int CLIMBING_PISTON_TIME_DELAY = 500; // ms
     static double MAX_RPM = 6380;
 
     // Measurements for the physical robot
