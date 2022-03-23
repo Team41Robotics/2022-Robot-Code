@@ -25,6 +25,9 @@ public class Constants {
     static int BALL_DISTANCE_FROM_BOT = 20;
     static int AUTON_BALL_AREA_THRESHOLD = 25;
     static double AUTON_SPEED_M_PER_S = 0.5;
+    static int AUTON_WAIT_LOOPS = 150;
+    static int AUTON_SHOOTER_WAIT_TIME = 5000;
+    static int SIMPLE_AUTON_DISTANCE = 60;
 
     // Ports for drivetrain Talons
     static int FALCON_LF = 10;
@@ -99,11 +102,12 @@ public class Constants {
     // Constants for Hood Auto Alligning
     static double HOOD_SPEED_SLOPE = 0.0731;
     static double HOOD_SPEED_OFFSET = 35.2;
+    static double HOOD_SPEED_OFFSET_INCREMENT = 0.5;
     static double HOOD_ANGLE_SLOPE = 0.231;
     static double HOOD_ANGLE_OFFSET = 8.96;
     static double HOOD_ANGLE_CURVE = -0.000437;
 
-    static double SHOOTER_DEFAULT_SPEED = 0.35;
+    static double SHOOTER_DEFAULT_SPEED = 0.355;
     static double HOOD_DEFAULT_ANGLE = 20;
 
     static double LOW_GOAL_SPEED = 0.22;

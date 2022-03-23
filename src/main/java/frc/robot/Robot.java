@@ -135,26 +135,26 @@ public class Robot extends TimedRobot {
     double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
 
 
-    if (secondDS.getRawButton(11)) {
-      Constants.HOOD_SPEED_OFFSET += 0.5;
-    } else if (secondDS.getRawButton(12)) {
-      Constants.HOOD_SPEED_OFFSET -= 0.5;
+    if (secondDS.getRawButton(Controls.SecondDriverStation.INCREASE_HOOD_OFFSET)) {
+      Constants.HOOD_SPEED_OFFSET += Constants.HOOD_SPEED_OFFSET_INCREMENT;
+    } else if (secondDS.getRawButton(Controls.SecondDriverStation.DECREASE_HOOD_OFFSET)) {
+      Constants.HOOD_SPEED_OFFSET -= Constants.HOOD_SPEED_OFFSET_INCREMENT;
     }
-    if (secondDS.getRawButton(14)) {
-      shooter.setSpeed(-secondDS.getRawAxis(0));
-    } else if (secondDS.getRawButton(5)) {
+    if (secondDS.getRawButton(Controls.SecondDriverStation.MANUAL_SHOOTER_SPEED)) {
+      shooter.setSpeed(-secondDS.getRawAxis(Controls.SecondDriverStation.SHOOTER_SPEED_SLIDER));
+    } else if (secondDS.getRawButton(Controls.SecondDriverStation.LOW_GOAL_SETUP)) {
       Limelight.setLedOn(false);
       shooter.setSpeed(Constants.LOW_GOAL_SPEED);
       hood.setToPosition(Constants.LOW_GOAL_ANGLE);
       drivetrain.alignToGoal();
-    } else if (secondDS.getRawButton(6)) {
+    } else if (secondDS.getRawButton(Controls.SecondDriverStation.AUTO_SHOOTING)) {
       Limelight.setLedOn(true);
       if (Limelight.targetFound()) {
         shooter.setSpeed(speed/100);
         hood.setToPosition(angle);
         drivetrain.alignToGoal();
       }
-    } else if (secondDS.getRawButton(15)) {
+    } else if (secondDS.getRawButton(Controls.SecondDriverStation.SHOOTER_WARMUP)) {
       Limelight.setLedOn(true);
       shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
       hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
@@ -220,7 +220,7 @@ public class Robot extends TimedRobot {
       switch (autonState) {
         // Go until ball finds the starting tape
         case FIND_LINE:
-          shooter.setSpeed(35.5);
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           if(leftColorSensor.findLineMax()){
             onTapeL = true;
             System.out.println("Left Sensor has found the tape");
@@ -363,12 +363,12 @@ public class Robot extends TimedRobot {
           angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
           shooter.setSpeed(speed/100);
           hood.setToPosition(angle);
-          if (hood.isReady() && ++autonCounter > 150) {
+          if (hood.isReady() && ++autonCounter > Constants.AUTON_WAIT_LOOPS) {
             autonShootingStartTime = System.currentTimeMillis();
             shooter.runFeeder(true);
             shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
             intake.runConveyor(true);
-            if (System.currentTimeMillis() - autonShootingStartTime >= 5000) {
+            if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
               autonState = AutonState.ALIGN_TO_THIRD_BALL;
               shooter.runFeeder(false);
               shooter.runElevator(0);
@@ -389,7 +389,7 @@ public class Robot extends TimedRobot {
 
   public void simpleAuton() {
     Limelight.setLedOn(true);
-    if(drivetrain.getPosition() >= 60 ) {
+    if(drivetrain.getPosition() >= Constants.SIMPLE_AUTON_DISTANCE) {
       double distance = Limelight.estimateDistance();
       double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
       double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
