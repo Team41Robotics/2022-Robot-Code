@@ -12,12 +12,13 @@ public class Controls {
         public static int SHOOTER_WARMUP = 15;
 
         public static int MANUAL_CLIMBING_TOGGLE = 13;
-        public static int CLIMB_FWD = 3;
-        public static int CLIMB_RV = 4;
         public static int ENABLE_PISTON_BRAKE = 14;
         public static int CLIMBING_STATE_POV = 1;
 
         public static int HOOD_UP = 7;
         public static int HOOD_DOWN = 8;
+    public static class LeftJoy {
+        public static int CLIMB_FWD = 3;
+        public static int CLIMB_RV = 4;
     }
 }

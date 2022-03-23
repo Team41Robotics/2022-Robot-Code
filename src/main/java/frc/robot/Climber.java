@@ -78,9 +78,9 @@ public class Climber {
 
     public void teleop() {
         if (driverStation.getRawButton(Controls.SecondDriverStation.MANUAL_CLIMBING_TOGGLE)) {
-            if (leftJoy.getRawButton(Controls.SecondDriverStation.CLIMB_FWD)) {
+            if (leftJoy.getRawButton(Controls.LeftJoy.CLIMB_FWD)) {
                 motorSpeed = Constants.CLIMBING_MAX_SPEED;
-            } else if (leftJoy.getRawButton(Controls.SecondDriverStation.CLIMB_RV)) {
+            } else if (leftJoy.getRawButton(Controls.LeftJoy.CLIMB_RV)) {
                 motorSpeed = -Constants.CLIMBING_MAX_SPEED;
             } else {
                 motorSpeed = 0;
