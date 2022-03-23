@@ -134,6 +134,7 @@ public class Constants {
     static double SHOOTER_RAMP_TIME = 1;
 
     static double BALLTRACKING_P = 0.0035;
+    static double BALL_FOLLOWING_kP = 0.01;
 
     static double PID_MIN_ERR = 0.03;
 
