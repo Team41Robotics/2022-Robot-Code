@@ -32,9 +32,9 @@ public class Hood {
 
     public void teleop() {
         double pos = enc.getPosition();
-        if (topSwitch.get() && station.getRawButton(7) && pos <= 50) {
+        if (topSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_UP) && pos <= Constants.HOOD_MAX_POS) {
             hoodMotor.set(Constants.HOOD_SPEED);
-        } else if (bottomSwitch.get() && station.getRawButton(8)) {
+        } else if (bottomSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_DOWN)) {
             hoodMotor.set(-Constants.HOOD_SPEED/2);
         } else {
             hoodMotor.set(0);
@@ -45,10 +45,10 @@ public class Hood {
 
     public void setToPosition(double angle) {
         double pos = enc.getPosition();
-        if (topSwitch.get() && (pos - angle) < -1 && pos < 50) {
+        if (topSwitch.get() && (pos - angle) < -1 && pos < Constants.HOOD_MAX_POS) {
             hoodMotor.set(Constants.HOOD_SPEED/2);
             ready = false;
-        } else if (bottomSwitch.get() && (pos-angle) > 1 && pos > 0) {
+        } else if (bottomSwitch.get() && (pos-angle) > 1 && pos > Constants.HOOD_MIN_POS) {
             hoodMotor.set(-Constants.HOOD_SPEED/4);
             ready = false;
         } else {
@@ -60,10 +60,10 @@ public class Hood {
     // Adjust angle based on switch
     public void test() {
         double pos = enc.getPosition();
-        if (topSwitch.get() && station.getRawButtonPressed(9) && pos <= 50) {
-            angle += (angle < 50) ? 1 : 0;
+        if (topSwitch.get() && station.getRawButtonPressed(9) && pos <= Constants.HOOD_MAX_POS) {
+            angle += (angle < Constants.HOOD_MAX_POS) ? 1 : 0;
         } else if (bottomSwitch.get() && station.getRawButtonPressed(10)) {
-            angle -= (angle > 0) ? 1 : 0;
+            angle -= (angle > Constants.HOOD_MIN_POS) ? 1 : 0;
         }
 
         setToPosition(angle);
