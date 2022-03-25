@@ -141,7 +141,7 @@ public class Robot extends TimedRobot {
       Constants.HOOD_SPEED_OFFSET -= Constants.HOOD_SPEED_OFFSET_INCREMENT;
     }
     if (secondDS.getRawButton(Controls.SecondDriverStation.MANUAL_SHOOTER_SPEED)) {
-      shooter.setSpeed(-secondDS.getRawAxis(Controls.SecondDriverStation.SHOOTER_SPEED_SLIDER));
+      shooter.setSpeed(0);
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.LOW_GOAL_SETUP)) {
       Limelight.setLedOn(false);
       shooter.setSpeed(Constants.LOW_GOAL_SPEED);
@@ -194,10 +194,13 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     LiveWindow.setEnabled(false);
-    System.out.print(leftColorSensor.findLineMax());
-    System.out.println(rightColorSensor.findLineMax());
+    System.out.print(hood.getTopSwitch());
+    System.out.print(hood.getBottomSwitch());
+    System.out.print(climber.getLSwitch());
+    System.out.print(climber.getRSwitch());
+    System.out.print(climber.getMSwitch());
+    System.out.println(climber.getSecondMSwitch());
     SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
-    drivetrain.runInverseKinematics(0.2, 0.5);
     // System.out.print(Limelight.getRobotAngle());
     // System.out.println(Limelight.getHorizontalAngle());
     // intake.test();
