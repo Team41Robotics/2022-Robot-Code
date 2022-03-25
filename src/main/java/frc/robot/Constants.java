@@ -24,7 +24,7 @@ public class Constants {
     static int AUTON_DISTANCE = 50;
     static int BALL_DISTANCE_FROM_BOT = 20;
     static int AUTON_BALL_AREA_THRESHOLD = 25;
-    static double AUTON_SPEED_M_PER_S = 0.5;
+    static double AUTON_SPEED_M_PER_S = 0.6;
     static int AUTON_WAIT_LOOPS = 150;
     static int AUTON_SHOOTER_WAIT_TIME = 5000;
     static int SIMPLE_AUTON_DISTANCE = 60;

@@ -70,10 +70,12 @@ public class Hood {
     }
 
     public void home() {
-        while (bottomSwitch.get()) {
+        if (bottomSwitch.get()) {
             hoodMotor.set(-Constants.HOOD_SPEED/4);
+        } else {
+            enc.setPosition(0);
+            hoodMotor.set(0);
         }
-        enc.setPosition(0);
     }
 
     public boolean isReady() {

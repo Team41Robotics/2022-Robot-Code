@@ -5,14 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
-
-import com.revrobotics.ColorSensorV3;
 
 import frc.robot.Constants.AutonState;
 import frc.robot.Constants.INTAKE_MODE;
@@ -31,14 +28,10 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static Hood hood;
   public static boolean inUse = Intake.inUse;
-  private boolean onTapeR;
-  private boolean onTapeL;
   private Climber climber;
   private Shooter shooter;
   private Drivetrain drivetrain;
   private AutonState autonState;
-  private ColorSensor leftColorSensor;
-  private ColorSensor rightColorSensor;
   private int autonCounter;
   private NetworkTable telemetryTable;
   private long autonShootingStartTime;
@@ -53,8 +46,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drivetrain = new Drivetrain();
     intake = new Intake();
-    leftColorSensor = new ColorSensor(new ColorSensorV3(Port.kMXP));
-    rightColorSensor = new ColorSensor(new ColorSensorV3(Port.kOnboard));
     shooter = new Shooter();
     hood = new Hood();
     climber = new Climber();
@@ -77,12 +68,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autonCounter = 0;
-    onTapeL = false;
-    onTapeR = false;
     autonState = AutonState.ALIGN_TO_BALL;
     intake.autonInit();
-    leftColorSensor.calcMedian();
-    rightColorSensor.calcMedian();
     drivetrain.setPosition(0);
     if (SmartDashboard.getBoolean("Do Real Auton", true)) drivetrain.setupAlignmentToBall();
     drivetrain.stop();
@@ -104,8 +91,6 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    leftColorSensor.calcMedian();
-    rightColorSensor.calcMedian();
     shooter.setSpeed(0);
     hood.home();
     if(inUse == false){
@@ -125,8 +110,6 @@ public class Robot extends TimedRobot {
       intake.teleop();
       inUse = false;
     }
-    leftColorSensor.teleop();
-    rightColorSensor.teleop();
     climber.teleop();
     shooter.teleop();
     Limelight.manualZoom(secondDS);
@@ -186,8 +169,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    leftColorSensor.calcMedian();
-    rightColorSensor.calcMedian();
     // hood.home();
     // drivetrain.startTime = System.currentTimeMillis();
   }
@@ -207,33 +188,12 @@ public class Robot extends TimedRobot {
       switch (autonState) {
         // Go until ball finds the starting tape
         case FIND_LINE:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          if(leftColorSensor.findLineMax()){
-            onTapeL = true;
-            System.out.println("Left Sensor has found the tape");
-            drivetrain.setLeft(0);
-          }
-          if(rightColorSensor.findLineMax()){
-            onTapeR = true;
-          System.out.println("Right Sensor has found tape");
-            drivetrain.setRight(0);
-          }    
-          if(!onTapeL){
-            drivetrain.setLeft(Constants.AUTON_SPEED);
-          }
-          if(!onTapeR){
-            drivetrain.setRight(Constants.AUTON_SPEED);
-          }
-          if(onTapeL && onTapeR) {
-            autonState = AutonState.GOTO_BALL;
-            drivetrain.setPosition(0);
-            drivetrain.stop();
-          }
           break;
         
         // After the line, go to where we know the ball is (~40in outside of the tape)
         
         case ALIGN_TO_BALL:
+          hood.home();
           if (drivetrain.alignToBall()) {
             drivetrain.setNoRamp(0);
             autonState = AutonState.GOTO_BALL;
@@ -241,7 +201,7 @@ public class Robot extends TimedRobot {
           break;
 
         case GOTO_BALL:
-          // TODO: Get rid of if to always run w/ inverse kinematics and p controller
+          hood.home();
           Limelight.setLedOn(true);
           if (PhotonCamera.getArea() >= Constants.AUTON_BALL_AREA_THRESHOLD) {
             do {
@@ -256,6 +216,7 @@ public class Robot extends TimedRobot {
         
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
+          hood.home();
           inUse = true;
           System.out.println(drivetrain.getPosition());
           if (drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT) {
@@ -267,6 +228,7 @@ public class Robot extends TimedRobot {
           }
           break;
         case TRACK_GOAL:
+          hood.home();
           if (drivetrain.alignToGoal()) {
             autonState = Constants.AutonState.PREPARE_SHOOTER;
           }
@@ -395,8 +357,6 @@ public class Robot extends TimedRobot {
     if(owenGlag){
       telemetryTable.getEntry("time").setDouble(System.currentTimeMillis());
       climber.telemetry(telemetryTable);
-      leftColorSensor.telemetry(telemetryTable, "Left Color Sensor");
-      rightColorSensor.telemetry(telemetryTable, "Right Color Sensor");
       drivetrain.telemetry(telemetryTable);
       hood.telemetry(telemetryTable);
       intake.telemetry(telemetryTable);
