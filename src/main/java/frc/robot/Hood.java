@@ -107,4 +107,12 @@ public class Hood {
         bottomSwitchTable.getEntry("name").setString("Hood Min Angle Limit Switch");
         bottomSwitchTable.getEntry("status").setBoolean(bottomSwitch.get());
     }
+
+    public boolean getBottomSwitch() {
+        return bottomSwitch.get();
+    }
+
+    public boolean getTopSwitch() {
+        return topSwitch.get();
+    }
 }

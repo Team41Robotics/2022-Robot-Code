@@ -29,7 +29,7 @@ public class Climber {
     private long startTime;
     private CANSparkMax climbingMotor1;
     private CANSparkMax climbingMotor2;
-    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, firstStageMidSwitch;
+    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, secondStageSecondSwitch;
     private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
     private Hood hood;
     private Joystick leftJoy;
@@ -60,7 +60,7 @@ public class Climber {
 
         firstStageLeftSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_L);
         firstStageRightSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWITCH_R);
-        firstStageMidSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWTICH_M);
+        secondStageSecondSwitch = new DigitalInput(Constants.FIRST_STAGE_LIMIT_SWTICH_M);
         secondStageSwitch = new DigitalInput(Constants.SECOND_STAGE_LIMIT_SWITCH);
         
         climbing = false;
@@ -123,7 +123,7 @@ public class Climber {
                     if (!secondStageUp) {
                         motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
 
-                        if (!secondStageSwitch.get()) {
+                        if (!secondStageSwitch.get() || !secondStageSecondSwitch.get()) {
                             secondStageUp = true;
                             System.out.println("Second stage bueno");
                         }
@@ -144,9 +144,9 @@ public class Climber {
                 case(315):
                     break;
             }
-            climbingMotor1.set(motorSpeed);
-            climbingMotor2.set(motorSpeed);
         }
+        climbingMotor1.set(motorSpeed);
+        climbingMotor2.set(motorSpeed);
     }
 
     public boolean getLSwitch() {
@@ -157,8 +157,12 @@ public class Climber {
         return firstStageRightSwitch.get();
     }
 
+    public boolean getSecondMSwitch() {
+        return secondStageSecondSwitch.get();
+    }
+
     public boolean getMSwitch() {
-        return firstStageMidSwitch.get();
+        return secondStageSwitch.get();
     }
 
     public void telemetry(NetworkTable table) {
