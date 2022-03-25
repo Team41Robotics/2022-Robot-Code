@@ -7,6 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,6 +32,7 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static Hood hood;
   public static boolean inUse = Intake.inUse;
+  private UsbCamera cam;
   private Climber climber;
   private Shooter shooter;
   private Drivetrain drivetrain;
@@ -50,6 +55,10 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     climber = new Climber();
     telemetryTable = NetworkTableInstance.getDefault().getTable("telemetry");
+    cam = CameraServer.startAutomaticCapture();
+    cam.setExposureAuto();
+    cam.setVideoMode(VideoMode.PixelFormat.kMJPEG, 80, 60, 30);
+    cam.setFPS(30);
   }
 
   /**
@@ -277,18 +286,14 @@ public class Robot extends TimedRobot {
             }
             autonState = AutonState.PICKUP_THIRD_BALL;
           }
-          else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {
-            angle = PhotonCamera.getYaw();
-            drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
-          } else {
-            drivetrain.set(Constants.AUTON_SPEED);
-          }  
+          angle = PhotonCamera.getYaw();
+          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
           break;
           
         case PICKUP_THIRD_BALL:
         System.out.println(drivetrain.getPosition());
           if(drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT ) {
-            drivetrain.stop();
+            drivetrain.setNoRamp(0);
             autonState = AutonState.ALIGN_TO_GOAL_AGAIN;
           }
           else {
