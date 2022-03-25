@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
     leftColorSensor.calcMedian();
     rightColorSensor.calcMedian();
     drivetrain.setPosition(0);
+    if (SmartDashboard.getBoolean("Do Real Auton", true)) drivetrain.setupAlignmentToBall();
     drivetrain.stop();
     hood.home();
     Limelight.resetZoom();
@@ -182,7 +183,7 @@ public class Robot extends TimedRobot {
   /**doesnt have any code yet */
   @Override
   public void disabledPeriodic() {}
-  /**doesnt have any code yet */
+
   @Override
   public void testInit() {
     leftColorSensor.calcMedian();
@@ -190,29 +191,12 @@ public class Robot extends TimedRobot {
     // hood.home();
     // drivetrain.startTime = System.currentTimeMillis();
   }
-  /**doesnt have any code yet */
+
   @Override
   public void testPeriodic() {
     LiveWindow.setEnabled(false);
-    System.out.print(hood.getTopSwitch());
-    System.out.print(hood.getBottomSwitch());
-    System.out.print(climber.getLSwitch());
-    System.out.print(climber.getRSwitch());
-    System.out.print(climber.getMSwitch());
-    System.out.println(climber.getSecondMSwitch());
+    System.out.println(drivetrain.getGyroAngle());
     SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
-    // System.out.print(Limelight.getRobotAngle());
-    // System.out.println(Limelight.getHorizontalAngle());
-    // intake.test();
-    // hood.test();
-    // shooter.test();
-    // Limelight.test();
-    // drivetrain.teleop();
-    //drivetrain.test();
-    // System.out.print("Hood Angle: ");
-    // System.out.print(hood.angle);
-    // System.out.print("\t\tShooter Speed: ");
-    // System.out.println(shooter.speed);
   }
 
   public void fullAuton() {
@@ -257,13 +241,13 @@ public class Robot extends TimedRobot {
           break;
 
         case GOTO_BALL:
+          // TODO: Get rid of if to always run w/ inverse kinematics and p controller
           Limelight.setLedOn(true);
           if (PhotonCamera.getArea() >= Constants.AUTON_BALL_AREA_THRESHOLD) {
-            drivetrain.setPosition(0);
-            System.out.println(drivetrain.getPosition());
-            while (drivetrain.getPosition() > 1) {
+            do {
               drivetrain.setPosition(0);
             }
+            while (drivetrain.getPosition() > 1);
             autonState = AutonState.PICKUP_BALL;
           }
           else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {

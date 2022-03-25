@@ -81,7 +81,7 @@ public class Constants {
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
-    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 0.75; 
+    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 2; 
     static double DRIFTING_HORIZONTAL_THRESHOLD = 10; 
     static double LIMELIGHT_DEPTH_OFFSET = 2;
     static double LIMELIGHT_HORIZONTAL_OFFSET = -4.5;

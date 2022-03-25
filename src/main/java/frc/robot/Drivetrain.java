@@ -2,13 +2,18 @@ package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.kauailabs.navx.frc.AHRS;
+
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
     public boolean aligningToGoal, aligningToBall;
     public long startTime;
     private boolean climbing;
+    private double angleToBall;
+    private AHRS navx = new AHRS(Port.kUSB);
     private Joystick leftJoy;
     private Joystick rightJoy;
     private PID leftBackPID;
@@ -167,19 +172,25 @@ public class Drivetrain {
         return false;
     }
 
+    public void setupAlignmentToBall() {
+        if (!PhotonCamera.hasTarget()) {
+            setupAlignmentToBall();
+        } else {
+            angleToBall = PhotonCamera.getYaw();
+            navx.zeroYaw();
+        }
+    }
+
     public boolean alignToBall() {
         aligningToBall = true;
-        if (!PhotonCamera.hasTarget()) {
-            return false;
-        }
-        double angle = PhotonCamera.getYaw();
+        double angle = navx.getAngle();
         double speed = ballTrackingPID.run(angle);
-        if (speed < Constants.AUTON_SPEED/2.5) speed = Constants.AUTON_SPEED/2.5;
-        if (speed > -Constants.AUTON_SPEED/2.5) speed = -Constants.AUTON_SPEED/2.5;
-        if (angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
+        if (speed < Constants.AUTON_SPEED/2) speed = Constants.AUTON_SPEED/2;
+        if (speed > -Constants.AUTON_SPEED/2) speed = -Constants.AUTON_SPEED/2;
+        if (angleToBall - angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
             setRightNoRamp(speed);
             setLeftNoRamp(-speed);
-        } else if (angle<-Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
+        } else if (angleToBall - angle<-Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
             setRightNoRamp(-speed);
             setLeftNoRamp(speed);
         } else {
@@ -258,5 +269,9 @@ public class Drivetrain {
         leftBackPID.telemetry(motorTable, "Left Back Drivetrain Motor");
         rightFrontPID.telemetry(motorTable, "Right Front Drivetrain Motor");
         rightBackPID.telemetry(motorTable, "Right Back Drivetrain Motor");
+    }
+
+    public double getGyroAngle() {
+        return navx.getAngle();
     }
 }
