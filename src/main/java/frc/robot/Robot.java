@@ -250,12 +250,8 @@ public class Robot extends TimedRobot {
             while (drivetrain.getPosition() > 1);
             autonState = AutonState.PICKUP_BALL;
           }
-          else if (PhotonCamera.getYaw() >= Constants.DRIFTING_HORIZONTAL_THRESHOLD || PhotonCamera.getYaw() <= -Constants.DRIFTING_HORIZONTAL_THRESHOLD) {
-            double angle = PhotonCamera.getYaw();
-            drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
-          } else {
-            drivetrain.set(Constants.AUTON_SPEED);
-          }  
+          double angle = PhotonCamera.getYaw();
+          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
           break;
         
         // Turn off intake after the ball is picked up
@@ -279,7 +275,7 @@ public class Robot extends TimedRobot {
         case PREPARE_SHOOTER:
           double distance = Limelight.estimateDistance();
           double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
-          double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+          angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
           shooter.setSpeed(speed/100);
           hood.setToPosition(angle);
           if (hood.isReady() && ++autonCounter > 150) {
