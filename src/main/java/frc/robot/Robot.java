@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   public static Intake intake;
   public static Hood hood;
+  public static long startTime = System.currentTimeMillis();
   public static boolean inUse = Intake.inUse;
   private UsbCamera cam;
   private Climber climber;
@@ -115,6 +116,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
     if(inUse == false){
       inUse = true;
       intake.teleop();
@@ -134,6 +136,7 @@ public class Robot extends TimedRobot {
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.DECREASE_HOOD_OFFSET)) {
       Constants.HOOD_SPEED_OFFSET -= Constants.HOOD_SPEED_OFFSET_INCREMENT;
     }
+
     if (secondDS.getRawButton(Controls.SecondDriverStation.MANUAL_SHOOTER_SPEED)) {
       shooter.setSpeed(0);
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.LOW_GOAL_SETUP)) {
@@ -366,7 +369,7 @@ public class Robot extends TimedRobot {
   public void gatherData() {
     owenGlag = telemetryTable.getEntry("owenGlag").getBoolean(true);
     if(owenGlag){
-      telemetryTable.getEntry("time").setDouble(System.currentTimeMillis());
+      telemetryTable.getEntry("time").setDouble(System.currentTimeMillis()-startTime);
       climber.telemetry(telemetryTable);
       drivetrain.telemetry(telemetryTable);
       hood.telemetry(telemetryTable);

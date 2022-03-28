@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Hood {
     public double angle;
-    private boolean ready;
+    private boolean ready, homed;
     private CANSparkMax hoodMotor;
     private DigitalInput topSwitch, bottomSwitch;
     private Joystick station;
@@ -28,11 +28,14 @@ public class Hood {
         station = Robot.secondDS;
         angle = 0;
         ready = false;
+        homed = false;
     }
 
     public void teleop() {
         double pos = enc.getPosition();
-        if (topSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_UP) && pos <= Constants.HOOD_MAX_POS) {
+        if (!homed) {
+            home();
+        } else if (topSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_UP) && pos <= Constants.HOOD_MAX_POS) {
             hoodMotor.set(Constants.HOOD_SPEED);
         } else if (bottomSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_DOWN)) {
             hoodMotor.set(-Constants.HOOD_SPEED/2);
@@ -75,7 +78,12 @@ public class Hood {
         } else {
             enc.setPosition(0);
             hoodMotor.set(0);
+            homed = true;
         }
+    }
+
+    public boolean isHomed() {
+        return homed;
     }
 
     public boolean isReady() {

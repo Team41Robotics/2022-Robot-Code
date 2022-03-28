@@ -72,7 +72,7 @@ public class Constants {
     static int CONVEYOR_MOTOR = 3;
     static int FEEDER_MOTOR = 4;
     static int ELEVATOR_MOTOR = 6;
-    static double INTAKE_FULL_SPEED = 0.4;
+    static double INTAKE_FULL_SPEED = 0.6;
     static double CONVEYOR_FULL_SPEED = 0.5;
     static double FEEDER_FULL_SPEED = 0.5;
     static double ELEVATOR_FULL_SPEED = 0.5;
