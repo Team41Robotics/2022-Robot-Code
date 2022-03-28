@@ -108,6 +108,7 @@ public class Robot extends TimedRobot {
       inUse = false;
     }
     Limelight.setLedOn(false);
+    Limelight.resetZoom();
     climber.reset();
   }
 
@@ -202,6 +203,7 @@ public class Robot extends TimedRobot {
         // After the line, go to where we know the ball is (~40in outside of the tape)
         
         case ALIGN_TO_BALL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           hood.home();
           if (drivetrain.alignToBall()) {
             drivetrain.setNoRamp(0);
@@ -210,6 +212,7 @@ public class Robot extends TimedRobot {
           break;
 
         case GOTO_BALL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           hood.home();
           Limelight.setLedOn(true);
           if (PhotonCamera.getArea() >= Constants.AUTON_BALL_AREA_THRESHOLD) {
@@ -220,11 +223,12 @@ public class Robot extends TimedRobot {
             autonState = AutonState.PICKUP_BALL;
           }
           double angle = PhotonCamera.getYaw();
-          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S);
+          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S*(2.0/3));
           break;
         
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           hood.home();
           inUse = true;
           System.out.println(drivetrain.getPosition());
@@ -237,6 +241,7 @@ public class Robot extends TimedRobot {
           }
           break;
         case TRACK_GOAL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           hood.home();
           if (drivetrain.alignToGoal()) {
             autonState = Constants.AutonState.PREPARE_SHOOTER;
@@ -260,7 +265,7 @@ public class Robot extends TimedRobot {
           shooter.runFeeder(true);
           shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
           intake.runConveyor(true);
-          if (System.currentTimeMillis() - autonShootingStartTime >= 5000) {
+          if (System.currentTimeMillis() - autonShootingStartTime >= 2500) {
             shooter.runFeeder(false);
             shooter.runElevator(0);
             intake.runConveyor(false);
@@ -269,6 +274,7 @@ public class Robot extends TimedRobot {
           break;
 
         case ALIGN_TO_THIRD_BALL:
+          Limelight.zoomIn();
           if (drivetrain.alignToBall()) {
             drivetrain.setNoRamp(0);
             intake.run(INTAKE_MODE.FORWARD);

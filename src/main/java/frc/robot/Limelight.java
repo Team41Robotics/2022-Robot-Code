@@ -67,4 +67,8 @@ class Limelight {
     public static void resetZoom() {
         limelightTable.getEntry("pipeline").setNumber(0);
     }
+
+    public static void zoomIn() {
+        limelightTable.getEntry("pipeline").setNumber(1);
+    }
 }

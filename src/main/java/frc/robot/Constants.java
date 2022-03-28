@@ -23,10 +23,10 @@ public class Constants {
     static double AUTON_SPEED = 0.1;
     static int AUTON_DISTANCE = 50;
     static int BALL_DISTANCE_FROM_BOT = 20;
-    static int AUTON_BALL_AREA_THRESHOLD = 25;
-    static double AUTON_SPEED_M_PER_S = 1.5;
-    static int AUTON_WAIT_LOOPS = 150;
-    static int AUTON_SHOOTER_WAIT_TIME = 5000;
+    static int AUTON_BALL_AREA_THRESHOLD = 20;
+    static double AUTON_SPEED_M_PER_S = 1;
+    static int AUTON_WAIT_LOOPS = 525;
+    static int AUTON_SHOOTER_WAIT_TIME = 2500;
     static int SIMPLE_AUTON_DISTANCE = 60;
 
     // Ports for drivetrain Talons
@@ -72,7 +72,7 @@ public class Constants {
     static int CONVEYOR_MOTOR = 3;
     static int FEEDER_MOTOR = 4;
     static int ELEVATOR_MOTOR = 6;
-    static double INTAKE_FULL_SPEED = 0.2;
+    static double INTAKE_FULL_SPEED = 0.4;
     static double CONVEYOR_FULL_SPEED = 0.5;
     static double FEEDER_FULL_SPEED = 0.5;
     static double ELEVATOR_FULL_SPEED = 0.5;
@@ -113,7 +113,7 @@ public class Constants {
     static double HOOD_ANGLE_OFFSET = 8.96;
     static double HOOD_ANGLE_CURVE = -0.000437;
 
-    static double SHOOTER_DEFAULT_SPEED = 0.355;
+    static double SHOOTER_DEFAULT_SPEED = 0.375;
     static double HOOD_DEFAULT_ANGLE = 20;
 
     static double LOW_GOAL_SPEED = 0.22;
@@ -136,7 +136,7 @@ public class Constants {
     static double BALLTRACKING_P = 0.0035;
     static double BALL_FOLLOWING_kP = 0.01;
 
-    static double PID_MIN_ERR = 0.03;
+    static double PID_MIN_ERR = 0.04;
 
     //different states for auton
     public enum AutonState {
