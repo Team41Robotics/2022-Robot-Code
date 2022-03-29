@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   public static Intake intake;
   public static Hood hood;
-  public static long startTime = System.currentTimeMillis();
+  public static long startTime;
   public static boolean inUse = Intake.inUse;
   private UsbCamera cam;
   private Climber climber;
@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
   private NetworkTable telemetryTable;
   private long autonShootingStartTime;
   private boolean owenGlag;
+  private int dropCount;
   
 
   /**
@@ -60,6 +61,8 @@ public class Robot extends TimedRobot {
     cam.setExposureAuto();
     cam.setVideoMode(VideoMode.PixelFormat.kMJPEG, 80, 60, 30);
     cam.setFPS(30);
+    startTime = System.currentTimeMillis();
+    
   }
 
   /**
@@ -376,6 +379,10 @@ public class Robot extends TimedRobot {
       intake.telemetry(telemetryTable);
       shooter.telemetry(telemetryTable);
       telemetryTable.getEntry("owenGlag").setBoolean(false);
+      dropCount = 0;
+  }else{
+    dropCount += 1;
+    System.out.println(String.format("Message dropped... Times Since Last Success: %s",dropCount));
   }
   }
 }

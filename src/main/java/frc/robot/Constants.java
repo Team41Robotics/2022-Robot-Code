@@ -34,7 +34,7 @@ public class Constants {
     static int FALCON_LB = 9;
     static int FALCON_RF = 7;
     static int FALCON_RB = 8;
-    static double DRIVETRAIN_MAX_SPEED = 0.75;
+    static double DRIVETRAIN_MAX_SPEED = 0.65;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
     static double CLIMBING_DRIVING_SPEED_OFFSET = 4e-4;
     static double CLIMBING_MAX_SPEED = 0.7;
@@ -74,19 +74,19 @@ public class Constants {
     static int ELEVATOR_MOTOR = 6;
     static double INTAKE_FULL_SPEED = 0.6;
     static double CONVEYOR_FULL_SPEED = 0.5;
-    static double FEEDER_FULL_SPEED = 0.5;
-    static double ELEVATOR_FULL_SPEED = 0.5;
+    static double FEEDER_FULL_SPEED = 0.75;
+    static double ELEVATOR_FULL_SPEED = 0.75;
 
     // Measurements for the Limelight
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
-    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 2; 
+    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 1; 
     static double DRIFTING_HORIZONTAL_THRESHOLD = 10; 
     static double LIMELIGHT_DEPTH_OFFSET = 2;
     static double LIMELIGHT_HORIZONTAL_OFFSET = -4.5;
 
-    // Ports for Climbing
+    // Ports for Climbingramp
     static int CLIMBING_SPARK_F = 1;
     static int CLIMBING_SPARK_B = 2;
     static int FIRST_STAGE_LIMIT_SWITCH_R = 1;
@@ -124,7 +124,7 @@ public class Constants {
     static double kI = 0.02;
     static double kD = 0.004;
     static double kFF = 1.5;
-    static double RAMP_TIME = 0.9;
+    static double RAMP_TIME = 0.8;
 
     // 0.5, 0.03, 0.0005, 1.1, 1
     static double SHOOTER_kP = 0.5;
