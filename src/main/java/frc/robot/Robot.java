@@ -13,6 +13,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 
 import frc.robot.Constants.AutonState;
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
   private UsbCamera cam;
   private Climber climber;
   private Shooter shooter;
+  private DigitalInput beamBreak;
   private Drivetrain drivetrain;
   private AutonState autonState;
   private int autonCounter;
@@ -62,7 +64,7 @@ public class Robot extends TimedRobot {
     cam.setVideoMode(VideoMode.PixelFormat.kMJPEG, 80, 60, 30);
     cam.setFPS(30);
     startTime = System.currentTimeMillis();
-    
+    beamBreak = new DigitalInput(4);
   }
 
   /**
@@ -174,6 +176,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
     SmartDashboard.putNumber("Shooter Offset", Constants.HOOD_SPEED_OFFSET);
     SmartDashboard.putBoolean("Shooter Ready", shooter.isReady());
+    SmartDashboard.putBoolean("Beam Break", beamBreak.get());
   }
   
   /** doesnt have any code yet */
