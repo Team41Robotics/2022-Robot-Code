@@ -274,4 +274,8 @@ public class Drivetrain {
     public double getGyroAngle() {
         return navx.getAngle();
     }
+
+    public boolean isReady() {
+        return leftFrontPID.isReady();
+    }
 }

@@ -24,10 +24,12 @@ public class Constants {
     static int AUTON_DISTANCE = 50;
     static int BALL_DISTANCE_FROM_BOT = 20;
     static int AUTON_BALL_AREA_THRESHOLD = 20;
-    static double AUTON_SPEED_M_PER_S = 1;
+    static double AUTON_SPEED_M_PER_S = 1.5;
     static int AUTON_WAIT_LOOPS = 525;
-    static int AUTON_SHOOTER_WAIT_TIME = 2500;
+    static int AUTON_SHOOTER_WAIT_TIME = 1000;
+    static int AUTON_HUMAN_BALL_WAIT_TIME = 1000;
     static int SIMPLE_AUTON_DISTANCE = 60;
+    static int DISTANCE_FROM_HUMAN_STATION = 75;
 
     // Ports for drivetrain Talons
     static int FALCON_LF = 10;
@@ -81,7 +83,7 @@ public class Constants {
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
-    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 1; 
+    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 0.5; 
     static double DRIFTING_HORIZONTAL_THRESHOLD = 10; 
     static double LIMELIGHT_DEPTH_OFFSET = 2;
     static double LIMELIGHT_HORIZONTAL_OFFSET = -4.5;
@@ -133,10 +135,12 @@ public class Constants {
     static double SHOOTER_kFF = 1.1;
     static double SHOOTER_RAMP_TIME = 1;
 
-    static double BALLTRACKING_P = 0.0035;
+    static double BALLTRACKING_P = 0.09;
     static double BALL_FOLLOWING_kP = 0.01;
 
-    static double PID_MIN_ERR = 0.04;
+    static double THIRD_BALL_SPEED_kP = 2;
+
+    static double PID_MIN_ERR = 0.03;
 
     //different states for auton
     public enum AutonState {
@@ -149,7 +153,8 @@ public class Constants {
         SHOOT_BALL,
         ALIGN_TO_THIRD_BALL,
         GOTO_THIRD_BALL,
-        PICKUP_THIRD_BALL,
+        WAIT_FOR_BALL,
+        MOVE_TOWARDS_GOAL,
         ALIGN_TO_GOAL_AGAIN,
         SHOOT_AGAIN,
         NONE
