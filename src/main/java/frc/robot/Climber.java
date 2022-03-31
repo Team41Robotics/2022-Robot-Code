@@ -165,6 +165,10 @@ public class Climber {
         return secondStageSwitch.get();
     }
 
+    public int getClimbingState() {
+        return climbingState;
+    }
+
     public void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
         

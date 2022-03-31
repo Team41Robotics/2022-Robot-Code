@@ -15,7 +15,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-
+import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.Constants.AutonState;
 import frc.robot.Constants.INTAKE_MODE;
 
@@ -400,15 +400,15 @@ public class Robot extends TimedRobot {
       hood.telemetry(telemetryTable);
       intake.telemetry(telemetryTable);
       shooter.telemetry(telemetryTable);
-
       telemetryTable.getEntry("autonState").setNumber(autonStateToInt());
-      dropCount = 0;
+      telemetryTable.getEntry("started").setBoolean(started);
+      telemetryTable.getEntry("disabled").setBoolean(RobotState.isDisabled());
+      telemetryTable.getEntry("climbingState").setDouble(climber.getClimbingState());
       telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("angle").setDouble(PhotonCamera.getYaw());
       telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("area").setDouble(PhotonCamera.getArea());
-      
       telemetryTable.getSubTable("cameras").getSubTable("limelight").getEntry("angle").setDouble(Limelight.getHorizontalAngle());
-      
       telemetryTable.getEntry("owenGlag").setBoolean(false);
+      dropCount = 0;;
     }else{
       dropCount += 1;
       // System.out.println(String.format("Message dropped... Times Since Last Success: %s",dropCount));
