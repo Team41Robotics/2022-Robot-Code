@@ -298,6 +298,9 @@ public class Robot extends TimedRobot {
           break;
 
         case GOTO_THIRD_BALL:
+          if (drivetrain.getDanger()){
+            autonState = AutonState.WAIT_FOR_BALL;
+          }
           if (!beamBreak.get()) {
             drivetrain.setNoRamp(0);
             // System.out.println(drivetrain.getPosition());

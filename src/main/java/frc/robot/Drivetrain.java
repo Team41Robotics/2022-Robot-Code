@@ -278,4 +278,7 @@ public class Drivetrain {
     public boolean isReady() {
         return leftFrontPID.isReady();
     }
+    public boolean getDanger(){
+        return (leftBackPID.getCurrent()>80) || (leftFrontPID.getCurrent()>80)|| (rightBackPID.getCurrent()>80) || (rightFrontPID.getCurrent()>80);
+    }
 }
