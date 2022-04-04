@@ -209,7 +209,6 @@ public class Robot extends TimedRobot {
   }
 
   public void fullAuton() {
-    SmartDashboard.putNumber("PID Err", shooter.getErr());
     // State machine for auton
     if (inUse == false) {
       inUse = true;
@@ -381,7 +380,6 @@ public class Robot extends TimedRobot {
   }
 
   public void simpleAuton() {
-    SmartDashboard.putNumber("PID Err", shooter.getErr());
     // State machine for auton
     if (inUse == false) {
       inUse = true;

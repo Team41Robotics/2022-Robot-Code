@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -77,11 +76,6 @@ public class Drivetrain {
         leftFrontPID.run(speed);
         rightBackPID.run(speed);
         rightFrontPID.run(speed);
-
-        SmartDashboard.putNumber("err", leftBackPID.getError());
-        SmartDashboard.putNumber("vel", leftBackPID.getVelocity());
-        SmartDashboard.putNumber("ctrl", leftBackPID.getControlSignal());
-        SmartDashboard.putNumber("current", talonLB.getStatorCurrent());
     }
 
     public void setNoRamp(double speed) {
@@ -89,11 +83,6 @@ public class Drivetrain {
         leftFrontPID.runNoRamp(speed);
         rightBackPID.runNoRamp(speed);
         rightFrontPID.runNoRamp(speed);
-        
-        SmartDashboard.putNumber("err", leftBackPID.getError());
-        SmartDashboard.putNumber("vel", leftBackPID.getVelocity());
-        SmartDashboard.putNumber("ctrl", leftBackPID.getControlSignal());
-        SmartDashboard.putNumber("current", talonLB.getStatorCurrent());
     }
 
     /**
@@ -259,7 +248,6 @@ public class Drivetrain {
         } else {
             set(0);
         }
-        SmartDashboard.putNumber("Motor Speed", leftBackPID.getVelocity());
     }
 
     public void telemetry(NetworkTable table) {

@@ -4,7 +4,6 @@ import java.lang.Math;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class Limelight {
     private static NetworkTable limelightTable  = NetworkTableInstance.getDefault().getTable("limelight");
@@ -45,9 +44,6 @@ class Limelight {
         double distance = estimateDistance();
         double x = Constants.LIMELIGHT_DEPTH_OFFSET + (distance * Math.cos(cameraAngle));
         double y = Constants.LIMELIGHT_HORIZONTAL_OFFSET + (distance * Math.sin(cameraAngle));
-        SmartDashboard.putNumber("X", x);
-        SmartDashboard.putNumber("Y", y);
-        SmartDashboard.putNumber("Arctan", Math.atan(y/x));
         return Math.toDegrees(Math.atan2(y, x));
     }
 

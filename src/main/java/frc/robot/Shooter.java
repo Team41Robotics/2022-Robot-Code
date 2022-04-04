@@ -1,7 +1,6 @@
 package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -48,7 +47,6 @@ public class Shooter {
                 
             }
         }
-        SmartDashboard.putNumber("Shooter Error", leftFalconPID.getError());
     }
 
     public void test() {
