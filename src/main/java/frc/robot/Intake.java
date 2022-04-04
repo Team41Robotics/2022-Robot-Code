@@ -3,10 +3,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.INTAKE_MODE;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -21,6 +24,8 @@ public class Intake {
     private DoubleSolenoid intakeSolLeft;
     private DoubleSolenoid intakeSolRight;
     private Joystick leftJoy, rightJoy, secondDS;
+    private ShuffleboardTab robotTab;
+    private NetworkTableEntry intakeStatus = robotTab.add("Intake On", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
 
     /** Initialize all parts of the intake */
     public Intake(){
@@ -36,6 +41,7 @@ public class Intake {
         intakeMotor.setIdleMode(IdleMode.kCoast);
         intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
         intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
+        robotTab = Shuffleboard.getTab("Robot");
     }
 
     /** At beginning of auton, move the intake down and start the motor */
@@ -70,7 +76,7 @@ public class Intake {
           intakeMotor.set(0);
         }
 
-        SmartDashboard.putBoolean("Intake On", intakeOn);
+        intakeStatus.setBoolean(intakeOn);
     }
 
     public void test() {

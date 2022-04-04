@@ -7,9 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,6 +46,9 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private AutonState autonState;
   private NetworkTable telemetryTable;
+  private NetworkTableEntry limelightDistanceEntry, speedOffsetEntry, shooterReadyEntry, beamBreakEntry, droppedTelemetryEntry;
+  private SendableChooser<Boolean> autonChooser;
+  private ShuffleboardTab debugTab, robotTab;
   private long autonShootingStartTime, autonHumanStationWait;
   private boolean owenGlag, thirdBallClose, started;
   private int dropCount;
@@ -63,11 +70,18 @@ public class Robot extends TimedRobot {
     startTime = System.currentTimeMillis();
     beamBreak = new DigitalInput(4);
     autonState = AutonState.NONE;
-    if(DriverStation.getAlliance() == Alliance.Blue){
-      PhotonCamera.setPipeline(true);
-    } else {
-      PhotonCamera.setPipeline(false);
-    }
+    debugTab = Shuffleboard.getTab("Debug");
+    robotTab = Shuffleboard.getTab("Robot");
+    limelightDistanceEntry = debugTab.add("LL Distance", -1).getEntry();
+    speedOffsetEntry = debugTab.add("Speed Offset", Constants.HOOD_SPEED_OFFSET).getEntry();
+    shooterReadyEntry = debugTab.add("Shooter Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    beamBreakEntry = debugTab.add("Beam Break", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    droppedTelemetryEntry = debugTab.add("Telemetry Packets Dropped", -1).getEntry();
+
+    autonChooser = new SendableChooser<>();
+    autonChooser.setDefaultOption("4 Ball Auton", true);
+    autonChooser.addOption("2 Ball Auton", false);
+    robotTab.add("Do Real Auton", autonChooser).withWidget(BuiltInWidgets.kComboBoxChooser); // true: 4 ball   false: 2 ball
   }
 
   /**
@@ -87,6 +101,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    PhotonCamera.setPipeline(DriverStation.getAlliance() == Alliance.Blue);
     telemetryTable.getEntry("disabled").setBoolean(false);
     autonState = AutonState.ALIGN_TO_BALL;
     started = true;
@@ -104,7 +119,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (SmartDashboard.getBoolean("Do Real Auton", true)) {
+    if (autonChooser.getSelected()) {
       fullAuton();
     } else {
       simpleAuton();
@@ -178,11 +193,10 @@ public class Robot extends TimedRobot {
       shooter.setSpeed(0);
       Limelight.setLedOn(false);
     }
-
-    SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
-    SmartDashboard.putNumber("Shooter Offset", Constants.HOOD_SPEED_OFFSET);
-    SmartDashboard.putBoolean("Shooter Ready", shooter.isReady());
-    SmartDashboard.putBoolean("Beam Break", !beamBreak.get());
+    limelightDistanceEntry.setDouble(Limelight.estimateDistance());
+    speedOffsetEntry.setDouble(Constants.HOOD_SPEED_OFFSET);
+    shooterReadyEntry.setBoolean(shooter.isReady());
+    beamBreakEntry.setBoolean(!beamBreak.get());
   }
 
   /** doesnt have any code yet */
@@ -205,7 +219,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     LiveWindow.setEnabled(false);
-    System.out.println(SmartDashboard.getBoolean("Do Real Auton", true));
+    System.out.println(autonChooser.getSelected());
   }
 
   public void fullAuton() {
@@ -495,7 +509,7 @@ public class Robot extends TimedRobot {
       ;
     } else {
       dropCount += 1;
-      SmartDashboard.putString("Packages Dropped", String.format("Message dropped... Times Since Last Success: %s", dropCount));
+      droppedTelemetryEntry.setDouble(dropCount);
     }
   }
 
