@@ -110,14 +110,11 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    telemetryTable.getEntry("disabled").setBoolean(false);
     autonState = AutonState.NONE;
     shooter.setSpeed(0);
     hood.home();
-    if(inUse == false){
-      inUse = true;
-      intake.stop();
-      inUse = false;
-    }
+    intake.reset();
     Limelight.setLedOn(false);
     Limelight.resetZoom();
     climber.reset();

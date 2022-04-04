@@ -47,14 +47,6 @@ public class Intake {
         conveyor.set(Constants.CONVEYOR_FULL_SPEED);
     }
 
-    /**
-     * Set the intake motor to a specified speed
-     * @param speed desired speed of the intake motor [-1, 1]
-     */
-    public void setIntakeMotor(double speed){
-        intakeMotor.set(speed);
-    }
-
     /** In teleop, use joystick triggers to raise/lower the intake and toggle the motor */
     public void teleop(){
         if (leftJoy.getRawButtonPressed(Controls.LeftJoy.INTAKE_PISTON_TOGGLE)) {
@@ -120,6 +112,18 @@ public class Intake {
     public void stop() {
       conveyor.set(0);
       intakeMotor.set(0);
+    }
+
+    public void putUp() {
+      intakeSolLeft.set(Value.kReverse);
+      intakeSolRight.set(Value.kReverse);
+    }
+
+    public void reset() {
+      putUp();
+      stop();
+      intakeOn = false;
+      intakeUp = false;
     }
 
     public void telemetry(NetworkTable table) {
