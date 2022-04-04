@@ -39,7 +39,8 @@ public class Constants {
     static double DRIVETRAIN_MAX_SPEED = 0.65;
     static double CLIMBING_DRIVE_MAX_SPEED = 0.4;
     static double CLIMBING_DRIVING_SPEED_OFFSET = 4e-4;
-    static double CLIMBING_MAX_SPEED = 0.7;
+    static double CLIMBING_MAX_SPEED = 0.85;
+    static double CLIMBING_SPEED_SECOND_STAGE = 0.6;
     static double CLIMBING_SLOW_SPEED = 0.4;
     static double JOYSTICK_CURVE_POWER = 3; // x^3 function
     static double JOYSTICK_DEADZONE = 0.1;

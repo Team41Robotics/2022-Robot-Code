@@ -100,7 +100,7 @@ public class Climber {
                     hood.setToPosition(0);
                     if (!firstStageUp) {
                         motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
-                        if (!(firstStageLeftSwitch.get() || firstStageRightSwitch.get())) {
+                        if (!firstStageLeftSwitch.get() || !firstStageRightSwitch.get()) {
                             firstStageUp = true;
                             System.out.println("Pressed");
                         }
@@ -121,7 +121,7 @@ public class Climber {
                 case(135):
                     // send out third arm 
                     if (!secondStageUp) {
-                        motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
+                        motorSpeed = -Constants.CLIMBING_SPEED_SECOND_STAGE;
 
                         if (!secondStageSwitch.get() || !secondStageSecondSwitch.get()) {
                             secondStageUp = true;
