@@ -5,24 +5,26 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.Constants.AutonState;
 import frc.robot.Constants.INTAKE_MODE;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -34,7 +36,6 @@ public class Robot extends TimedRobot {
   public static Hood hood;
   public static long startTime;
   public static boolean inUse = Intake.inUse;
-  private UsbCamera cam;
   private Climber climber;
   private Shooter shooter;
   private DigitalInput beamBreak;
@@ -45,7 +46,6 @@ public class Robot extends TimedRobot {
   private boolean owenGlag, thirdBallClose, started;
   private int dropCount;
   private double robotPos;
-  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -60,18 +60,21 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     climber = new Climber();
     telemetryTable = NetworkTableInstance.getDefault().getTable("telemetry");
-    cam = CameraServer.startAutomaticCapture();
-    cam.setExposureAuto();
-    cam.setVideoMode(VideoMode.PixelFormat.kMJPEG, 80, 60, 30);
-    cam.setFPS(30);
     startTime = System.currentTimeMillis();
     beamBreak = new DigitalInput(4);
     autonState = AutonState.NONE;
+    if(DriverStation.getAlliance() == Alliance.Blue){
+      PhotonCamera.setPipeline(true);
+    } else {
+      PhotonCamera.setPipeline(false);
+    }
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like
+   * diagnostics that you want ran during disabled, autonomous, teleoperated and
+   * test.
    *
    */
   @Override
@@ -84,16 +87,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    telemetryTable.getEntry("disabled").setBoolean(false);
     autonState = AutonState.ALIGN_TO_BALL;
     started = true;
     thirdBallClose = false;
     intake.autonInit();
     drivetrain.setPosition(0);
-    if (SmartDashboard.getBoolean("Do Real Auton", true)) drivetrain.setupAlignmentToBall();
+    drivetrain.setupAlignmentToBall();
     drivetrain.stop();
     hood.home();
     shooter.setSpeed(0);
     Limelight.resetZoom();
+
   }
 
   /** This function is called periodically during autonomous. */
@@ -124,7 +129,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    if(inUse == false){
+    if (inUse == false) {
       inUse = true;
       intake.teleop();
       inUse = false;
@@ -154,7 +159,7 @@ public class Robot extends TimedRobot {
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.AUTO_SHOOTING)) {
       Limelight.setLedOn(true);
       if (Limelight.targetFound()) {
-        shooter.setSpeed(speed/100);
+        shooter.setSpeed(speed / 100);
         hood.setToPosition(angle);
         drivetrain.alignToGoal();
       }
@@ -163,7 +168,7 @@ public class Robot extends TimedRobot {
       shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
       hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
       drivetrain.teleop();
-    } else if (climber.climbing) { 
+    } else if (climber.climbing) {
       shooter.setSpeed(0);
       Limelight.setLedOn(false);
       drivetrain.teleop();
@@ -174,22 +179,25 @@ public class Robot extends TimedRobot {
       Limelight.setLedOn(false);
     }
 
-    
     SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
     SmartDashboard.putNumber("Shooter Offset", Constants.HOOD_SPEED_OFFSET);
     SmartDashboard.putBoolean("Shooter Ready", shooter.isReady());
     SmartDashboard.putBoolean("Beam Break", !beamBreak.get());
   }
-  
+
   /** doesnt have any code yet */
   @Override
-  public void disabledInit() {}
-  /**doesnt have any code yet */
+  public void disabledInit() {
+  }
+
+  /** doesnt have any code yet */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
   public void testInit() {
+    telemetryTable.getEntry("disabled").setBoolean(false);
     // hood.home();
     // drivetrain.startTime = System.currentTimeMillis();
   }
@@ -197,22 +205,21 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     LiveWindow.setEnabled(false);
-    System.out.println(drivetrain.getGyroAngle());
-    SmartDashboard.putBoolean("Beam Break", !beamBreak.get());
+    System.out.println(SmartDashboard.getBoolean("Do Real Auton", true));
   }
 
   public void fullAuton() {
     SmartDashboard.putNumber("PID Err", shooter.getErr());
     // State machine for auton
-    if(inUse == false){
+    if (inUse == false) {
       inUse = true;
       switch (autonState) {
         // Go until ball finds the starting tape
         case FIND_LINE:
           break;
-        
+
         // After the line, go to where we know the ball is (~40in outside of the tape)
-        
+
         case ALIGN_TO_BALL:
           shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           hood.home();
@@ -230,14 +237,13 @@ public class Robot extends TimedRobot {
           if (!beamBreak.get()) {
             do {
               drivetrain.setPosition(0);
-            }
-            while (drivetrain.getPosition() > 1);
+            } while (drivetrain.getPosition() > 1);
             autonState = AutonState.TRACK_GOAL;
           }
           double angle = PhotonCamera.getYaw();
-          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S*(2.0/3));
+          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
           break;
-        
+
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
           shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
@@ -262,9 +268,10 @@ public class Robot extends TimedRobot {
 
         case PREPARE_SHOOTER:
           double distance = Limelight.estimateDistance();
-          double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
-          angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
-          shooter.setSpeed(speed/100);
+          double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET + .5;
+          angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
+              + Constants.HOOD_ANGLE_OFFSET;
+          shooter.setSpeed(speed / 100);
           hood.setToPosition(angle);
           if (hood.isReady()) {
             autonShootingStartTime = System.currentTimeMillis();
@@ -286,7 +293,6 @@ public class Robot extends TimedRobot {
           break;
 
         case ALIGN_TO_THIRD_BALL:
-          Limelight.zoomIn();
           if (drivetrain.alignToBall()) {
             drivetrain.setNoRamp(0);
             intake.run(INTAKE_MODE.FORWARD);
@@ -313,26 +319,28 @@ public class Robot extends TimedRobot {
             }
             angle = PhotonCamera.getYaw();
             double slowSpeed = 0.5;
-            drivetrain.runInverseKinematics(AngularPController.run(-angle), !thirdBallClose ? Constants.AUTON_SPEED_M_PER_S : slowSpeed);
+            drivetrain.runInverseKinematics(AngularPController.run(-angle),
+                !thirdBallClose ? Constants.AUTON_SPEED_M_PER_S : slowSpeed);
           }
           break;
-          
+
         case WAIT_FOR_BALL:
-          if (System.currentTimeMillis()-autonHumanStationWait > Constants.AUTON_HUMAN_BALL_WAIT_TIME) {
+          if (System.currentTimeMillis() - autonHumanStationWait > Constants.AUTON_HUMAN_BALL_WAIT_TIME) {
             autonState = AutonState.MOVE_TOWARDS_GOAL;
           } else {
             drivetrain.setNoRamp(0);
           }
           break;
-        
+
         case MOVE_TOWARDS_GOAL:
-          if(Math.abs(drivetrain.getPosition()-robotPos) >= Constants.DISTANCE_FROM_HUMAN_STATION ) {
-            do drivetrain.stop(); while (!drivetrain.isReady());
+          if (Math.abs(drivetrain.getPosition() - robotPos) >= Constants.DISTANCE_FROM_HUMAN_STATION) {
+            do
+              drivetrain.stop();
+            while (!drivetrain.isReady());
             autonState = AutonState.ALIGN_TO_GOAL_AGAIN;
-          }
-          else {
+          } else {
             drivetrain.runInverseKinematics(0, -Constants.AUTON_SPEED_M_PER_S);
-          }  
+          }
           break;
 
         case ALIGN_TO_GOAL_AGAIN:
@@ -343,9 +351,10 @@ public class Robot extends TimedRobot {
 
         case SHOOT_AGAIN:
           distance = Limelight.estimateDistance();
-          speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET+2;
-          angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
-          shooter.setSpeed(speed/100);
+          speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
+          angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
+              + Constants.HOOD_ANGLE_OFFSET;
+          shooter.setSpeed(speed / 100);
           hood.setToPosition(angle);
           if (hood.isReady()) {
             autonShootingStartTime = System.currentTimeMillis();
@@ -372,29 +381,99 @@ public class Robot extends TimedRobot {
   }
 
   public void simpleAuton() {
-    Limelight.setLedOn(true);
-    if(drivetrain.getPosition() >= Constants.SIMPLE_AUTON_DISTANCE) {
-      double distance = Limelight.estimateDistance();
-      double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
-      double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
-      shooter.setSpeed(speed/100);
-      hood.setToPosition(angle);
-      if (shooter.isReady() && hood.isReady() && inUse == false) {
-        inUse = true;
-        shooter.runFeeder(true);
-        intake.runConveyor(true);
-        inUse = false;
+    SmartDashboard.putNumber("PID Err", shooter.getErr());
+    // State machine for auton
+    if (inUse == false) {
+      inUse = true;
+      switch (autonState) {
+        // Go until ball finds the starting tape
+        case FIND_LINE:
+          break;
+
+        // After the line, go to where we know the ball is (~40in outside of the tape)
+
+        case ALIGN_TO_BALL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          hood.home();
+          if (drivetrain.alignToBall()) {
+            drivetrain.setNoRamp(0);
+            autonState = AutonState.GOTO_BALL;
+          }
+          break;
+
+        case GOTO_BALL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          hood.home();
+          Limelight.setLedOn(true);
+          // Beam break here
+          if (!beamBreak.get()) {
+            do {
+              drivetrain.setPosition(0);
+            } while (drivetrain.getPosition() > 1);
+            autonState = AutonState.TRACK_GOAL;
+          }
+          double angle = PhotonCamera.getYaw();
+          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
+          break;
+
+        // Turn off intake after the ball is picked up
+        case PICKUP_BALL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          hood.home();
+          inUse = true;
+          System.out.println(drivetrain.getPosition());
+          if (drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT) {
+            drivetrain.setNoRamp(0);
+            // intake.run(INTAKE_MODE.OFF);
+            autonState = AutonState.TRACK_GOAL;
+          } else {
+            drivetrain.set(Constants.AUTON_SPEED);
+          }
+          break;
+        case TRACK_GOAL:
+          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          hood.home();
+          if (drivetrain.alignToGoal()) {
+            autonState = Constants.AutonState.PREPARE_SHOOTER;
+          }
+          break;
+
+        case PREPARE_SHOOTER:
+          double distance = Limelight.estimateDistance();
+          double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
+          angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
+              + Constants.HOOD_ANGLE_OFFSET;
+          shooter.setSpeed(speed / 100);
+          hood.setToPosition(angle);
+          if (hood.isReady()) {
+            autonShootingStartTime = System.currentTimeMillis();
+            autonState = AutonState.SHOOT_BALL;
+          }
+          drivetrain.setNoRamp(0);
+          break;
+
+        case SHOOT_BALL:
+          shooter.runFeeder(true);
+          shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
+          intake.runConveyor(true);
+          break;
+
+        case NONE:
+          drivetrain.setNoRamp(0);
+          break;
+        
+        default:
+          drivetrain.set(0);
+          break;
       }
+      inUse = false;
     }
-    else {
-      drivetrain.set(Constants.AUTON_SPEED);
-    } 
   }
 
   public void gatherData() {
     owenGlag = telemetryTable.getEntry("owenGlag").getBoolean(true);
-    if(owenGlag){
-      telemetryTable.getEntry("time").setDouble(System.currentTimeMillis()-startTime);
+    if (owenGlag) {
+      telemetryTable.getEntry("time").setDouble(System.currentTimeMillis() - startTime);
       climber.telemetry(telemetryTable);
       drivetrain.telemetry(telemetryTable);
       hood.telemetry(telemetryTable);
@@ -404,14 +483,22 @@ public class Robot extends TimedRobot {
       telemetryTable.getEntry("started").setBoolean(started);
       telemetryTable.getEntry("disabled").setBoolean(RobotState.isDisabled());
       telemetryTable.getEntry("climbingState").setDouble(climber.getClimbingState());
-      telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("angle").setDouble(PhotonCamera.getYaw());
-      telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("area").setDouble(PhotonCamera.getArea());
-      telemetryTable.getSubTable("cameras").getSubTable("limelight").getEntry("angle").setDouble(Limelight.getHorizontalAngle());
+      telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("angle")
+          .setDouble(PhotonCamera.getYaw());
+      telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("area")
+          .setDouble(PhotonCamera.getArea());
+      telemetryTable.getSubTable("cameras").getSubTable("limelight").getEntry("angle")
+          .setDouble(Limelight.getHorizontalAngle());
+      telemetryTable.getSubTable("cameras").getSubTable("limelight").getEntry("distance")
+          .setDouble(Limelight.estimateDistance());
       telemetryTable.getEntry("owenGlag").setBoolean(false);
-      dropCount = 0;;
-    }else{
+      telemetryTable.getSubTable("inputs").getEntry("run_feeder").setBoolean(secondDS.getRawButton(Controls.SecondDriverStation.FEED_BALL_TO_SHOOTER));
+      dropCount = 0;
+      ;
+    } else {
       dropCount += 1;
-      // System.out.println(String.format("Message dropped... Times Since Last Success: %s",dropCount));
+      // System.out.println(String.format("Message dropped... Times Since Last
+      // Success: %s",dropCount));
     }
   }
 

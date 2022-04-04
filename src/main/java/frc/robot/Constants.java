@@ -77,14 +77,14 @@ public class Constants {
     static int ELEVATOR_MOTOR = 6;
     static double INTAKE_FULL_SPEED = 0.6;
     static double CONVEYOR_FULL_SPEED = 0.5;
-    static double FEEDER_FULL_SPEED = 0.75;
-    static double ELEVATOR_FULL_SPEED = 0.75;
+    static double FEEDER_FULL_SPEED = 0.5;
+    static double ELEVATOR_FULL_SPEED = -0.1;
 
     // Measurements for the Limelight
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;
     static double LIMELIGHT_HEIGHT = 35;
     static double LIMELIGHT_ANGLE = 24.5;
-    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 0.5; 
+    static double ALIGNMENT_HORIZONTAL_THRESHHOLD = 1; 
     static double DRIFTING_HORIZONTAL_THRESHOLD = 10; 
     static double LIMELIGHT_DEPTH_OFFSET = 2;
     static double LIMELIGHT_HORIZONTAL_OFFSET = -4.5;

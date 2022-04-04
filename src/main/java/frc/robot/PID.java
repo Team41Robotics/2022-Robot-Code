@@ -127,6 +127,10 @@ public class PID {
         return err;
     }
 
+    public double getCurrent(){
+        return motor.getSupplyCurrent();
+    }
+
     public double getControlSignal() {
         return controlSignal;
     }

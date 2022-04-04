@@ -17,4 +17,16 @@ public class PhotonCamera {
     public static boolean hasTarget() {
         return driverCam.getEntry("hasTarget").getBoolean(false);
     }
+
+    /**
+     * True: Blue
+     * False: Red
+     */
+    public static void setPipeline(boolean team) {
+        if (team) {
+            driverCam.getEntry("pipelineIndex").setDouble(3);
+        } else {
+            driverCam.getEntry("pipelineIndex").setDouble(2);
+        }
+    }
 }
