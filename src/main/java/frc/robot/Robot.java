@@ -497,8 +497,7 @@ public class Robot extends TimedRobot {
       ;
     } else {
       dropCount += 1;
-      // System.out.println(String.format("Message dropped... Times Since Last
-      // Success: %s",dropCount));
+      SmartDashboard.putString("Packages Dropped", String.format("Message dropped... Times Since Last Success: %s", dropCount));
     }
   }
 
