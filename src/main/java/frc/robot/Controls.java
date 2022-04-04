@@ -18,6 +18,9 @@ public class Controls {
         public static int HOOD_UP = 7;
         public static int HOOD_DOWN = 8;
 
+        public static int SHOOTER_OFFSET_UP = 9;
+        public static int SHOOTER_OFFSET_DOWN = 10;
+
         public static int FEED_BALL_TO_SHOOTER = 1;
     }
 
