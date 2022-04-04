@@ -32,7 +32,6 @@ public class Hood {
     }
 
     public void teleop() {
-        double pos = enc.getPosition();
         if (!homed) {
             home();
         } else {
