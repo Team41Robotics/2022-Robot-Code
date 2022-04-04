@@ -35,13 +35,10 @@ public class Hood {
         double pos = enc.getPosition();
         if (!homed) {
             home();
-        } else if (topSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_UP) && pos <= Constants.HOOD_MAX_POS) {
-            hoodMotor.set(Constants.HOOD_SPEED);
-        } else if (bottomSwitch.get() && station.getRawButton(Controls.SecondDriverStation.HOOD_DOWN)) {
-            hoodMotor.set(-Constants.HOOD_SPEED/2);
         } else {
             hoodMotor.set(0);
-        }if(station.getPOV(0)==90){
+        }
+        if(station.getPOV(0)==90){
             home();
         }
     }

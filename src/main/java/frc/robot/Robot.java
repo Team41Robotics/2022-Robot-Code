@@ -137,14 +137,14 @@ public class Robot extends TimedRobot {
     Limelight.manualZoom(secondDS);
 
     double distance = Limelight.estimateDistance();
-    double speed = (distance*Constants.HOOD_SPEED_SLOPE)+Constants.HOOD_SPEED_OFFSET;
-    double angle = (distance*distance*Constants.HOOD_ANGLE_CURVE)+(distance*Constants.HOOD_ANGLE_SLOPE)+Constants.HOOD_ANGLE_OFFSET;
+    double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
+    double angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
+        + Constants.HOOD_ANGLE_OFFSET;
 
-
-    if (secondDS.getRawButton(Controls.SecondDriverStation.INCREASE_HOOD_OFFSET)) {
-      Constants.HOOD_SPEED_OFFSET += Constants.HOOD_SPEED_OFFSET_INCREMENT;
-    } else if (secondDS.getRawButton(Controls.SecondDriverStation.DECREASE_HOOD_OFFSET)) {
-      Constants.HOOD_SPEED_OFFSET -= Constants.HOOD_SPEED_OFFSET_INCREMENT;
+    if (secondDS.getRawButtonPressed(Controls.SecondDriverStation.SHOOTER_OFFSET_UP)) {
+      Constants.HOOD_SPEED_OFFSET += 1;
+    } else if (secondDS.getRawButtonPressed(Controls.SecondDriverStation.SHOOTER_OFFSET_DOWN)) {
+      Constants.HOOD_SPEED_OFFSET -= 1;
     }
 
     if (secondDS.getRawButton(Controls.SecondDriverStation.MANUAL_SHOOTER_SPEED)) {
