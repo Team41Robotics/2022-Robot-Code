@@ -35,6 +35,9 @@ public class Climber {
     private Joystick leftJoy;
     private Joystick driverStation;
 
+    /**
+     * Create a new object for controlling the climber on the robot
+     */
     public Climber() {
         climbingMotor1 = new CANSparkMax(Constants.CLIMBING_SPARK_F, MotorType.kBrushless);
         climbingMotor2 = new CANSparkMax(Constants.CLIMBING_SPARK_B, MotorType.kBrushless);
