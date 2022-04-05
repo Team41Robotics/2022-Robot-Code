@@ -224,10 +224,6 @@ public class Robot extends TimedRobot {
     if (inUse == false) {
       inUse = true;
       switch (autonState) {
-        // Go until ball finds the starting tape
-        case FIND_LINE:
-          break;
-
         // After the line, go to where we know the ball is (~40in outside of the tape)
 
         case ALIGN_TO_BALL:
@@ -395,12 +391,7 @@ public class Robot extends TimedRobot {
     if (inUse == false) {
       inUse = true;
       switch (autonState) {
-        // Go until ball finds the starting tape
-        case FIND_LINE:
-          break;
-
         // After the line, go to where we know the ball is (~40in outside of the tape)
-
         case ALIGN_TO_BALL:
           Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
@@ -508,8 +499,6 @@ public class Robot extends TimedRobot {
     switch (autonState) {
       case NONE:
         return 0;
-      case FIND_LINE:
-        return 1;
       case ALIGN_TO_BALL:
         return 2;
       case GOTO_BALL:
