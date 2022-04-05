@@ -73,8 +73,8 @@ public class Robot extends TimedRobot {
     debugTab = Shuffleboard.getTab("Debug");
     robotTab = Shuffleboard.getTab("Robot");
     limelightDistanceEntry = debugTab.add("LL Distance", -1).getEntry();
-    speedOffsetEntry = debugTab.add("Speed Offset", Constants.HOOD_SPEED_OFFSET).getEntry();
-    shooterReadyEntry = debugTab.add("Shooter Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    speedOffsetEntry = robotTab.add("Speed Offset", Constants.HOOD_SPEED_OFFSET).getEntry();
+    shooterReadyEntry = robotTab.add("Shooter Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     beamBreakEntry = debugTab.add("Beam Break", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     droppedTelemetryEntry = debugTab.add("Telemetry Packets Dropped", -1).getEntry();
 

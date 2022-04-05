@@ -25,7 +25,7 @@ public class Intake {
     private DoubleSolenoid intakeSolRight;
     private Joystick leftJoy, rightJoy, secondDS;
     private ShuffleboardTab robotTab;
-    private NetworkTableEntry intakeStatus = robotTab.add("Intake On", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    private NetworkTableEntry intakeStatus;
 
     /** Initialize all parts of the intake */
     public Intake(){
@@ -42,6 +42,7 @@ public class Intake {
         intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
         intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
         robotTab = Shuffleboard.getTab("Robot");
+        intakeStatus = robotTab.add("Intake On", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     }
 
     /** At beginning of auton, move the intake down and start the motor */
