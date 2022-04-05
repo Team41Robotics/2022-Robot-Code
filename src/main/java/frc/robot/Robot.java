@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.Constants.AutonState;
-import frc.robot.Constants.INTAKE_MODE;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,17 +38,14 @@ public class Robot extends TimedRobot {
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
   public static Hood hood;
   public static long startTime;
-  public static boolean inUse = Intake.inUse;
   private DigitalInput beamBreak;
   private AutonState autonState;
   private NetworkTable telemetryTable;
   private NetworkTableEntry limelightDistanceEntry, speedOffsetEntry, shooterReadyEntry, beamBreakEntry, droppedTelemetryEntry;
   private SendableChooser<Boolean> autonChooser;
   private ShuffleboardTab debugTab, robotTab;
-  private long autonShootingStartTime, autonHumanStationWait;
-  private boolean owenGlag, thirdBallClose, started;
+  private boolean owenGlag, started;
   private int dropCount;
-  private double robotPos;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -102,7 +98,6 @@ public class Robot extends TimedRobot {
     telemetryTable.getEntry("disabled").setBoolean(false);
     autonState = AutonState.ALIGN_TO_BALL;
     started = true;
-    thirdBallClose = false;
     Intake.autonInit();
     Drivetrain.setPosition(0);
     Drivetrain.setupAlignmentToBall();
@@ -110,7 +105,7 @@ public class Robot extends TimedRobot {
     Hood.home();
     Shooter.setSpeed(0);
     Limelight.resetZoom();
-
+    Auton.init(beamBreak);
   }
 
   /** This function is called periodically during autonomous. */
@@ -140,12 +135,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
-    if (inUse == false) {
-      inUse = true;
-      Intake.teleop();
-      inUse = false;
-    }
+    Intake.teleop();
     Climber.teleop();
     Shooter.teleop();
     Limelight.manualZoom(secondDS);
@@ -220,253 +210,94 @@ public class Robot extends TimedRobot {
   }
 
   public void fullAuton() {
-    // State machine for auton
-    if (inUse == false) {
-      inUse = true;
-      switch (autonState) {
-        // After the line, go to where we know the ball is (~40in outside of the tape)
+    switch (autonState) {
+      case ALIGN_TO_BALL:
+        autonState = Auton.alignToBall();
+        break;
 
-        case ALIGN_TO_BALL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          if (Drivetrain.alignToBall()) {
-            Drivetrain.setNoRamp(0);
-            autonState = AutonState.GOTO_BALL;
-          }
-          break;
+      case GOTO_BALL:
+        autonState = Auton.gotoBall();
+        break;
 
-        case GOTO_BALL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          Limelight.setLedOn(true);
-          // Beam break here
-          if (!beamBreak.get()) {
-            do {
-              Drivetrain.setPosition(0);
-            } while (Drivetrain.getPosition() > 1);
-            autonState = AutonState.TRACK_GOAL;
-          }
-          double angle = PhotonCamera.getYaw();
-          Drivetrain.runInverseKinematics(Constants.BALL_FOLLOWING_kP * -angle, Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
-          break;
+      case PICKUP_BALL:
+        autonState = AutonState.NONE;
+        break;
 
-        // Turn off intake after the ball is picked up
-        case PICKUP_BALL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          inUse = true;
-          System.out.println(Drivetrain.getPosition());
-          if (Drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT) {
-            Drivetrain.setNoRamp(0);
-            // intake.run(INTAKE_MODE.OFF);
-            autonState = AutonState.TRACK_GOAL;
-          } else {
-            Drivetrain.set(Constants.AUTON_SPEED);
-          }
-          break;
-        case TRACK_GOAL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          if (Drivetrain.alignToGoal()) {
-            autonState = Constants.AutonState.PREPARE_SHOOTER;
-          }
-          break;
+      case TRACK_GOAL:
+        autonState = Auton.trackGoal();
+        break;
 
-        case PREPARE_SHOOTER:
-          double distance = Limelight.estimateDistance();
-          double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET + .5;
-          angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
-              + Constants.HOOD_ANGLE_OFFSET;
-          Shooter.setSpeed(speed / 100);
-          Hood.setToPosition(angle);
-          if (Hood.isReady()) {
-            autonShootingStartTime = System.currentTimeMillis();
-            autonState = AutonState.SHOOT_BALL;
-          }
-          Drivetrain.setNoRamp(0);
-          break;
+      case PREPARE_SHOOTER:
+        autonState = Auton.prepareShooter();
+        break;
 
-        case SHOOT_BALL:
-          Shooter.runFeeder(true);
-          Shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-          Intake.runConveyor(true);
-          if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
-            Shooter.runFeeder(false);
-            Shooter.runElevator(0);
-            Intake.runConveyor(false);
-            autonState = AutonState.ALIGN_TO_THIRD_BALL;
-          }
-          break;
+      case SHOOT_BALL:
+        autonState = Auton.shootBall();
+        break;
 
-        case ALIGN_TO_THIRD_BALL:
-          if (Drivetrain.alignToBall()) {
-            Drivetrain.setNoRamp(0);
-            Intake.run(INTAKE_MODE.FORWARD);
-            autonState = AutonState.GOTO_THIRD_BALL;
-          }
-          break;
+      case ALIGN_TO_THIRD_BALL:
+        autonState = Auton.alignToThirdBall();
+        break;
 
-        case GOTO_THIRD_BALL:
-          if (Drivetrain.getDanger()){
-            autonState = AutonState.WAIT_FOR_BALL;
-          }
-          if (!beamBreak.get()) {
-            Drivetrain.setNoRamp(0);
-            // System.out.println(drivetrain.getPosition());
-            // drivetrain.setPosition(0);
-            // System.out.println(drivetrain.getPosition());
-            // drivetrain.setPosition(0);
-            autonHumanStationWait = System.currentTimeMillis();
-            robotPos = Drivetrain.getPosition();
-            autonState = AutonState.WAIT_FOR_BALL;
-          } else {
-            if (PhotonCamera.getArea() > 5) {
-              thirdBallClose = true;
-            }
-            angle = PhotonCamera.getYaw();
-            double slowSpeed = 0.5;
-            Drivetrain.runInverseKinematics((Constants.BALL_FOLLOWING_kP * -angle),
-                !thirdBallClose ? Constants.AUTON_SPEED_M_PER_S : slowSpeed);
-          }
-          break;
+      case GOTO_THIRD_BALL:
+        autonState = Auton.gotoThirdBall();
+        break;
 
-        case WAIT_FOR_BALL:
-          if (System.currentTimeMillis() - autonHumanStationWait > Constants.AUTON_HUMAN_BALL_WAIT_TIME) {
-            autonState = AutonState.MOVE_TOWARDS_GOAL;
-          } else {
-            Drivetrain.setNoRamp(0);
-          }
-          break;
+      case WAIT_FOR_BALL:
+        autonState = Auton.waitForBall();
+        break;
 
-        case MOVE_TOWARDS_GOAL:
-          if (Math.abs(Drivetrain.getPosition() - robotPos) >= Constants.DISTANCE_FROM_HUMAN_STATION) {
-            do
-            Drivetrain.stop();
-            while (!Drivetrain.isReady());
-            autonState = AutonState.ALIGN_TO_GOAL_AGAIN;
-          } else {
-            Drivetrain.runInverseKinematics(0, -Constants.AUTON_SPEED_M_PER_S);
-          }
-          break;
+      case MOVE_TOWARDS_GOAL:
+        autonState = Auton.moveTowardsGoal();
+        break;
 
-        case ALIGN_TO_GOAL_AGAIN:
-          if (Drivetrain.alignToGoal()) {
-            autonState = Constants.AutonState.SHOOT_AGAIN;
-          }
-          break;
+      case ALIGN_TO_GOAL_AGAIN:
+        autonState = Auton.alignToGoalAgain();
+        break;
 
-        case SHOOT_AGAIN:
-          distance = Limelight.estimateDistance();
-          speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
-          angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
-              + Constants.HOOD_ANGLE_OFFSET;
-          Shooter.setSpeed(speed / 100);
-          Hood.setToPosition(angle);
-          if (Hood.isReady()) {
-            autonShootingStartTime = System.currentTimeMillis();
-            Shooter.runFeeder(true);
-            Shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-            Intake.runConveyor(true);
-            if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
-              autonState = AutonState.ALIGN_TO_THIRD_BALL;
-              Shooter.runFeeder(false);
-              Shooter.runElevator(0);
-              Intake.runConveyor(false);
-              Limelight.setLedOn(false);
-            }
-          }
-          Drivetrain.setNoRamp(0);
-          break;
+      case SHOOT_AGAIN:
+        Auton.shootAgain();
+        break;
 
-        case NONE:
-          Drivetrain.setNoRamp(0);
-          break;
-      }
-      inUse = false;
+      case NONE:
+        Auton.none();
+        break;
     }
   }
 
   public void simpleAuton() {
-    // State machine for auton
-    if (inUse == false) {
-      inUse = true;
-      switch (autonState) {
-        // After the line, go to where we know the ball is (~40in outside of the tape)
-        case ALIGN_TO_BALL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          if (Drivetrain.alignToBall()) {
-            Drivetrain.setNoRamp(0);
-            autonState = AutonState.GOTO_BALL;
-          }
-          break;
+    switch (autonState) {
+      case ALIGN_TO_BALL:
+        autonState = Auton.alignToBall();
+        break;
 
-        case GOTO_BALL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          Limelight.setLedOn(true);
-          // Beam break here
-          if (!beamBreak.get()) {
-            do {
-              Drivetrain.setPosition(0);
-            } while (Drivetrain.getPosition() > 1);
-            autonState = AutonState.TRACK_GOAL;
-          }
-          double angle = PhotonCamera.getYaw();
-          Drivetrain.runInverseKinematics(Constants.BALL_FOLLOWING_kP * -angle, Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
-          break;
+      case GOTO_BALL:
+        autonState = Auton.gotoBall();
+        break;
+  
+      case PICKUP_BALL:
+        autonState = AutonState.NONE;
+        break;
 
-        // Turn off intake after the ball is picked up
-        case PICKUP_BALL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          inUse = true;
-          System.out.println(Drivetrain.getPosition());
-          if (Drivetrain.getPosition() >= Constants.BALL_DISTANCE_FROM_BOT) {
-            Drivetrain.setNoRamp(0);
-            // intake.run(INTAKE_MODE.OFF);
-            autonState = AutonState.TRACK_GOAL;
-          } else {
-            Drivetrain.set(Constants.AUTON_SPEED);
-          }
-          break;
-        case TRACK_GOAL:
-          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
-          Hood.home();
-          if (Drivetrain.alignToGoal()) {
-            autonState = Constants.AutonState.PREPARE_SHOOTER;
-          }
-          break;
+      case TRACK_GOAL:
+        autonState = Auton.trackGoal();
+        break;
 
-        case PREPARE_SHOOTER:
-          double distance = Limelight.estimateDistance();
-          double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
-          angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
-              + Constants.HOOD_ANGLE_OFFSET;
-          Shooter.setSpeed(speed / 100);
-          Hood.setToPosition(angle);
-          if (Hood.isReady()) {
-            autonShootingStartTime = System.currentTimeMillis();
-            autonState = AutonState.SHOOT_BALL;
-          }
-          Drivetrain.setNoRamp(0);
-          break;
+      case PREPARE_SHOOTER:
+        autonState = Auton.prepareShooter();
+        break;
 
-        case SHOOT_BALL:
-          Shooter.runFeeder(true);
-          Shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-          Intake.runConveyor(true);
-          break;
+      case SHOOT_BALL:
+        autonState = Auton.shootBall();
+        break;
 
-        case NONE:
-          Drivetrain.setNoRamp(0);
-          break;
-        
-        default:
-          Drivetrain.set(0);
-          break;
-      }
-      inUse = false;
+      case NONE:
+        Auton.none();
+        break;
+      
+      default:
+        Drivetrain.set(0);
+        break;
     }
   }
 
