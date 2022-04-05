@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.Constants.AutonState;
 import frc.robot.Constants.INTAKE_MODE;
@@ -491,22 +492,16 @@ public class Robot extends TimedRobot {
       hood.telemetry(telemetryTable);
       intake.telemetry(telemetryTable);
       shooter.telemetry(telemetryTable);
+      Limelight.telemetry(telemetryTable.getSubTable("limelight"));
+      PhotonCamera.telemetry(telemetryTable.getSubTable("photonvision"));
+
       telemetryTable.getEntry("autonState").setNumber(autonStateToInt());
       telemetryTable.getEntry("started").setBoolean(started);
       telemetryTable.getEntry("disabled").setBoolean(RobotState.isDisabled());
-      telemetryTable.getEntry("climbingState").setDouble(climber.getClimbingState());
-      telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("angle")
-          .setDouble(PhotonCamera.getYaw());
-      telemetryTable.getSubTable("cameras").getSubTable("photonvision").getEntry("area")
-          .setDouble(PhotonCamera.getArea());
-      telemetryTable.getSubTable("cameras").getSubTable("limelight").getEntry("angle")
-          .setDouble(Limelight.getHorizontalAngle());
-      telemetryTable.getSubTable("cameras").getSubTable("limelight").getEntry("distance")
-          .setDouble(Limelight.estimateDistance());
       telemetryTable.getEntry("owenGlag").setBoolean(false);
       telemetryTable.getSubTable("inputs").getEntry("run_feeder").setBoolean(secondDS.getRawButton(Controls.SecondDriverStation.FEED_BALL_TO_SHOOTER));
+      telemetryTable.getEntry("battery").setDouble(RobotController.getBatteryVoltage());
       dropCount = 0;
-      ;
     } else {
       dropCount += 1;
       droppedTelemetryEntry.setDouble(dropCount);

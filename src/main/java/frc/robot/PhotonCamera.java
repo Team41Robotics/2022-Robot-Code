@@ -18,15 +18,17 @@ public class PhotonCamera {
         return driverCam.getEntry("hasTarget").getBoolean(false);
     }
 
+
     /**
-     * True: Blue
-     * False: Red
+     * Set the photonvision pipeline to the correct one
+     * @param team true for blue, false for red
      */
     public static void setPipeline(boolean team) {
-        if (team) {
-            driverCam.getEntry("pipelineIndex").setDouble(3);
-        } else {
-            driverCam.getEntry("pipelineIndex").setDouble(2);
-        }
+        driverCam.getEntry("pipelineIndex").setDouble(team ? 3 : 2);
+    }
+
+    public static void telemetry(NetworkTable table) {
+        table.getEntry("angle").setDouble(getYaw());
+        table.getEntry("area").setDouble(getArea());
     }
 }

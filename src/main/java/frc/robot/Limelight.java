@@ -67,4 +67,9 @@ class Limelight {
     public static void zoomIn() {
         limelightTable.getEntry("pipeline").setNumber(1);
     }
+
+    public static void telemetry(NetworkTable table) {
+        table.getEntry("angle").setDouble(getHorizontalAngle());
+        table.getEntry("distance").setDouble(estimateDistance());
+    }
 }
