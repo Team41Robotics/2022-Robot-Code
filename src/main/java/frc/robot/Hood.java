@@ -10,17 +10,17 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Hood {
-    public double angle;
-    private boolean ready, homed;
-    private CANSparkMax hoodMotor;
-    private DigitalInput topSwitch, bottomSwitch;
-    private Joystick station;
-    private RelativeEncoder enc;
+    public static double angle;
+    private static boolean ready, homed;
+    private static CANSparkMax hoodMotor;
+    private static DigitalInput topSwitch, bottomSwitch;
+    private static Joystick station;
+    private static RelativeEncoder enc;
 
     /**
      * Initialize all motors, encoders, and switches needed to operate the hood
      */
-    public Hood() {
+    public static void initHood() {
         // Bottom switch needs to be inverted
         hoodMotor = new CANSparkMax(Constants.HOOD_SPARK, MotorType.kBrushless);
         topSwitch = new DigitalInput(Constants.HOOD_TOP_LIMIT_SWITCH);
@@ -37,7 +37,7 @@ public class Hood {
     /**
      * Function to control the hood's homing during teleop
      */
-    public void teleop() {
+    public static void teleop() {
         if (!homed) {
             home();
         } else {
@@ -52,7 +52,7 @@ public class Hood {
      * Sets the hood to a specified position
      * @param angle the desired angle of the hood (in rotations of the motor)
      */
-    public void setToPosition(double angle) {
+    public static void setToPosition(double angle) {
         double pos = enc.getPosition();
         if (topSwitch.get() && (pos - angle) < -1 && pos < Constants.HOOD_MAX_POS) {
             hoodMotor.set(Constants.HOOD_SPEED/2);
@@ -69,7 +69,7 @@ public class Hood {
     /**
      * A place to add testing code for the hood
      */
-    public void test() {
+    public static void test() {
         double pos = enc.getPosition();
         if (topSwitch.get() && station.getRawButtonPressed(9) && pos <= Constants.HOOD_MAX_POS) {
             angle += (angle < Constants.HOOD_MAX_POS) ? 1 : 0;
@@ -83,7 +83,7 @@ public class Hood {
     /**
      * Homes the hood asynchronously (needs to be called more than once to finish)
      */
-    public void home() {
+    public static void home() {
         if (bottomSwitch.get()) {
             hoodMotor.set(-Constants.HOOD_SPEED/4);
         } else {
@@ -97,7 +97,7 @@ public class Hood {
      * Get if the hood is homed
      * @return true if the hood is homed, false if not
      */
-    public boolean isHomed() {
+    public static boolean isHomed() {
         return homed;
     }
 
@@ -105,7 +105,7 @@ public class Hood {
      * Get the ready status of the hood
      * @return Whether the hood is in the desired position
      */
-    public boolean isReady() {
+    public static boolean isReady() {
         return ready;
     }
 
@@ -113,7 +113,7 @@ public class Hood {
      * Get the value of the hood limit switch at the bottom of its motion
      * @return the value of the switch
      */
-    public boolean getBottomSwitch() {
+    public static boolean getBottomSwitch() {
         return bottomSwitch.get();
     }
 
@@ -121,7 +121,7 @@ public class Hood {
      * Get the value of the hood limit switch at the top of its motion
      * @return the value of the switch
      */
-    public boolean getTopSwitch() {
+    public static boolean getTopSwitch() {
         return topSwitch.get();
     }
 
@@ -129,7 +129,7 @@ public class Hood {
      * Upload all telemetry data for the hood
      * @param table the base telemetry NetworkTable
      */
-    public void telemetry(NetworkTable table) {
+    public static void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
         
         NetworkTable hoodMotorTable = motorTable.getSubTable("Hood Motor");

@@ -31,7 +31,6 @@ public class Climber {
     private CANSparkMax climbingMotor2;
     private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, secondStageSecondSwitch;
     private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
-    private Hood hood;
     private Joystick leftJoy;
     private Joystick driverStation;
 
@@ -51,7 +50,6 @@ public class Climber {
 
         this.driverStation = Robot.secondDS;
         this.leftJoy = Robot.leftJoy;
-        this.hood = Robot.hood;
 
         firstStageUp = false;
         secondStageUp = false;
@@ -106,7 +104,7 @@ public class Climber {
                     break;            
                 case(45):
                     climbing = true;
-                    hood.setToPosition(0);
+                    Hood.setToPosition(0);
                     if (!firstStageUp) {
                         motorSpeed = -Constants.CLIMBING_SLOW_SPEED;
                         if (!firstStageLeftSwitch.get() || !firstStageRightSwitch.get()) {
