@@ -254,7 +254,7 @@ public class Robot extends TimedRobot {
             autonState = AutonState.TRACK_GOAL;
           }
           double angle = PhotonCamera.getYaw();
-          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
+          drivetrain.runInverseKinematics(Constants.BALL_FOLLOWING_kP * -angle, Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
           break;
 
         // Turn off intake after the ball is picked up
@@ -332,7 +332,7 @@ public class Robot extends TimedRobot {
             }
             angle = PhotonCamera.getYaw();
             double slowSpeed = 0.5;
-            drivetrain.runInverseKinematics(AngularPController.run(-angle),
+            drivetrain.runInverseKinematics((Constants.BALL_FOLLOWING_kP * -angle),
                 !thirdBallClose ? Constants.AUTON_SPEED_M_PER_S : slowSpeed);
           }
           break;
@@ -425,7 +425,7 @@ public class Robot extends TimedRobot {
             autonState = AutonState.TRACK_GOAL;
           }
           double angle = PhotonCamera.getYaw();
-          drivetrain.runInverseKinematics(AngularPController.run(-angle), Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
+          drivetrain.runInverseKinematics(Constants.BALL_FOLLOWING_kP * -angle, Constants.AUTON_SPEED_M_PER_S * (2.0 / 3));
           break;
 
         // Turn off intake after the ball is picked up
