@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
     autonState = AutonState.ALIGN_TO_BALL;
     started = true;
     thirdBallClose = false;
-    intake.autonInit();
+    Intake.autonInit();
     drivetrain.setPosition(0);
     drivetrain.setupAlignmentToBall();
     drivetrain.stop();
@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
     autonState = AutonState.NONE;
     shooter.setSpeed(0);
     hood.home();
-    intake.reset();
+    Intake.reset();
     Limelight.setLedOn(false);
     Limelight.resetZoom();
     climber.reset();
@@ -147,7 +147,7 @@ public class Robot extends TimedRobot {
 
     if (inUse == false) {
       inUse = true;
-      intake.teleop();
+      Intake.teleop();
       inUse = false;
     }
     climber.teleop();
@@ -297,11 +297,11 @@ public class Robot extends TimedRobot {
         case SHOOT_BALL:
           shooter.runFeeder(true);
           shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-          intake.runConveyor(true);
+          Intake.runConveyor(true);
           if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
             shooter.runFeeder(false);
             shooter.runElevator(0);
-            intake.runConveyor(false);
+            Intake.runConveyor(false);
             autonState = AutonState.ALIGN_TO_THIRD_BALL;
           }
           break;
@@ -309,7 +309,7 @@ public class Robot extends TimedRobot {
         case ALIGN_TO_THIRD_BALL:
           if (drivetrain.alignToBall()) {
             drivetrain.setNoRamp(0);
-            intake.run(INTAKE_MODE.FORWARD);
+            Intake.run(INTAKE_MODE.FORWARD);
             autonState = AutonState.GOTO_THIRD_BALL;
           }
           break;
@@ -374,12 +374,12 @@ public class Robot extends TimedRobot {
             autonShootingStartTime = System.currentTimeMillis();
             shooter.runFeeder(true);
             shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-            intake.runConveyor(true);
+            Intake.runConveyor(true);
             if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
               autonState = AutonState.ALIGN_TO_THIRD_BALL;
               shooter.runFeeder(false);
               shooter.runElevator(0);
-              intake.runConveyor(false);
+              Intake.runConveyor(false);
               Limelight.setLedOn(false);
             }
           }
@@ -468,7 +468,7 @@ public class Robot extends TimedRobot {
         case SHOOT_BALL:
           shooter.runFeeder(true);
           shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
-          intake.runConveyor(true);
+          Intake.runConveyor(true);
           break;
 
         case NONE:
@@ -490,7 +490,7 @@ public class Robot extends TimedRobot {
       climber.telemetry(telemetryTable);
       drivetrain.telemetry(telemetryTable);
       hood.telemetry(telemetryTable);
-      intake.telemetry(telemetryTable);
+      Intake.telemetry(telemetryTable);
       shooter.telemetry(telemetryTable);
       Limelight.telemetry(telemetryTable.getSubTable("limelight"));
       PhotonCamera.telemetry(telemetryTable.getSubTable("photonvision"));
