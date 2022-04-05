@@ -35,10 +35,17 @@ class Limelight {
         limelightTable.getEntry("ledMode").setNumber(mode ? 3 : 1);
     }  
 
+    /**
+     * Place to put test code for the Limelight
+     */
     public static void test() {
         System.out.println(estimateDistance());
     }   
-    
+  
+    /**
+     * Gets the angle of the robot compared to the hub
+     * @return The offset angle in degrees
+     */
     public static double getRobotAngle(){
         double cameraAngle = Math.toRadians(getHorizontalAngle());
         double distance = estimateDistance();
@@ -47,10 +54,18 @@ class Limelight {
         return Math.toDegrees(Math.atan2(y, x));
     }
 
+    /**
+     * Get if the limelight has a target
+     * @return True if a target is found, false if not
+     */
     public static boolean targetFound() {
         return getHorizontalAngle() != 0.0;
     }
     
+    /**
+     * Zoom in the limelight based off of the value of a joystick
+     * @param secondDS
+     */
     public static void manualZoom(Joystick secondDS) {
         int POVVal = secondDS.getPOV();
         if (POVVal == 0) {
@@ -60,16 +75,26 @@ class Limelight {
         }
     }
 
+    /**
+     * Set limelight zoom to max
+     */
     public static void resetZoom() {
         limelightTable.getEntry("pipeline").setNumber(0);
     }
 
+    /**
+     * Zoom the limelight in
+     */
     public static void zoomIn() {
         limelightTable.getEntry("pipeline").setNumber(1);
     }
 
+    /**
+     * Record all telemetry data for the limelight
+     * @param table the base telemetry NetworkTable
+     */
     public static void telemetry(NetworkTable table) {
-        table.getEntry("angle").setDouble(getHorizontalAngle());
+        table.getEntry("angle").setDouble(getRobotAngle());
         table.getEntry("distance").setDouble(estimateDistance());
     }
 }
