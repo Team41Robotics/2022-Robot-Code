@@ -12,7 +12,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class Shooter {
     public static boolean reverseOn = false;
-    public static boolean inUse = Intake.inUse;
     public static boolean testOn = false;
     public static PID leftFalconPID, rightFalconPID;
     public static double speed = 0;

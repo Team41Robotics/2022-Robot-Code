@@ -18,7 +18,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 * Controls the intake on the robot 
 */
 public class Intake {
-    public static boolean inUse;
     private static boolean intakeOn;
     private static boolean intakeUp;
     private static CANSparkMax intakeMotor, conveyor;
@@ -32,7 +31,6 @@ public class Intake {
     * Initialize all parts of the intake
     */
     public static void initIntake(){
-        inUse = false;
         intakeOn = false;
         intakeUp = false;
         leftJoy = Robot.leftJoy;
