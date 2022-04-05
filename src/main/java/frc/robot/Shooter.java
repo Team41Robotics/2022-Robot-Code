@@ -7,6 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+/**
+ * Class to control the shooter on the robot
+ */
 public class Shooter {
     public static boolean reverseOn = false;
     public static boolean inUse = Intake.inUse;
@@ -17,6 +20,9 @@ public class Shooter {
     private Joystick rightDS, rightJoy;
     private TalonFX leftFalcon, rightFalcon;
     
+    /**
+     * Intialize all components of the shooter
+     */
     public Shooter() {
         leftFalcon = new TalonFX(Constants.SHOOTER_TALON_2);
         rightFalcon = new TalonFX(Constants.SHOOTER_TALON_1);
@@ -33,6 +39,9 @@ public class Shooter {
         rightDS = Robot.secondDS;
     }
 
+    /**
+     * Runs the teleop functions of the shooter
+     */
     public void teleop() {
         if (rightJoy.getRawButton(Controls.RightJoy.INTAKE_REVERSE)) {
             reverseOn = true;
@@ -49,6 +58,9 @@ public class Shooter {
         }
     }
 
+    /**
+     * Place to put test code for the shooter
+     */
     public void test() {
         if (rightDS.getRawButtonPressed(11)) {
             speed += (speed < 0.89) ? 0.025 : 0;
@@ -70,6 +82,10 @@ public class Shooter {
         }
     }
 
+    /**
+     * Set a desired shooter speed
+     * @param speed the desired speed of the shooter [0, 1]
+     */
     public void setSpeed(double speed) {
         leftFalconPID.run(speed);
         rightFalconPID.run(speed);
@@ -80,22 +96,34 @@ public class Shooter {
         }
     }
 
+    /**
+     * Check if the shooter has reached the desired speed
+     * @return Whether or not the shooter is ready
+     */
     public boolean isReady() {
         return leftFalconPID.isReady();
     }
 
+    /**
+     * Run the feeder wheel to the shooter
+     * @param on true to turn the motor on, false to turn it off
+     */
     public void runFeeder(boolean on) {
         feeder.set(on ? Constants.FEEDER_FULL_SPEED : 0);
     }
 
-    public double getErr() {
-        return leftFalconPID.getError();
-    }
-
+    /**
+     * Run the elevator motor manually
+     * @param speed the desired speed of the elevator motor
+     */
     public void runElevator(double speed) {
         elevator.set(speed);
     }
 
+    /**
+     * Upload all telemetry data for the shooter's systems
+     * @param table the base telemetry NetworkTable
+     */
     public void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
 
