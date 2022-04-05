@@ -31,7 +31,7 @@ public class Intake {
     /**
      * Initialize all parts of the intake
      */
-    public static void initialize(){
+    public static void initIntake(){
         inUse = false;
         intakeOn = false;
         intakeUp = false;

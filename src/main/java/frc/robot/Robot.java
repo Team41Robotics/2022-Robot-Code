@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
     Hood.initHood();
     climber = new Climber();
     Drivetrain.initDrivetrain();
-    Intake.initialize();
+    Intake.initIntake();
     telemetryTable = NetworkTableInstance.getDefault().getTable("telemetry");
     startTime = System.currentTimeMillis();
     beamBreak = new DigitalInput(4);
