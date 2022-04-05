@@ -17,6 +17,9 @@ public class Hood {
     private Joystick station;
     private RelativeEncoder enc;
 
+    /**
+     * Initialize all motors, encoders, and switches needed to operate the hood
+     */
     public Hood() {
         // Bottom switch needs to be inverted
         hoodMotor = new CANSparkMax(Constants.HOOD_SPARK, MotorType.kBrushless);
@@ -31,6 +34,9 @@ public class Hood {
         homed = false;
     }
 
+    /**
+     * Function to control the hood's homing during teleop
+     */
     public void teleop() {
         if (!homed) {
             home();
@@ -42,6 +48,10 @@ public class Hood {
         }
     }
 
+    /**
+     * Sets the hood to a specified position
+     * @param angle the desired angle of the hood (in rotations of the motor)
+     */
     public void setToPosition(double angle) {
         double pos = enc.getPosition();
         if (topSwitch.get() && (pos - angle) < -1 && pos < Constants.HOOD_MAX_POS) {
@@ -56,7 +66,9 @@ public class Hood {
         }
     }
 
-    // Adjust angle based on switch
+    /**
+     * A place to add testing code for the hood
+     */
     public void test() {
         double pos = enc.getPosition();
         if (topSwitch.get() && station.getRawButtonPressed(9) && pos <= Constants.HOOD_MAX_POS) {
@@ -68,6 +80,9 @@ public class Hood {
         setToPosition(angle);
     }
 
+    /**
+     * Homes the hood asynchronously (needs to be called more than once to finish)
+     */
     public void home() {
         if (bottomSwitch.get()) {
             hoodMotor.set(-Constants.HOOD_SPEED/4);
@@ -78,14 +93,42 @@ public class Hood {
         }
     }
 
+    /**
+     * Get if the hood is homed
+     * @return true if the hood is homed, false if not
+     */
     public boolean isHomed() {
         return homed;
     }
 
+    /**
+     * Get the ready status of the hood
+     * @return Whether the hood is in the desired position
+     */
     public boolean isReady() {
         return ready;
     }
 
+    /**
+     * Get the value of the hood limit switch at the bottom of its motion
+     * @return the value of the switch
+     */
+    public boolean getBottomSwitch() {
+        return bottomSwitch.get();
+    }
+
+    /**
+     * Get the value of the hood limit switch at the top of its motion
+     * @return the value of the switch
+     */
+    public boolean getTopSwitch() {
+        return topSwitch.get();
+    }
+
+    /**
+     * Upload all telemetry data for the hood
+     * @param table the base telemetry NetworkTable
+     */
     public void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
         
@@ -112,13 +155,5 @@ public class Hood {
         NetworkTable bottomSwitchTable = switchTable.getSubTable("Hood Min Angle Limit Switch");
         bottomSwitchTable.getEntry("name").setString("Hood Min Angle Limit Switch");
         bottomSwitchTable.getEntry("status").setBoolean(bottomSwitch.get());
-    }
-
-    public boolean getBottomSwitch() {
-        return bottomSwitch.get();
-    }
-
-    public boolean getTopSwitch() {
-        return topSwitch.get();
     }
 }
