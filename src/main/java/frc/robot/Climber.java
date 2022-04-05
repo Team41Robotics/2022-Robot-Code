@@ -22,22 +22,22 @@ import edu.wpi.first.wpilibj.Joystick;
  *      </ul>
  */
 public class Climber {
-    public boolean climbing;
-    private boolean firstStageUp, secondStageUp;
-    private int climbingState;
-    private double motorSpeed;
-    private long startTime;
-    private CANSparkMax climbingMotor1;
-    private CANSparkMax climbingMotor2;
-    private DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, secondStageSecondSwitch;
-    private DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
-    private Joystick leftJoy;
-    private Joystick driverStation;
+    public static boolean climbing;
+    private static boolean firstStageUp, secondStageUp;
+    private static int climbingState;
+    private static double motorSpeed;
+    private static long startTime;
+    private static CANSparkMax climbingMotor1;
+    private static CANSparkMax climbingMotor2;
+    private static DigitalInput firstStageLeftSwitch, firstStageRightSwitch, secondStageSwitch, secondStageSecondSwitch;
+    private static DoubleSolenoid secondStageGearLock, firstStageGearLock, secondStageRelease , gearShifter; // secondStageRelease is second stage piston
+    private static Joystick leftJoy;
+    private static Joystick driverStation;
 
     /**
      * Create a new object for controlling the climber on the robot
      */
-    public Climber() {
+    public static void initClimber() {
         climbingMotor1 = new CANSparkMax(Constants.CLIMBING_SPARK_F, MotorType.kBrushless);
         climbingMotor2 = new CANSparkMax(Constants.CLIMBING_SPARK_B, MotorType.kBrushless);
         climbingMotor1.setIdleMode(IdleMode.kBrake);
@@ -48,8 +48,8 @@ public class Climber {
         secondStageRelease = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.MIDDLE_ARM_LOCK, Constants.MIDDLE_ARM_RELEASE);
         gearShifter = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.MOVE_TO_OUTER_ARMS, Constants.MOVE_TO_INNER_ARM);
 
-        this.driverStation = Robot.secondDS;
-        this.leftJoy = Robot.leftJoy;
+        driverStation = Robot.secondDS;
+        leftJoy = Robot.leftJoy;
 
         firstStageUp = false;
         secondStageUp = false;
@@ -70,7 +70,7 @@ public class Climber {
     /**
      * Reset the climbing process
      */
-    public void reset() {
+    public static void reset() {
         secondStageGearLock.set(DoubleSolenoid.Value.kForward);
         secondStageRelease.set(DoubleSolenoid.Value.kForward);
         firstStageGearLock.set(DoubleSolenoid.Value.kReverse);
@@ -83,7 +83,7 @@ public class Climber {
     /**
      * Conduct the climbing process using the joysticks and bottom touchscreen, with control being decided by a toggle switch
      */
-    public void teleop() {
+    public static void teleop() {
         if (driverStation.getRawButton(Controls.SecondDriverStation.MANUAL_CLIMBING_TOGGLE)) {
             if (leftJoy.getRawButton(Controls.LeftJoy.CLIMB_FWD)) {
                 motorSpeed = Constants.CLIMBING_MAX_SPEED;
@@ -160,7 +160,7 @@ public class Climber {
      * Get the value of the leftmost limit switch
      * @return the value of the switch
      */
-    public boolean getLSwitch() {
+    public static boolean getLSwitch() {
         return firstStageLeftSwitch.get();
     }
 
@@ -168,7 +168,7 @@ public class Climber {
      * Get the value of the rightmost switch
      * @return the value of the switch
      */
-    public boolean getRSwitch() {
+    public static boolean getRSwitch() {
         return firstStageRightSwitch.get();
     }
 
@@ -176,7 +176,7 @@ public class Climber {
      * Get the value of the second switch for the middle climber
      * @return the value of the switch
      */
-    public boolean getSecondMSwitch() {
+    public static boolean getSecondMSwitch() {
         return secondStageSecondSwitch.get();
     }
 
@@ -184,7 +184,7 @@ public class Climber {
      * Get the value of the first switch for the middle climber
      * @return the value of the switch
      */
-    public boolean getMSwitch() {
+    public static boolean getMSwitch() {
         return secondStageSwitch.get();
     }
 
@@ -192,7 +192,7 @@ public class Climber {
      * Add all telemetry data for the climber
      * @param table the base telemetry networktable
      */
-    public void telemetry(NetworkTable table) {
+    public static void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
         
         NetworkTable climberMotor1Table = motorTable.getSubTable("Climber Motor 1");

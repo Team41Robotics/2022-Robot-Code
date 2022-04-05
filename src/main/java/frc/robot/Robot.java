@@ -40,7 +40,6 @@ public class Robot extends TimedRobot {
   public static Hood hood;
   public static long startTime;
   public static boolean inUse = Intake.inUse;
-  private Climber climber;
   private DigitalInput beamBreak;
   private AutonState autonState;
   private NetworkTable telemetryTable;
@@ -61,7 +60,7 @@ public class Robot extends TimedRobot {
     started = false;
     Shooter.initShooter();
     Hood.initHood();
-    climber = new Climber();
+    Climber.initClimber();
     Drivetrain.initDrivetrain();
     Intake.initIntake();
     telemetryTable = NetworkTableInstance.getDefault().getTable("telemetry");
@@ -135,7 +134,7 @@ public class Robot extends TimedRobot {
     Intake.reset();
     Limelight.setLedOn(false);
     Limelight.resetZoom();
-    climber.reset();
+    Climber.reset();
   }
 
   /** This function is called periodically during operator control. */
@@ -147,7 +146,7 @@ public class Robot extends TimedRobot {
       Intake.teleop();
       inUse = false;
     }
-    climber.teleop();
+    Climber.teleop();
     Shooter.teleop();
     Limelight.manualZoom(secondDS);
 
@@ -181,7 +180,7 @@ public class Robot extends TimedRobot {
       Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
       Hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
       Drivetrain.teleop();
-    } else if (climber.climbing) {
+    } else if (Climber.climbing) {
       Shooter.setSpeed(0);
       Limelight.setLedOn(false);
       Drivetrain.teleop();
@@ -484,7 +483,7 @@ public class Robot extends TimedRobot {
     owenGlag = telemetryTable.getEntry("owenGlag").getBoolean(true);
     if (owenGlag) {
       telemetryTable.getEntry("time").setDouble(System.currentTimeMillis() - startTime);
-      climber.telemetry(telemetryTable);
+      Climber.telemetry(telemetryTable);
       Drivetrain.telemetry(telemetryTable);
       Hood.telemetry(telemetryTable);
       Intake.telemetry(telemetryTable);
