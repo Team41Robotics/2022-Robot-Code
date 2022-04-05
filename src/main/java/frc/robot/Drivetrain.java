@@ -8,25 +8,25 @@ import com.kauailabs.navx.frc.AHRS;
 
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
-    public boolean aligningToGoal, aligningToBall;
-    public long startTime;
-    private boolean climbing;
-    private double angleToBall;
-    private AHRS navx = new AHRS(Port.kUSB);
-    private Joystick leftJoy;
-    private Joystick rightJoy;
-    private PID leftBackPID;
-    private PID leftFrontPID;
-    private PID rightBackPID;
-    private PID rightFrontPID;
-    private PositionalPID ballTrackingPID;
-    private TalonFX talonLF, talonLB, talonRF, talonRB;
-    private TalonFX[] talonList = new TalonFX[4];
+    public static boolean aligningToGoal, aligningToBall;
+    public static long startTime;
+    private static boolean climbing;
+    private static double angleToBall;
+    private static AHRS navx = new AHRS(Port.kUSB);
+    private static Joystick leftJoy;
+    private static Joystick rightJoy;
+    private static PID leftBackPID;
+    private static PID leftFrontPID;
+    private static PID rightBackPID;
+    private static PID rightFrontPID;
+    private static PositionalPID ballTrackingPID;
+    private static TalonFX talonLF, talonLB, talonRF, talonRB;
+    private static TalonFX[] talonList = new TalonFX[4];
     
     /**
      * Intialize all falcons, their encoders and PID controllers, and joysticks
      */
-    public Drivetrain() {
+    public static void initDrivetrain() {
         talonLB = new TalonFX(Constants.FALCON_LB);
         talonLF = new TalonFX(Constants.FALCON_LF);
         talonRF = new TalonFX(Constants.FALCON_RF);
@@ -55,7 +55,7 @@ public class Drivetrain {
      * Get position of the robot
      * @return position of the robot in inches
      */
-    public double getPosition() {
+    public static double getPosition() {
         return talonLF.getSelectedSensorPosition()*Constants.WHEEL_CONVERSION_FACTOR;
     }
 
@@ -63,7 +63,7 @@ public class Drivetrain {
      * Set position of the robot
      * @param pos position of the robot in inches
      */
-    public void setPosition(double pos) {
+    public static void setPosition(double pos) {
         for (TalonFX tal : talonList) {
             tal.setSelectedSensorPosition(pos);
         }
@@ -73,7 +73,7 @@ public class Drivetrain {
      * Set the speed of the drivetrain
      * @param speed desired speed of the robot [-1, 1]
      */
-    public void set(double speed) {
+    public static void set(double speed) {
         leftBackPID.run(speed);
         leftFrontPID.run(speed);
         rightBackPID.run(speed);
@@ -84,7 +84,7 @@ public class Drivetrain {
      * Set the speed of the drivetrain without the ramp in PID
      * @param speed desired speed of the robot [-1, 1]
      */
-    public void setNoRamp(double speed) {
+    public static void setNoRamp(double speed) {
         leftBackPID.runNoRamp(speed);
         leftFrontPID.runNoRamp(speed);
         rightBackPID.runNoRamp(speed);
@@ -94,14 +94,14 @@ public class Drivetrain {
     /**
      * Stop the drivetrain
      */
-    public void stop() {
+    public static void stop() {
         set(0);
     }
     
     /**
      * Run the drivetrain in teleoperated mode, with both slow and fast modes, as well as small joystick deadzones
      */
-    public void teleop() { 
+    public static void teleop() { 
         double leftSpeed = joystickTransfer(-leftJoy.getY());
         double rightSpeed = joystickTransfer(-rightJoy.getY());
     
@@ -126,7 +126,7 @@ public class Drivetrain {
      * Sets the speed of the left motors
      * @param speed desired speed [-1, 1]
      */
-    public void setLeft(double speed) {
+    public static void setLeft(double speed) {
         leftBackPID.run(speed);
         leftFrontPID.run(speed);
     }
@@ -135,7 +135,7 @@ public class Drivetrain {
      * Sets the speed of the right motors
      * @param speed desired speed [-1, 1]
      */
-    public void setRight(double speed) {
+    public static void setRight(double speed) {
         rightBackPID.run(speed);
         rightFrontPID.run(speed);
     }
@@ -144,7 +144,7 @@ public class Drivetrain {
      * Sets the speed of the left motors without the ramp from PID
      * @param speed desired speed [-1, 1]
      */
-    public void setLeftNoRamp(double speed) {
+    public static void setLeftNoRamp(double speed) {
         leftBackPID.runNoRamp(speed);
         leftFrontPID.runNoRamp(speed);
     }
@@ -153,7 +153,7 @@ public class Drivetrain {
      * Sets the speed of the right motors without the ramp from PID
      * @param speed desired speed [-1, 1]
      */
-    public void setRightNoRamp(double speed) {
+    public static void setRightNoRamp(double speed) {
         rightBackPID.runNoRamp(speed);
         rightFrontPID.runNoRamp(speed);
     }
@@ -162,7 +162,7 @@ public class Drivetrain {
      * Adjusts the orientation of the robot in accordance to its relation with the tape
      * @return Whether the robot is within the alignment threshold of the hub
      */
-    public boolean alignToGoal() {
+    public static boolean alignToGoal() {
         aligningToGoal = true;
         double angle = Limelight.getRobotAngle();
         if (Limelight.targetFound() && angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
@@ -182,7 +182,7 @@ public class Drivetrain {
     /**
      * Prepare the robot to align to a ball
      */
-    public void setupAlignmentToBall() {
+    public static void setupAlignmentToBall() {
         if (!PhotonCamera.hasTarget()) {
             setupAlignmentToBall();
         } else {
@@ -195,7 +195,7 @@ public class Drivetrain {
      * Align the robot to the nearest ball of the correct color
      * @return Whether the robot is within the alignment threshold of the ball
      */
-    public boolean alignToBall() {
+    public static boolean alignToBall() {
         aligningToBall = true;
         double angle = navx.getAngle();
         double speed = ballTrackingPID.run(angle);
@@ -220,7 +220,7 @@ public class Drivetrain {
      * @param angularVel the desired angular velocity of the robot (rad/s)
      * @param linearVel the desired linear velocity of the robot (m/s)
      */
-    public void runInverseKinematics(double angularVel, double linearVel) {
+    public static void runInverseKinematics(double angularVel, double linearVel) {
         double leftWheelAngularVelocity;
         double rightWheelAngularVelocity;
 
@@ -239,7 +239,7 @@ public class Drivetrain {
      * @param joyVal the inputted value from the joystick
      * @return the adjusted value
      */
-    public double joystickTransfer(double joyVal) {
+    public static double joystickTransfer(double joyVal) {
         if (climbing) {
             double newJoyVal = Math.pow(joyVal, 2);
             newJoyVal *= Constants.CLIMBING_DRIVE_MAX_SPEED;
@@ -257,7 +257,7 @@ public class Drivetrain {
     /**
      * A function to test any features of the drivetrain
      */
-    public void test() {
+    public static void test() {
         if (System.currentTimeMillis() - startTime <= 2000) {
             set(0.1);
         } else {
@@ -269,7 +269,7 @@ public class Drivetrain {
      * Output all necessary telemetry data from the drivetrain
      * @param table the base telemetry NetworkTable
      */
-    public void telemetry(NetworkTable table) {
+    public static void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
 
         leftFrontPID.telemetry(motorTable, "Left Front Drivetrain Motor");
@@ -282,7 +282,7 @@ public class Drivetrain {
      * Returns the total accumulated yaw angle (Z Axis, in degrees) reported by the gyro on the robot
      * @return the gyro angle in degrees
      */
-    public double getGyroAngle() {
+    public static double getGyroAngle() {
         return navx.getAngle();
     }
 
@@ -290,7 +290,7 @@ public class Drivetrain {
      * Get whether or not the drivetrain is at the desired speed
      * @return If the drivetrain is at the desired speed
      */
-    public boolean isReady() {
+    public static boolean isReady() {
         return leftFrontPID.isReady();
     }
 
@@ -298,7 +298,7 @@ public class Drivetrain {
      * Get if the drivetrain current is too high
      * @return true if any of the drivetrain motors are reading more than 80 amps
      */
-    public boolean getDanger(){
+    public static boolean getDanger(){
         return (leftBackPID.getCurrent()>80) || (leftFrontPID.getCurrent()>80)|| (rightBackPID.getCurrent()>80) || (rightFrontPID.getCurrent()>80);
     }
 }
