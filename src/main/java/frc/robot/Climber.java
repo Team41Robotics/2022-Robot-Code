@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 
 /** Pistons:
- *      secondStageGearLock: fwd - locked; rev - unlocked
- *      firstStageGearLock: fwd - locked; rev - unlocked
- *      secondStageRelease: fwd - locked; rev - unlocked
- *      gearShifter: fwd - first stage; rev - second stage
+ *      <ul>
+ *      <li>secondStageGearLock: fwd - locked; rev - unlocked </li>
+ *      <li>firstStageGearLock: fwd - locked; rev - unlocked </li>
+ *      <li>secondStageRelease: fwd - locked; rev - unlocked </li>
+ *      <li>gearShifter: fwd - first stage; rev - second stage </li>
+ *      </ul>
  */
-
-
 public class Climber {
     public boolean climbing;
     private boolean firstStageUp, secondStageUp;
@@ -66,6 +66,9 @@ public class Climber {
         climbing = false;
     }
 
+    /**
+     * Reset the climbing process
+     */
     public void reset() {
         secondStageGearLock.set(DoubleSolenoid.Value.kForward);
         secondStageRelease.set(DoubleSolenoid.Value.kForward);
@@ -76,6 +79,9 @@ public class Climber {
         climbing = false;
     }
 
+    /**
+     * Conduct the climbing process using the joysticks and bottom touchscreen, with control being decided by a toggle switch
+     */
     public void teleop() {
         if (driverStation.getRawButton(Controls.SecondDriverStation.MANUAL_CLIMBING_TOGGLE)) {
             if (leftJoy.getRawButton(Controls.LeftJoy.CLIMB_FWD)) {
@@ -149,26 +155,42 @@ public class Climber {
         climbingMotor2.set(motorSpeed);
     }
 
+    /**
+     * Get the value of the leftmost limit switch
+     * @return the value of the switch
+     */
     public boolean getLSwitch() {
         return firstStageLeftSwitch.get();
     }
 
+    /**
+     * Get the value of the rightmost switch
+     * @return the value of the switch
+     */
     public boolean getRSwitch() {
         return firstStageRightSwitch.get();
     }
 
+    /**
+     * Get the value of the second switch for the middle climber
+     * @return the value of the switch
+     */
     public boolean getSecondMSwitch() {
         return secondStageSecondSwitch.get();
     }
 
+    /**
+     * Get the value of the first switch for the middle climber
+     * @return the value of the switch
+     */
     public boolean getMSwitch() {
         return secondStageSwitch.get();
     }
 
-    public int getClimbingState() {
-        return climbingState;
-    }
-
+    /**
+     * Add all telemetry data for the climber
+     * @param table the base telemetry networktable
+     */
     public void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
         
