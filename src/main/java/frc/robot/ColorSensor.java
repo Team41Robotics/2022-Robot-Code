@@ -30,6 +30,7 @@ public class ColorSensor {
 
   /**
    * Run color sensor and filter colors
+   * @deprecated
    * @return the filtered color signal
    */
   private int filter() {
@@ -48,19 +49,13 @@ public class ColorSensor {
     colorData[0] = sensor.getRed();
     colorData[1] = sensor.getGreen();
     colorData[2] = sensor.getBlue();
-    // System.out.println(Arrays.toString(colorData));
     return Math.max(colorData[0]-medians[0], colorData[2]-medians[2]);
-  }
-
-  /** Function to run during teleop */
-  public void teleop() {
-    // System.out.println(findLineMax());
-    // System.out.println(Arrays.toString(colorData));
   }
 
   /**
    * Check the calculated value and compare to threshold
-   * @return True if robot is on a line, false if otherwise
+   * @deprecated
+   * @return True if robot is on a line, false if not
    */
   public boolean findLine() {
     double threshold;
@@ -82,7 +77,8 @@ public class ColorSensor {
   }
 
   /**
-   * Get the calculated number based off of the r g an b values in colorData[]
+   * Get the calculated number based off of the r g and b values in colorData[]
+   * @deprecated
    * @return the calculated value
    */
   private int getAdjColor() {
@@ -98,7 +94,9 @@ public class ColorSensor {
     return finalNum;
   }
 
-  /** Calculates the median color sensor data in preparation for running the robot */
+/**
+ * Calculates the median color sensor data in preparation for running the robot
+ */
   public void calcMedian() {
     for(int i = 0;i<256;i++){
       findLineMax();
@@ -127,10 +125,19 @@ public class ColorSensor {
       return Math.round(median);
   }
 
+  /**
+   * Get the red value detected by the color sensor
+   * @return The red portion of the RGB read by the color sensor
+   */
   public int getRed() {
     return sensor.getRed();
   }
 
+  /**
+   * Add all values from this color sensor in the telemetry NetworkTable
+   * @param table the base telemetry NetworkTable
+   * @param name the name of this sensor to use in the table
+   */
   public void telemetry(NetworkTable table, String name){
     NetworkTable lightSensorTable = table.getSubTable("light_sensors");
 
@@ -147,5 +154,4 @@ public class ColorSensor {
     thisSensorTable.getEntry("g").setNumber(sensor.getGreen());
     thisSensorTable.getEntry("b").setNumber(sensor.getBlue());
   }
-
 }
