@@ -13,17 +13,17 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Shooter {
     public static boolean reverseOn = false;
     public static boolean inUse = Intake.inUse;
-    public boolean testOn = false;
-    public PID leftFalconPID, rightFalconPID;
-    public double speed = 0;
-    private CANSparkMax feeder, elevator;
-    private Joystick rightDS, rightJoy;
-    private TalonFX leftFalcon, rightFalcon;
+    public static boolean testOn = false;
+    public static PID leftFalconPID, rightFalconPID;
+    public static double speed = 0;
+    private static CANSparkMax feeder, elevator;
+    private static Joystick rightDS, rightJoy;
+    private static TalonFX leftFalcon, rightFalcon;
     
     /**
      * Intialize all components of the shooter
      */
-    public Shooter() {
+    public static void initShooter() {
         leftFalcon = new TalonFX(Constants.SHOOTER_TALON_2);
         rightFalcon = new TalonFX(Constants.SHOOTER_TALON_1);
         rightFalcon.setInverted(true);
@@ -42,7 +42,7 @@ public class Shooter {
     /**
      * Runs the teleop functions of the shooter
      */
-    public void teleop() {
+    public static void teleop() {
         if (rightJoy.getRawButton(Controls.RightJoy.INTAKE_REVERSE)) {
             reverseOn = true;
             elevator.set(reverseOn ? -Constants.ELEVATOR_FULL_SPEED : 0);
@@ -61,7 +61,7 @@ public class Shooter {
     /**
      * Place to put test code for the shooter
      */
-    public void test() {
+    public static void test() {
         if (rightDS.getRawButtonPressed(11)) {
             speed += (speed < 0.89) ? 0.025 : 0;
         } else if (rightDS.getRawButtonPressed(12)) {
@@ -86,7 +86,7 @@ public class Shooter {
      * Set a desired shooter speed
      * @param speed the desired speed of the shooter [0, 1]
      */
-    public void setSpeed(double speed) {
+    public static void setSpeed(double speed) {
         leftFalconPID.run(speed);
         rightFalconPID.run(speed);
         if (speed != 0) {
@@ -100,7 +100,7 @@ public class Shooter {
      * Check if the shooter has reached the desired speed
      * @return Whether or not the shooter is ready
      */
-    public boolean isReady() {
+    public static boolean isReady() {
         return leftFalconPID.isReady();
     }
 
@@ -108,7 +108,7 @@ public class Shooter {
      * Run the feeder wheel to the shooter
      * @param on true to turn the motor on, false to turn it off
      */
-    public void runFeeder(boolean on) {
+    public static void runFeeder(boolean on) {
         feeder.set(on ? Constants.FEEDER_FULL_SPEED : 0);
     }
 
@@ -116,7 +116,7 @@ public class Shooter {
      * Run the elevator motor manually
      * @param speed the desired speed of the elevator motor
      */
-    public void runElevator(double speed) {
+    public static void runElevator(double speed) {
         elevator.set(speed);
     }
 
@@ -124,7 +124,7 @@ public class Shooter {
      * Upload all telemetry data for the shooter's systems
      * @param table the base telemetry NetworkTable
      */
-    public void telemetry(NetworkTable table) {
+    public static void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
 
         leftFalconPID.telemetry(motorTable, "Left Shooter Motor");

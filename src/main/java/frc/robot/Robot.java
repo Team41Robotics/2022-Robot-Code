@@ -41,7 +41,6 @@ public class Robot extends TimedRobot {
   public static long startTime;
   public static boolean inUse = Intake.inUse;
   private Climber climber;
-  private Shooter shooter;
   private DigitalInput beamBreak;
   private AutonState autonState;
   private NetworkTable telemetryTable;
@@ -60,7 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     started = false;
-    shooter = new Shooter();
+    Shooter.initShooter();
     Hood.initHood();
     climber = new Climber();
     Drivetrain.initDrivetrain();
@@ -110,7 +109,7 @@ public class Robot extends TimedRobot {
     Drivetrain.setupAlignmentToBall();
     Drivetrain.stop();
     Hood.home();
-    shooter.setSpeed(0);
+    Shooter.setSpeed(0);
     Limelight.resetZoom();
 
   }
@@ -131,7 +130,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     telemetryTable.getEntry("disabled").setBoolean(false);
     autonState = AutonState.NONE;
-    shooter.setSpeed(0);
+    Shooter.setSpeed(0);
     Hood.home();
     Intake.reset();
     Limelight.setLedOn(false);
@@ -149,7 +148,7 @@ public class Robot extends TimedRobot {
       inUse = false;
     }
     climber.teleop();
-    shooter.teleop();
+    Shooter.teleop();
     Limelight.manualZoom(secondDS);
 
     double distance = Limelight.estimateDistance();
@@ -164,37 +163,37 @@ public class Robot extends TimedRobot {
     }
 
     if (secondDS.getRawButton(Controls.SecondDriverStation.MANUAL_SHOOTER_SPEED)) {
-      shooter.setSpeed(0);
+      Shooter.setSpeed(0);
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.LOW_GOAL_SETUP)) {
       Limelight.setLedOn(false);
-      shooter.setSpeed(Constants.LOW_GOAL_SPEED);
+      Shooter.setSpeed(Constants.LOW_GOAL_SPEED);
       Hood.setToPosition(Constants.LOW_GOAL_ANGLE);
       Drivetrain.alignToGoal();
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.AUTO_SHOOTING)) {
       Limelight.setLedOn(true);
       if (Limelight.targetFound()) {
-        shooter.setSpeed(speed / 100);
+        Shooter.setSpeed(speed / 100);
         Hood.setToPosition(angle);
         Drivetrain.alignToGoal();
       }
     } else if (secondDS.getRawButton(Controls.SecondDriverStation.SHOOTER_WARMUP)) {
       Limelight.setLedOn(true);
-      shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+      Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
       Hood.setToPosition(Constants.HOOD_DEFAULT_ANGLE);
       Drivetrain.teleop();
     } else if (climber.climbing) {
-      shooter.setSpeed(0);
+      Shooter.setSpeed(0);
       Limelight.setLedOn(false);
       Drivetrain.teleop();
     } else {
       Drivetrain.teleop();
       Hood.teleop();
-      shooter.setSpeed(0);
+      Shooter.setSpeed(0);
       Limelight.setLedOn(false);
     }
     limelightDistanceEntry.setDouble(Limelight.estimateDistance());
     speedOffsetEntry.setDouble(Constants.HOOD_SPEED_OFFSET);
-    shooterReadyEntry.setBoolean(shooter.isReady());
+    shooterReadyEntry.setBoolean(Shooter.isReady());
     beamBreakEntry.setBoolean(!beamBreak.get());
   }
 
@@ -233,7 +232,7 @@ public class Robot extends TimedRobot {
         // After the line, go to where we know the ball is (~40in outside of the tape)
 
         case ALIGN_TO_BALL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           if (Drivetrain.alignToBall()) {
             Drivetrain.setNoRamp(0);
@@ -242,7 +241,7 @@ public class Robot extends TimedRobot {
           break;
 
         case GOTO_BALL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           Limelight.setLedOn(true);
           // Beam break here
@@ -258,7 +257,7 @@ public class Robot extends TimedRobot {
 
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           inUse = true;
           System.out.println(Drivetrain.getPosition());
@@ -271,7 +270,7 @@ public class Robot extends TimedRobot {
           }
           break;
         case TRACK_GOAL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           if (Drivetrain.alignToGoal()) {
             autonState = Constants.AutonState.PREPARE_SHOOTER;
@@ -283,7 +282,7 @@ public class Robot extends TimedRobot {
           double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET + .5;
           angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
               + Constants.HOOD_ANGLE_OFFSET;
-          shooter.setSpeed(speed / 100);
+          Shooter.setSpeed(speed / 100);
           Hood.setToPosition(angle);
           if (Hood.isReady()) {
             autonShootingStartTime = System.currentTimeMillis();
@@ -293,12 +292,12 @@ public class Robot extends TimedRobot {
           break;
 
         case SHOOT_BALL:
-          shooter.runFeeder(true);
-          shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
+          Shooter.runFeeder(true);
+          Shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
           Intake.runConveyor(true);
           if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
-            shooter.runFeeder(false);
-            shooter.runElevator(0);
+            Shooter.runFeeder(false);
+            Shooter.runElevator(0);
             Intake.runConveyor(false);
             autonState = AutonState.ALIGN_TO_THIRD_BALL;
           }
@@ -366,17 +365,17 @@ public class Robot extends TimedRobot {
           speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
           angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
               + Constants.HOOD_ANGLE_OFFSET;
-          shooter.setSpeed(speed / 100);
+          Shooter.setSpeed(speed / 100);
           Hood.setToPosition(angle);
           if (Hood.isReady()) {
             autonShootingStartTime = System.currentTimeMillis();
-            shooter.runFeeder(true);
-            shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
+            Shooter.runFeeder(true);
+            Shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
             Intake.runConveyor(true);
             if (System.currentTimeMillis() - autonShootingStartTime >= Constants.AUTON_SHOOTER_WAIT_TIME) {
               autonState = AutonState.ALIGN_TO_THIRD_BALL;
-              shooter.runFeeder(false);
-              shooter.runElevator(0);
+              Shooter.runFeeder(false);
+              Shooter.runElevator(0);
               Intake.runConveyor(false);
               Limelight.setLedOn(false);
             }
@@ -404,7 +403,7 @@ public class Robot extends TimedRobot {
         // After the line, go to where we know the ball is (~40in outside of the tape)
 
         case ALIGN_TO_BALL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           if (Drivetrain.alignToBall()) {
             Drivetrain.setNoRamp(0);
@@ -413,7 +412,7 @@ public class Robot extends TimedRobot {
           break;
 
         case GOTO_BALL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           Limelight.setLedOn(true);
           // Beam break here
@@ -429,7 +428,7 @@ public class Robot extends TimedRobot {
 
         // Turn off intake after the ball is picked up
         case PICKUP_BALL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           inUse = true;
           System.out.println(Drivetrain.getPosition());
@@ -442,7 +441,7 @@ public class Robot extends TimedRobot {
           }
           break;
         case TRACK_GOAL:
-          shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
+          Shooter.setSpeed(Constants.SHOOTER_DEFAULT_SPEED);
           Hood.home();
           if (Drivetrain.alignToGoal()) {
             autonState = Constants.AutonState.PREPARE_SHOOTER;
@@ -454,7 +453,7 @@ public class Robot extends TimedRobot {
           double speed = (distance * Constants.HOOD_SPEED_SLOPE) + Constants.HOOD_SPEED_OFFSET;
           angle = (distance * distance * Constants.HOOD_ANGLE_CURVE) + (distance * Constants.HOOD_ANGLE_SLOPE)
               + Constants.HOOD_ANGLE_OFFSET;
-          shooter.setSpeed(speed / 100);
+          Shooter.setSpeed(speed / 100);
           Hood.setToPosition(angle);
           if (Hood.isReady()) {
             autonShootingStartTime = System.currentTimeMillis();
@@ -464,8 +463,8 @@ public class Robot extends TimedRobot {
           break;
 
         case SHOOT_BALL:
-          shooter.runFeeder(true);
-          shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
+          Shooter.runFeeder(true);
+          Shooter.runElevator(Constants.ELEVATOR_FULL_SPEED);
           Intake.runConveyor(true);
           break;
 
@@ -489,7 +488,7 @@ public class Robot extends TimedRobot {
       Drivetrain.telemetry(telemetryTable);
       Hood.telemetry(telemetryTable);
       Intake.telemetry(telemetryTable);
-      shooter.telemetry(telemetryTable);
+      Shooter.telemetry(telemetryTable);
       Limelight.telemetry(telemetryTable.getSubTable("limelight"));
       PhotonCamera.telemetry(telemetryTable.getSubTable("photonvision"));
 
