@@ -23,7 +23,9 @@ public class Drivetrain {
     private TalonFX talonLF, talonLB, talonRF, talonRB;
     private TalonFX[] talonList = new TalonFX[4];
     
-    /** Intialize all sparks, joysticks, and encoder */
+    /**
+     * Intialize all falcons, their encoders and PID controllers, and joysticks
+     */
     public Drivetrain() {
         talonLB = new TalonFX(Constants.FALCON_LB);
         talonLF = new TalonFX(Constants.FALCON_LF);
@@ -78,6 +80,10 @@ public class Drivetrain {
         rightFrontPID.run(speed);
     }
 
+    /**
+     * Set the speed of the drivetrain without the ramp in PID
+     * @param speed desired speed of the robot [-1, 1]
+     */
     public void setNoRamp(double speed) {
         leftBackPID.runNoRamp(speed);
         leftFrontPID.runNoRamp(speed);
@@ -92,7 +98,9 @@ public class Drivetrain {
         set(0);
     }
     
-    /** Run the drivetrain at half the speed of the joysticks */
+    /**
+     * Run the drivetrain in teleoperated mode, with both slow and fast modes, as well as small joystick deadzones
+     */
     public void teleop() { 
         double leftSpeed = joystickTransfer(-leftJoy.getY());
         double rightSpeed = joystickTransfer(-rightJoy.getY());
@@ -115,8 +123,8 @@ public class Drivetrain {
     }
 
     /**
-     * sets the speed of the left motors
-     * @param speed desired speed
+     * Sets the speed of the left motors
+     * @param speed desired speed [-1, 1]
      */
     public void setLeft(double speed) {
         leftBackPID.run(speed);
@@ -124,26 +132,36 @@ public class Drivetrain {
     }
 
     /**
-     * sets the speed of the right motors
-     * @param speed desired speed
+     * Sets the speed of the right motors
+     * @param speed desired speed [-1, 1]
      */
     public void setRight(double speed) {
         rightBackPID.run(speed);
         rightFrontPID.run(speed);
     }
 
-
+    /**
+     * Sets the speed of the left motors without the ramp from PID
+     * @param speed desired speed [-1, 1]
+     */
     public void setLeftNoRamp(double speed) {
         leftBackPID.runNoRamp(speed);
         leftFrontPID.runNoRamp(speed);
     }
 
+    /**
+     * Sets the speed of the right motors without the ramp from PID
+     * @param speed desired speed [-1, 1]
+     */
     public void setRightNoRamp(double speed) {
         rightBackPID.runNoRamp(speed);
         rightFrontPID.runNoRamp(speed);
     }
 
-    /** Adjusts the orientation of the robot in accordance to its relation with the tape */
+    /**
+     * Adjusts the orientation of the robot in accordance to its relation with the tape
+     * @return Whether the robot is within the alignment threshold of the hub
+     */
     public boolean alignToGoal() {
         aligningToGoal = true;
         double angle = Limelight.getRobotAngle();
@@ -161,6 +179,9 @@ public class Drivetrain {
         return false;
     }
 
+    /**
+     * Prepare the robot to align to a ball
+     */
     public void setupAlignmentToBall() {
         if (!PhotonCamera.hasTarget()) {
             setupAlignmentToBall();
@@ -170,6 +191,10 @@ public class Drivetrain {
         }
     }
 
+    /**
+     * Align the robot to the nearest ball of the correct color
+     * @return Whether the robot is within the alignment threshold of the ball
+     */
     public boolean alignToBall() {
         aligningToBall = true;
         double angle = navx.getAngle();
@@ -190,7 +215,11 @@ public class Drivetrain {
         return false;
     }
     
-    // max rpm: 6380 
+    /**
+     * Run the drivetrain using inverse kinematics
+     * @param angularVel the desired angular velocity of the robot (rad/s)
+     * @param linearVel the desired linear velocity of the robot (m/s)
+     */
     public void runInverseKinematics(double angularVel, double linearVel) {
         double leftWheelAngularVelocity;
         double rightWheelAngularVelocity;
@@ -207,27 +236,10 @@ public class Drivetrain {
 
     /**
      * Function to convert joystick input to a function (basically joystick acceleration)
-     * @param joy the Joystick object that will be transferred
+     * @param joyVal the inputted value from the joystick
      * @return the adjusted value
      */
     public double joystickTransfer(double joyVal) {
-        /** Cubic */
-        // joyVal = Math.pow(joyVal, Constants.JOYSTICK_CURVE_POWER);
-        // joyVal *= Constants.DRIVETRAIN_MAX_SPEED;
-        // return joyVal;
-
-        /** Quadratic */
-        // double newJoyVal = Math.pow(joyVal, 2);
-        // newJoyVal *= Constants.DRIVETRAIN_MAX_SPEED;
-        // if (joyVal > 0) {
-        //     return newJoyVal;
-        // } else {
-        //     return -newJoyVal;
-        // }
-
-        /** Linear */
-        // return joyVal*.85;
-
         if (climbing) {
             double newJoyVal = Math.pow(joyVal, 2);
             newJoyVal *= Constants.CLIMBING_DRIVE_MAX_SPEED;
@@ -242,6 +254,9 @@ public class Drivetrain {
         }
     }
 
+    /**
+     * A function to test any features of the drivetrain
+     */
     public void test() {
         if (System.currentTimeMillis() - startTime <= 2000) {
             set(0.1);
@@ -250,6 +265,10 @@ public class Drivetrain {
         }
     }
 
+    /**
+     * Output all necessary telemetry data from the drivetrain
+     * @param table the base telemetry NetworkTable
+     */
     public void telemetry(NetworkTable table) {
         NetworkTable motorTable = table.getSubTable("motors");
 
@@ -259,13 +278,26 @@ public class Drivetrain {
         rightBackPID.telemetry(motorTable, "Right Back Drivetrain Motor");
     }
 
+    /**
+     * Returns the total accumulated yaw angle (Z Axis, in degrees) reported by the gyro on the robot
+     * @return the gyro angle in degrees
+     */
     public double getGyroAngle() {
         return navx.getAngle();
     }
 
+    /**
+     * Get whether or not the drivetrain is at the desired speed
+     * @return If the drivetrain is at the desired speed
+     */
     public boolean isReady() {
         return leftFrontPID.isReady();
     }
+
+    /**
+     * Get if the drivetrain current is too high
+     * @return true if any of the drivetrain motors are reading more than 80 amps
+     */
     public boolean getDanger(){
         return (leftBackPID.getCurrent()>80) || (leftFrontPID.getCurrent()>80)|| (rightBackPID.getCurrent()>80) || (rightFrontPID.getCurrent()>80);
     }
