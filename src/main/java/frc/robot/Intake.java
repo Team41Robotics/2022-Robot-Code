@@ -14,7 +14,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-/** Controls the intake on the robot */
+/**
+ * Controls the intake on the robot 
+ */
 public class Intake {
     public static boolean inUse;
     private static boolean intakeOn;
@@ -26,7 +28,9 @@ public class Intake {
     private static ShuffleboardTab robotTab;
     private static NetworkTableEntry intakeStatus;
 
-    /** Initialize all parts of the intake */
+    /**
+     * Initialize all parts of the intake
+     */
     public static void initialize(){
         inUse = false;
         intakeOn = false;
@@ -44,7 +48,9 @@ public class Intake {
         intakeStatus = robotTab.add("Intake On", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     }
 
-    /** At beginning of auton, move the intake down and start the motor */
+    /**
+     * At beginning of auton, move the intake down and start the motor
+     */
     public static void autonInit(){
         intakeSolLeft.set(DoubleSolenoid.Value.kForward);
         intakeSolRight.set(DoubleSolenoid.Value.kForward);
@@ -53,13 +59,10 @@ public class Intake {
         conveyor.set(Constants.CONVEYOR_FULL_SPEED);
     }
 
-    /** In teleop, use joystick triggers to raise/lower the intake and toggle the motor */
+    /**
+     * In teleop, use joystick triggers to raise/lower the intake and toggle the motor
+     */
     public static void teleop(){
-        if (leftJoy.getRawButtonPressed(Controls.LeftJoy.INTAKE_PISTON_TOGGLE)) {
-          // intakeUp = !intakeUp;
-          // intakeSolLeft.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
-          // intakeSolRight.set(intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward);
-        }
         if (Shooter.reverseOn) {
           conveyor.set(-Constants.CONVEYOR_FULL_SPEED);
           intakeMotor.set(-Constants.INTAKE_FULL_SPEED);
@@ -79,6 +82,9 @@ public class Intake {
         intakeStatus.setBoolean(intakeOn);
     }
 
+    /**
+     * Place to put intake test code
+     */
     public static void test() {
         if (leftJoy.getRawButtonPressed(Controls.LeftJoy.INTAKE_PISTON_TOGGLE)) {
             intakeUp = !intakeUp;
@@ -91,7 +97,10 @@ public class Intake {
           }
     }
 
-    // true - forward; false - reverse
+    /**
+     * Run the intake and conveyor
+     * @param dir the direction to run the intake (enum)
+     */
     public static void run(Constants.INTAKE_MODE dir) {
       switch (dir) {
         case FORWARD:
@@ -107,24 +116,41 @@ public class Intake {
       }
     }
 
+    /**
+     * Set whether or not the intake should be on
+     * @param val true to turn intake on, false to turn it off
+     */
     public static void setIntakeOn(boolean val) {
       intakeOn = val;
     }
 
+    /**
+     * Set whether or not the conveyor should be on
+     * @param on true to turn the conveyor on, false to turn it off
+     */
     public static void runConveyor(boolean on) {
       conveyor.set(on ? Constants.CONVEYOR_FULL_SPEED : 0);
     }
 
+    /**
+     * Stop all motors controlled by the intake
+     */
     public static void stop() {
       conveyor.set(0);
       intakeMotor.set(0);
     }
 
+    /**
+     * Make the intake solenoids put the intake in the up position
+     */
     public static void putUp() {
       intakeSolLeft.set(Value.kReverse);
       intakeSolRight.set(Value.kReverse);
     }
 
+    /**
+     * Reset the intake to a known position and state
+     */
     public static void reset() {
       putUp();
       stop();
@@ -132,6 +158,10 @@ public class Intake {
       intakeUp = false;
     }
 
+    /**
+     * Record all telemetry data for the intake
+     * @param table the base telemetry NetworkTable
+     */
     public static void telemetry(NetworkTable table) {
       NetworkTable motorTable = table.getSubTable("motors");
 

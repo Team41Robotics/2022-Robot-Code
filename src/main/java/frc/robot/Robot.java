@@ -37,7 +37,6 @@ public class Robot extends TimedRobot {
   public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
   public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
   public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
-  public static Intake intake;
   public static Hood hood;
   public static long startTime;
   public static boolean inUse = Intake.inUse;
@@ -63,7 +62,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     started = false;
     drivetrain = new Drivetrain();
-    intake = new Intake();
     shooter = new Shooter();
     hood = new Hood();
     climber = new Climber();
