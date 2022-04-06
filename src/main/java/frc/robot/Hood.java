@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Hood {
-    public static double angle;
     private static boolean ready, homed;
+    private static double angle;
     private static CANSparkMax hoodMotor;
     private static DigitalInput topSwitch, bottomSwitch;
     private static Joystick station;

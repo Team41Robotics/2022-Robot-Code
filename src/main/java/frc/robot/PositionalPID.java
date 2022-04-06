@@ -4,7 +4,6 @@ package frc.robot;
  * Custom class to manage a positional P system
  */
 public class PositionalPID {
-    public final double SENSOR_NORM = (10.0*60)/(2048*6380);
     private boolean ready;
     private double kP;
     private double err;

@@ -125,7 +125,7 @@ public class Drivetrain {
      * Sets the speed of the left motors
      * @param speed desired speed [-1, 1]
      */
-    public static void setLeft(double speed) {
+    private static void setLeft(double speed) {
         leftBackPID.run(speed);
         leftFrontPID.run(speed);
     }
@@ -134,7 +134,7 @@ public class Drivetrain {
      * Sets the speed of the right motors
      * @param speed desired speed [-1, 1]
      */
-    public static void setRight(double speed) {
+    private static void setRight(double speed) {
         rightBackPID.run(speed);
         rightFrontPID.run(speed);
     }
@@ -143,7 +143,7 @@ public class Drivetrain {
      * Sets the speed of the left motors without the ramp from PID
      * @param speed desired speed [-1, 1]
      */
-    public static void setLeftNoRamp(double speed) {
+    private static void setLeftNoRamp(double speed) {
         leftBackPID.runNoRamp(speed);
         leftFrontPID.runNoRamp(speed);
     }
@@ -152,7 +152,7 @@ public class Drivetrain {
      * Sets the speed of the right motors without the ramp from PID
      * @param speed desired speed [-1, 1]
      */
-    public static void setRightNoRamp(double speed) {
+    private static void setRightNoRamp(double speed) {
         rightBackPID.runNoRamp(speed);
         rightFrontPID.runNoRamp(speed);
     }
@@ -234,7 +234,7 @@ public class Drivetrain {
      * @param joyVal the inputted value from the joystick
      * @return the adjusted value
      */
-    public static double joystickTransfer(double joyVal) {
+    private static double joystickTransfer(double joyVal) {
         if (climbing) {
             double newJoyVal = Math.pow(joyVal, 2);
             newJoyVal *= Constants.CLIMBING_DRIVE_MAX_SPEED;

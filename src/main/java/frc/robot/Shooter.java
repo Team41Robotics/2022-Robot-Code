@@ -11,10 +11,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * Class to control the shooter on the robot
  */
 public class Shooter {
-    public static boolean reverseOn = false;
-    public static boolean testOn = false;
-    public static PID leftFalconPID, rightFalconPID;
-    public static double speed = 0;
+    public static boolean reverseOn;
+    private static PID leftFalconPID, rightFalconPID;
+    public static double speed;
     private static CANSparkMax feeder, elevator;
     private static Joystick rightDS, rightJoy;
     private static TalonFX leftFalcon, rightFalcon;
@@ -68,12 +67,6 @@ public class Shooter {
         }
 
         setSpeed(speed);
-
-        if (rightJoy.getRawButtonPressed(1)) {
-            elevator.set(testOn ? Constants.ELEVATOR_FULL_SPEED : 0);
-            
-            testOn = !testOn;
-        }
         if (rightDS.getRawButton(1)) {
             feeder.set(Constants.FEEDER_FULL_SPEED);
         } else {

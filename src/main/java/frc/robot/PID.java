@@ -9,7 +9,7 @@ import edu.wpi.first.networktables.NetworkTable;
  * Custom class to handle PID on our Falcon 500s
  */
 public class PID {
-    public final double SENSOR_NORM = (10.0*60)/(2048*6380);
+    private final double SENSOR_NORM = (10.0*60)/(2048*6380);
     private boolean ready;
     private double kP;
     private double kI;

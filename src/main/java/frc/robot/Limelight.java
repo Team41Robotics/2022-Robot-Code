@@ -23,7 +23,7 @@ class Limelight {
      * retrieves current horizontal angle produced from limelight
      * @return limelight network table horizontal angle
      */
-    public static double getHorizontalAngle(){
+    private static double getHorizontalAngle(){
         return limelightTable.getEntry("tx").getDouble(0);
     }
 

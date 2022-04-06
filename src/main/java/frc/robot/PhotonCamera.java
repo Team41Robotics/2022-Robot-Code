@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * Custom class to manage the networktable interface of PhotonVision
  */
 public class PhotonCamera {
-    public static NetworkTable driverCam = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("FrontCamera");
+    private static NetworkTable driverCam = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("FrontCamera");
 
     /**
      * Get the area the current target takes up

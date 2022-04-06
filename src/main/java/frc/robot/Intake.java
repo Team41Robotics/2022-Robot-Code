@@ -113,15 +113,7 @@ public class Intake {
             conveyor.set(0);
         }
     }
-    
-    /**
-    * Set whether or not the intake should be on
-    * @param val true to turn intake on, false to turn it off
-    */
-    public static void setIntakeOn(boolean val) {
-        intakeOn = val;
-    }
-    
+   
     /**
     * Set whether or not the conveyor should be on
     * @param on true to turn the conveyor on, false to turn it off
@@ -133,7 +125,7 @@ public class Intake {
     /**
     * Stop all motors controlled by the intake
     */
-    public static void stop() {
+    private static void stop() {
         conveyor.set(0);
         intakeMotor.set(0);
     }
@@ -141,7 +133,7 @@ public class Intake {
     /**
     * Make the intake solenoids put the intake in the up position
     */
-    public static void putUp() {
+    private static void putUp() {
         intakeSolLeft.set(Value.kReverse);
         intakeSolRight.set(Value.kReverse);
     }
