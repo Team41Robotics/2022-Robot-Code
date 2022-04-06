@@ -8,7 +8,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 /** Class for manipulating the robot drivetrain */
 public class Drivetrain {
-    public static boolean aligningToGoal, aligningToBall;
     public static long startTime;
     private static boolean climbing;
     private static double angleToBall;
@@ -163,7 +162,6 @@ public class Drivetrain {
      * @return Whether the robot is within the alignment threshold of the hub
      */
     public static boolean alignToGoal() {
-        aligningToGoal = true;
         double angle = Limelight.getRobotAngle();
         if (Limelight.targetFound() && angle>Constants.ALIGNMENT_HORIZONTAL_THRESHHOLD) {
             setRight(-Constants.AUTON_SPEED/2);
@@ -173,7 +171,6 @@ public class Drivetrain {
             setLeft(-Constants.AUTON_SPEED/2);
         } else {
             setNoRamp(0);
-            aligningToGoal = false;
             return true;
         }
         return false;
@@ -196,7 +193,6 @@ public class Drivetrain {
      * @return Whether the robot is within the alignment threshold of the ball
      */
     public static boolean alignToBall() {
-        aligningToBall = true;
         double angle = navx.getAngle();
         double speed = ballTrackingPID.run(angle);
         if (speed < Constants.AUTON_SPEED/2) speed = Constants.AUTON_SPEED/2;
@@ -209,7 +205,6 @@ public class Drivetrain {
             setLeftNoRamp(speed);
         } else {
             setNoRamp(0);
-            aligningToBall = false;
             return true;
         }
         return false;
@@ -276,14 +271,6 @@ public class Drivetrain {
         leftBackPID.telemetry(motorTable, "Left Back Drivetrain Motor");
         rightFrontPID.telemetry(motorTable, "Right Front Drivetrain Motor");
         rightBackPID.telemetry(motorTable, "Right Back Drivetrain Motor");
-    }
-
-    /**
-     * Returns the total accumulated yaw angle (Z Axis, in degrees) reported by the gyro on the robot
-     * @return the gyro angle in degrees
-     */
-    public static double getGyroAngle() {
-        return navx.getAngle();
     }
 
     /**
