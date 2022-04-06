@@ -32,20 +32,18 @@ import frc.robot.Constants.AutonState;
 * project.
 */
 public class Robot extends TimedRobot {
-    public static boolean intakeOn = false;
+    public static long startTime;
     public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
     public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
     public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
-    public static Hood hood;
-    public static long startTime;
-    private DigitalInput beamBreak;
+    private boolean owenGlag, started;
+    private int dropCount;
     private AutonState autonState;
+    private DigitalInput beamBreak;
     private NetworkTable telemetryTable;
     private NetworkTableEntry limelightDistanceEntry, speedOffsetEntry, shooterReadyEntry, beamBreakEntry, droppedTelemetryEntry;
     private SendableChooser<Boolean> autonChooser;
     private ShuffleboardTab debugTab, robotTab;
-    private boolean owenGlag, started;
-    private int dropCount;
     
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -54,15 +52,11 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         started = false;
-        Shooter.initShooter();
-        Hood.initHood();
-        Climber.initClimber();
-        Drivetrain.initDrivetrain();
-        Intake.initIntake();
         telemetryTable = NetworkTableInstance.getDefault().getTable("telemetry");
         startTime = System.currentTimeMillis();
-        beamBreak = new DigitalInput(4);
+        beamBreak = new DigitalInput(Constants.BEAM_BREAK_PORT);
         autonState = AutonState.NONE;
+
         debugTab = Shuffleboard.getTab("Debug");
         robotTab = Shuffleboard.getTab("Robot");
         limelightDistanceEntry = debugTab.add("LL Distance", -1).getEntry();
@@ -75,6 +69,12 @@ public class Robot extends TimedRobot {
         autonChooser.setDefaultOption("4 Ball Auton", true);
         autonChooser.addOption("2 Ball Auton", false);
         robotTab.add("Do Real Auton", autonChooser).withWidget(BuiltInWidgets.kComboBoxChooser); // true: 4 ball   false: 2 ball
+
+        Shooter.initShooter();
+        Hood.initHood();
+        Climber.initClimber();
+        Drivetrain.initDrivetrain();
+        Intake.initIntake();
     }
     
     /**
@@ -94,18 +94,18 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void autonomousInit() {
-        PhotonCamera.setPipeline(DriverStation.getAlliance() == Alliance.Blue);
         telemetryTable.getEntry("disabled").setBoolean(false);
-        autonState = AutonState.ALIGN_TO_BALL;
         started = true;
-        Intake.autonInit();
+        autonState = AutonState.ALIGN_TO_BALL;
+        Auton.init(beamBreak);
         Drivetrain.setPosition(0);
         Drivetrain.setupAlignmentToBall();
         Drivetrain.stop();
+        PhotonCamera.setPipeline(DriverStation.getAlliance() == Alliance.Blue);
         Hood.home();
-        Shooter.setSpeed(0);
+        Intake.autonInit();
         Limelight.resetZoom();
-        Auton.init(beamBreak);
+        Shooter.setSpeed(0);
     }
     
     /** This function is called periodically during autonomous. */
@@ -115,21 +115,20 @@ public class Robot extends TimedRobot {
             fullAuton();
         } else {
             simpleAuton();
-        }
-        
+        }   
     }
     
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
-        telemetryTable.getEntry("disabled").setBoolean(false);
         autonState = AutonState.NONE;
-        Shooter.setSpeed(0);
+        telemetryTable.getEntry("disabled").setBoolean(false);
+        Climber.reset();
         Hood.home();
         Intake.reset();
         Limelight.setLedOn(false);
         Limelight.resetZoom();
-        Climber.reset();
+        Shooter.setSpeed(0);
     }
     
     /** This function is called periodically during operator control. */
@@ -206,7 +205,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
         LiveWindow.setEnabled(false);
-        System.out.println(autonChooser.getSelected());
+        PhotonCamera.setPipeline(false);
     }
     
     public void fullAuton() {
