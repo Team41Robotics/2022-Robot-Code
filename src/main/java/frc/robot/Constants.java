@@ -78,7 +78,7 @@ public class Constants {
     static double INTAKE_FULL_SPEED = 0.6;
     static double CONVEYOR_FULL_SPEED = 0.5;
     static double FEEDER_FULL_SPEED = 0.5;
-    static double ELEVATOR_FULL_SPEED = -0.1;
+    static double ELEVATOR_FULL_SPEED = -0.25;
 
     // Measurements for the Limelight
     static double LIMELIGHT_HEIGHT_OF_TARGET = 103.5;

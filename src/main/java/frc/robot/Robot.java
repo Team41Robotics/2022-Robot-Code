@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -32,12 +31,12 @@ import frc.robot.Constants.AutonState;
 * project.
 */
 public class Robot extends TimedRobot {
-    public static long startTime;
     public static Joystick leftJoy = new Joystick(Constants.LEFT_JOY);
     public static Joystick rightJoy = new Joystick(Constants.RIGHT_JOY);
     public static Joystick secondDS = new Joystick(Constants.RIGHT_DRIVER_STATION);
     private boolean owenGlag, started;
     private int dropCount;
+    private long startTime;
     private AutonState autonState;
     private DigitalInput beamBreak;
     private NetworkTable telemetryTable;
@@ -56,6 +55,10 @@ public class Robot extends TimedRobot {
         startTime = System.currentTimeMillis();
         beamBreak = new DigitalInput(Constants.BEAM_BREAK_PORT);
         autonState = AutonState.NONE;
+
+        String name = "${date}-Match-";
+        name = name + Integer.toString(DriverStation.getMatchNumber());
+        Shuffleboard.setRecordingFileNameFormat(name);
 
         debugTab = Shuffleboard.getTab("Debug");
         robotTab = Shuffleboard.getTab("Robot");
@@ -106,6 +109,8 @@ public class Robot extends TimedRobot {
         Intake.autonInit();
         Limelight.resetZoom();
         Shooter.setSpeed(0);
+        
+        Shuffleboard.startRecording();
     }
     
     /** This function is called periodically during autonomous. */
@@ -129,6 +134,7 @@ public class Robot extends TimedRobot {
         Limelight.setLedOn(false);
         Limelight.resetZoom();
         Shooter.setSpeed(0);
+        Shuffleboard.startRecording();
     }
     
     /** This function is called periodically during operator control. */
@@ -188,6 +194,7 @@ public class Robot extends TimedRobot {
     /** doesnt have any code yet */
     @Override
     public void disabledInit() {
+        Shuffleboard.stopRecording();
     }
     
     /** doesnt have any code yet */
@@ -200,6 +207,8 @@ public class Robot extends TimedRobot {
         telemetryTable.getEntry("disabled").setBoolean(false);
         // hood.home();
         // drivetrain.startTime = System.currentTimeMillis();
+        
+        Shuffleboard.startRecording();
     }
     
     @Override
@@ -318,6 +327,8 @@ public class Robot extends TimedRobot {
             telemetryTable.getEntry("owenGlag").setBoolean(false);
             telemetryTable.getSubTable("inputs").getEntry("run_feeder").setBoolean(secondDS.getRawButton(Controls.SecondDriverStation.FEED_BALL_TO_SHOOTER));
             telemetryTable.getEntry("battery").setDouble(RobotController.getBatteryVoltage());
+            telemetryTable.getEntry("match").setDouble(DriverStation.getMatchNumber());
+            telemetryTable.getEntry("event").setString(DriverStation.getEventName());
             dropCount = 0;
         } else {
             dropCount += 1;
