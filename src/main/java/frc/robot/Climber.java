@@ -236,6 +236,10 @@ public class Climber {
         secondStageSwitchTable.getEntry("name").setString("Second Climber Stage Limit Switch");
         secondStageSwitchTable.getEntry("status").setBoolean(secondStageSwitch.get());
 
+        NetworkTable secondStageSecondSwitchTable = switchTable.getSubTable("Second Climber Stage Second Limit Switch");
+        secondStageSecondSwitchTable.getEntry("name").setString("Second Climber Stage Second Limit Switch");
+        secondStageSecondSwitchTable.getEntry("status").setBoolean(secondStageSecondSwitch.get());
+
         
         NetworkTable solenoidTable = table.getSubTable("solenoids");
 
