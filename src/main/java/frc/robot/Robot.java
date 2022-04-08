@@ -148,7 +148,6 @@ public class Robot extends TimedRobot {
             Limelight.setLedOn(false);
             Shooter.setSpeed(Constants.LOW_GOAL_SPEED);
             Hood.setToPosition(Constants.LOW_GOAL_ANGLE);
-            Drivetrain.alignToGoal();
         } else if (secondDS.getRawButton(Controls.SecondDriverStation.AUTO_SHOOTING)) {
             Limelight.setLedOn(true);
             if (Limelight.targetFound()) {
