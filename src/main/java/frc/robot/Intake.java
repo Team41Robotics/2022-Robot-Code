@@ -2,13 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.INTAKE_MODE;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -24,8 +21,6 @@ public class Intake {
     private static DoubleSolenoid intakeSolLeft;
     private static DoubleSolenoid intakeSolRight;
     private static Joystick leftJoy, rightJoy, secondDS;
-    private static ShuffleboardTab robotTab;
-    private static NetworkTableEntry intakeStatus;
     
     /**
     * Initialize all parts of the intake
@@ -42,8 +37,7 @@ public class Intake {
         intakeMotor.setIdleMode(IdleMode.kCoast);
         intakeSolLeft = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.LEFT_SOL_FWD, Constants.LEFT_SOL_RV);
         intakeSolRight = new DoubleSolenoid(Constants.PCM_PORT, PneumaticsModuleType.REVPH, Constants.RIGHT_SOL_FWD, Constants.RIGHT_SOL_RV);
-        robotTab = Shuffleboard.getTab("Robot");
-        intakeStatus = robotTab.add("Intake On", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+        SmartDashboard.putBoolean("Intake On", false);
     }
     
     /**
@@ -77,7 +71,7 @@ public class Intake {
             intakeMotor.set(0);
         }
         
-        intakeStatus.setBoolean(intakeOn);
+        SmartDashboard.putBoolean("Intake On", intakeOn);
     }
     
     /**

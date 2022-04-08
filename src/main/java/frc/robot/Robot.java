@@ -7,12 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -40,9 +37,7 @@ public class Robot extends TimedRobot {
     private AutonState autonState;
     private DigitalInput beamBreak;
     private NetworkTable telemetryTable;
-    private NetworkTableEntry limelightDistanceEntry, speedOffsetEntry, shooterReadyEntry, beamBreakEntry, droppedTelemetryEntry;
     private SendableChooser<Boolean> autonChooser;
-    private ShuffleboardTab debugTab, robotTab;
     
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -56,22 +51,16 @@ public class Robot extends TimedRobot {
         beamBreak = new DigitalInput(Constants.BEAM_BREAK_PORT);
         autonState = AutonState.NONE;
 
-        String name = "${date}-Match-";
-        name = name + Integer.toString(DriverStation.getMatchNumber());
-        Shuffleboard.setRecordingFileNameFormat(name);
-
-        debugTab = Shuffleboard.getTab("Debug");
-        robotTab = Shuffleboard.getTab("Robot");
-        limelightDistanceEntry = debugTab.add("LL Distance", -1).getEntry();
-        speedOffsetEntry = robotTab.add("Speed Offset", Constants.HOOD_SPEED_OFFSET).getEntry();
-        shooterReadyEntry = robotTab.add("Shooter Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-        beamBreakEntry = debugTab.add("Beam Break", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-        droppedTelemetryEntry = debugTab.add("Telemetry Packets Dropped", -1).getEntry();
+        SmartDashboard.putNumber("LL Distance", -1);
+        SmartDashboard.putNumber("Speed Offset", Constants.HOOD_SPEED_OFFSET);
+        SmartDashboard.putBoolean("Shooter Ready", false);
+        SmartDashboard.putBoolean("Beam Break", false);
+        SmartDashboard.putNumber("Telemetry Packets Dropped", -1);
         
         autonChooser = new SendableChooser<>();
         autonChooser.setDefaultOption("4 Ball Auton", true);
         autonChooser.addOption("2 Ball Auton", false);
-        robotTab.add("Do Real Auton", autonChooser).withWidget(BuiltInWidgets.kComboBoxChooser); // true: 4 ball   false: 2 ball
+        SmartDashboard.putData("Do Real Auton", autonChooser);
 
         Shooter.initShooter();
         Hood.initHood();
@@ -109,8 +98,6 @@ public class Robot extends TimedRobot {
         Intake.autonInit();
         Limelight.resetZoom();
         Shooter.setSpeed(0);
-        
-        Shuffleboard.startRecording();
     }
     
     /** This function is called periodically during autonomous. */
@@ -134,7 +121,6 @@ public class Robot extends TimedRobot {
         Limelight.setLedOn(false);
         Limelight.resetZoom();
         Shooter.setSpeed(0);
-        Shuffleboard.startRecording();
     }
     
     /** This function is called periodically during operator control. */
@@ -185,16 +171,16 @@ public class Robot extends TimedRobot {
             Shooter.setSpeed(0);
             Limelight.setLedOn(false);
         }
-        limelightDistanceEntry.setDouble(Limelight.estimateDistance());
-        speedOffsetEntry.setDouble(Constants.HOOD_SPEED_OFFSET);
-        shooterReadyEntry.setBoolean(Shooter.isReady());
-        beamBreakEntry.setBoolean(!beamBreak.get());
+        
+        SmartDashboard.putNumber("LL Distance", Limelight.estimateDistance());
+        SmartDashboard.putNumber("Speed Offset", Constants.HOOD_SPEED_OFFSET);
+        SmartDashboard.putBoolean("Shooter Ready", Shooter.isReady());
+        SmartDashboard.putBoolean("Beam Break", !beamBreak.get());
     }
     
     /** doesnt have any code yet */
     @Override
     public void disabledInit() {
-        Shuffleboard.stopRecording();
     }
     
     /** doesnt have any code yet */
@@ -208,7 +194,6 @@ public class Robot extends TimedRobot {
         // hood.home();
         // drivetrain.startTime = System.currentTimeMillis();
         
-        Shuffleboard.startRecording();
     }
     
     @Override
@@ -332,7 +317,7 @@ public class Robot extends TimedRobot {
             dropCount = 0;
         } else {
             dropCount += 1;
-            droppedTelemetryEntry.setDouble(dropCount);
+            SmartDashboard.putNumber("Telemetry Packets Dropped", dropCount);
         }
     }
     
