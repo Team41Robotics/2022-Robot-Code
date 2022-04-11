@@ -96,7 +96,7 @@ public class Constants {
     static int FIRST_STAGE_LIMIT_SWITCH_L = 0;
     static int FIRST_STAGE_LIMIT_SWTICH_M = 3;
     static int SECOND_STAGE_LIMIT_SWITCH = 5;
-    static int BEAM_BREAK_PORT = 4;
+    static int BEAM_BREAK_PORT = 7;
     static int SHOOTER_TALON_1 = 14;
     static int SHOOTER_TALON_2 = 15;
     static double SHOOTER_SPEED = 0.55;
@@ -111,7 +111,7 @@ public class Constants {
     
     // Constants for Hood Auto Alligning
     static double HOOD_SPEED_SLOPE = 0.0731;
-    static double HOOD_SPEED_OFFSET = 35.2 + 2;
+    static double HOOD_SPEED_OFFSET = 35.2;
     static double HOOD_SPEED_OFFSET_INCREMENT = 0.5;
     static double HOOD_ANGLE_SLOPE = 0.231;
     static double HOOD_ANGLE_OFFSET = 8.96;
