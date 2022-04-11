@@ -160,7 +160,7 @@ public class Auton {
             while (!Drivetrain.isReady());
             return AutonState.ALIGN_TO_GOAL_AGAIN;
           } else {
-            Drivetrain.runInverseKinematics(0, -Constants.AUTON_SPEED_M_PER_S);
+            Drivetrain.runInverseKinematics(0.075, -Constants.AUTON_SPEED_M_PER_S);
           }
           return AutonState.MOVE_TOWARDS_GOAL;
     }
