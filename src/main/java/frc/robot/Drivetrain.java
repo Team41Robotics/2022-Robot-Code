@@ -181,11 +181,11 @@ public class Drivetrain {
      */
     public static void setupAlignmentToBall() {
         if (!PhotonCamera.hasTarget()) {
-            setupAlignmentToBall();
+            angleToBall = 0;
         } else {
             angleToBall = PhotonCamera.getYaw();
-            navx.zeroYaw();
         }
+        navx.zeroYaw();
     }
 
     /**
