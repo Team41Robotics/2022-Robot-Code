@@ -111,6 +111,7 @@ public class Robot extends TimedRobot {
                 break;
             case 1:
                 // move forward
+                superSimpleAuton();
                 break;
             case 2:
                 // 2 ball
