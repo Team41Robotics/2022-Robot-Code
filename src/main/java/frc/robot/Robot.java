@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     private AutonState autonState;
     private DigitalInput beamBreak;
     private NetworkTable telemetryTable;
-    private SendableChooser<Boolean> autonChooser;
+    private SendableChooser<Integer> autonChooser;
     
     /**
     * This function is run when the robot is first started up and should be used for any
@@ -58,8 +58,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Telemetry Packets Dropped", -1);
         
         autonChooser = new SendableChooser<>();
-        autonChooser.setDefaultOption("4 Ball Auton", true);
-        autonChooser.addOption("2 Ball Auton", false);
+        autonChooser.setDefaultOption("4 Ball Auton", 3);
+        autonChooser.addOption("2 Ball Auton", 2);
+        autonChooser.addOption("Simple Auton", 1);
+        autonChooser.addOption("No Auton", 0);
         SmartDashboard.putData("Do Real Auton", autonChooser);
 
         Shooter.initShooter();
@@ -103,11 +105,22 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        if (autonChooser.getSelected()) {
-            fullAuton();
-        } else {
-            simpleAuton();
-        }   
+        switch (autonChooser.getSelected()) {
+            case 0:
+                // do nothing
+                break;
+            case 1:
+                // move forward
+                break;
+            case 2:
+                // 2 ball
+                simpleAuton();
+                break;
+            case 3:
+                // 4 ball
+                fullAuton();
+                break;
+        } 
     }
     
     /** This function is called once when teleop is enabled. */
@@ -293,6 +306,14 @@ public class Robot extends TimedRobot {
         }
     }
     
+    public void superSimpleAuton() {
+        if (autonState == AutonState.MOVE_TOWARDS_GOAL) {
+            autonState = Auton.moveForward();
+        } else {
+            Drivetrain.stop();
+        }
+    }
+
     public void gatherData() {
         owenGlag = telemetryTable.getEntry("owenGlag").getBoolean(true);
         if (owenGlag) {

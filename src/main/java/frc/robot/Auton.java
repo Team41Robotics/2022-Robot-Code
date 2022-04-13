@@ -196,6 +196,18 @@ public class Auton {
         Drivetrain.setNoRamp(0);
     }
 
+    public static AutonState moveForward() {
+        if (Math.abs(Drivetrain.getPosition() - robotPos) >= Constants.SUPER_SIMPLE_AUTON_DISTANCE) {
+            do
+                Drivetrain.stop();
+            while (!Drivetrain.isReady());
+            return AutonState.NONE;
+          } else {
+            Drivetrain.runInverseKinematics(0, Constants.AUTON_SPEED_M_PER_S);
+          }
+          return AutonState.MOVE_TOWARDS_GOAL;
+    }
+
     /**
      * Align the robot to the closest ball
      * @return Whether the robot is done aligning

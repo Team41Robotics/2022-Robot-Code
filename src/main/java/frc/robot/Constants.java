@@ -2,6 +2,8 @@ package frc.robot;
 
 /** Class with all primitives needed in the code, so if they need to be changed they can */
 public class Constants {
+    public static final double SUPER_SIMPLE_AUTON_DISTANCE = 40;
+
     /** Driver station IDs of Joysticks */
     static int LEFT_JOY = 0, RIGHT_JOY = 1;
     static int CLIMBING_DRIVE_BUTTON = 2;
