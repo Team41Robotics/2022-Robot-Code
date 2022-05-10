@@ -22,6 +22,7 @@ public class Controls {
         public static int SHOOTER_OFFSET_DOWN = 10;
 
         public static int FEED_BALL_TO_SHOOTER = 1;
+        public static int ZERO_HOOD = 2;
     }
 
     public static class LeftJoy {

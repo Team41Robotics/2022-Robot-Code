@@ -60,8 +60,10 @@ public class Robot extends TimedRobot {
         autonChooser = new SendableChooser<>();
         autonChooser.setDefaultOption("4 Ball Auton", 3);
         autonChooser.addOption("2 Ball Auton", 2);
+        autonChooser.addOption("Simple 2 Ball Auton", 4);
         autonChooser.addOption("Simple Auton", 1);
         autonChooser.addOption("No Auton", 0);
+        autonChooser.addOption("1 Ball", 5);
         SmartDashboard.putData("Do Real Auton", autonChooser);
 
         Shooter.initShooter();
@@ -121,9 +123,22 @@ public class Robot extends TimedRobot {
                 // 4 ball
                 fullAuton();
                 break;
+            case 4:
+                // 2 ball no photonvision
+                simple2BallAuton();
+                break;
+            case 5:
+                // 1 ball w/ delay
+                Intake.reset();
+                delayed1BallAuton();
+                break;
         } 
     }
     
+    private void delayed1BallAuton() {
+        Auton.delayed1Ball();
+    }
+
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
@@ -154,6 +169,10 @@ public class Robot extends TimedRobot {
             Constants.HOOD_SPEED_OFFSET += 1;
         } else if (secondDS.getRawButtonPressed(Controls.SecondDriverStation.SHOOTER_OFFSET_DOWN)) {
             Constants.HOOD_SPEED_OFFSET -= 1;
+        }
+
+        if (secondDS.getRawButtonPressed(Controls.SecondDriverStation.ZERO_HOOD)) {
+            Hood.reHome();
         }
         
         if (secondDS.getRawButton(Controls.SecondDriverStation.MANUAL_SHOOTER_SPEED)) {
@@ -213,6 +232,13 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
         LiveWindow.setEnabled(false);
         PhotonCamera.setPipeline(false);
+        SmartDashboard.putBoolean("Beam Break", beamBreak.get());
+        System.out.print(Climber.getLSwitch());
+        System.out.print(Climber.getMSwitch());
+        System.out.print(Climber.getRSwitch());
+        System.out.print(Climber.getSecondMSwitch());
+        System.out.print(Hood.getBottomSwitch());
+        System.out.println(Hood.getTopSwitch());
     }
     
     public void fullAuton() {
@@ -306,12 +332,87 @@ public class Robot extends TimedRobot {
             break;
         }
     }
+
+    public void simple2BallAuton() {
+        System.out.println(autonState);
+        switch (autonState) {
+            case ALIGN_TO_BALL:
+            autonState = AutonState.GOTO_BALL;
+            break;
+            
+            case GOTO_BALL:
+            autonState = Auton.gotoBallNoVision();
+            break;
+            
+            case PICKUP_BALL:
+            autonState = AutonState.NONE;
+            break;
+            
+            case TRACK_GOAL:
+            autonState = Auton.trackGoal();
+            break;
+            
+            case PREPARE_SHOOTER:
+            autonState = Auton.prepareShooter();
+            break;
+            
+            case SHOOT_BALL:
+            autonState = Auton.shootBall();
+            break;
+            
+            case NONE:
+            Auton.none();
+            break;
+            
+            default:
+            Drivetrain.set(0);
+            break;
+        }
+    }
     
+    public void betterDelayed1Ball() {
+        System.out.println(autonState);
+        switch (autonState) {
+            case ALIGN_TO_BALL:
+            autonState = AutonState.GOTO_BALL;
+            break;
+            
+            case GOTO_BALL:
+            autonState = Auton.gotoBallNoVision();
+            break;
+            
+            case PICKUP_BALL:
+            autonState = AutonState.NONE;
+            break;
+            
+            case TRACK_GOAL:
+            autonState = Auton.trackGoal();
+            break;
+            
+            case PREPARE_SHOOTER:
+            autonState = Auton.prepareShooter();
+            break;
+            
+            case SHOOT_BALL:
+            autonState = Auton.shootBall();
+            break;
+            
+            case NONE:
+            Auton.none();
+            break;
+            
+            default:
+            Drivetrain.set(0);
+            break;
+        }
+    }
+
     public void superSimpleAuton() {
         if (autonState == AutonState.MOVE_TOWARDS_GOAL) {
             autonState = Auton.moveForward();
         } else {
             Drivetrain.stop();
+            Hood.setToPosition(15);
         }
     }
 

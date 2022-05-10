@@ -3,6 +3,8 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -174,6 +176,13 @@ public class Drivetrain {
             return true;
         }
         return false;
+    }
+
+    public static void hardSet(double speed) {
+        leftFrontPID.motor.set(ControlMode.PercentOutput, speed);
+        leftBackPID.motor.set(ControlMode.PercentOutput, speed);
+        rightBackPID.motor.set(ControlMode.PercentOutput, speed);
+        rightFrontPID.motor.set(ControlMode.PercentOutput, speed);
     }
 
     /**

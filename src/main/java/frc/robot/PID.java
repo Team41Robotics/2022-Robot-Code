@@ -25,7 +25,7 @@ public class PID {
     private double reqSpeed;
     private double actInputSpeed;
     private long time;
-    private TalonFX motor;
+    public TalonFX motor;
 
     /**
      * Create a new PID controller for a Falcon 500 Motor
